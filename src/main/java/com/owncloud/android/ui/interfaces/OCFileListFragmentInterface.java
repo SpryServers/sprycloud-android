@@ -1,5 +1,5 @@
 /**
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Mario Danic
  * Copyright (C) 2017 Mario Danic
@@ -23,18 +23,21 @@ package com.owncloud.android.ui.interfaces;
 import android.view.View;
 
 import com.owncloud.android.datamodel.OCFile;
+import com.owncloud.android.ui.adapter.OCFileListAdapter;
 
 /**
  * Interface for communication between {@link com.owncloud.android.ui.fragment.OCFileListFragment}
- * and {@link com.owncloud.android.ui.adapter.FileListListAdapter}
+ * and {@link OCFileListAdapter}
  */
 
 public interface OCFileListFragmentInterface {
-    void finishedFiltering();
-
     int getColumnSize();
 
     void onShareIconClick(OCFile file);
 
-    void onOverflowIconClick(View view, OCFile file);
+    void onOverflowIconClicked(OCFile file, View view);
+
+    void onItemClicked(OCFile file);
+
+    boolean onLongItemClicked(OCFile file);
 }

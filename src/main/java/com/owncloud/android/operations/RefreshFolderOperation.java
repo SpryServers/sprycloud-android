@@ -207,6 +207,9 @@ public class RefreshFolderOperation extends RemoteOperation {
                 // request for the synchronization of KEPT-IN-SYNC file contents
                 startContentSynchronizations(mFilesToSyncContents);
             }
+
+            mLocalFolder.setLastSyncDateForData(System.currentTimeMillis());
+            mStorageManager.saveFile(mLocalFolder);
         }
 
         if (!mSyncFullAccount) {
@@ -422,9 +425,14 @@ public class RefreshFolderOperation extends RemoteOperation {
                 );
                 updatedFile.setStoragePath(localFile.getStoragePath());
                 // eTag will not be updated unless file CONTENTS are synchronized
+                if (!updatedFile.isFolder() && localFile.isDown() &&
+                        !updatedFile.getEtag().equals(localFile.getEtag())) {
+                    updatedFile.setEtagInConflict(updatedFile.getEtag());
+                }
                 updatedFile.setEtag(localFile.getEtag());
                 if (updatedFile.isFolder()) {
                     updatedFile.setFileLength(remoteFile.getFileLength());
+                    updatedFile.setMountType(remoteFile.getMountType());
                 } else if (mRemoteFolderChanged && MimeTypeUtil.isImage(remoteFile) &&
                         remoteFile.getModificationTimestamp() !=
                                 localFile.getModificationTimestamp()) {
@@ -434,7 +442,6 @@ public class RefreshFolderOperation extends RemoteOperation {
                 updatedFile.setPublicLink(localFile.getPublicLink());
                 updatedFile.setShareViaLink(localFile.isSharedViaLink());
                 updatedFile.setShareWithSharee(localFile.isSharedWithSharee());
-                updatedFile.setEtagInConflict(localFile.getEtagInConflict());
             } else {
                 // remote eTag will not be updated unless file CONTENTS are synchronized
                 updatedFile.setEtag("");
