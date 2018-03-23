@@ -601,7 +601,7 @@ public class UploadFileOperation extends SyncOperation {
             result = mUploadOperation.execute(client, true);
 
             /// move local temporal file or original file to its corresponding
-            // location in the Nextcloud local folder
+            // location in the spryCloud local folder
             if (!result.isSuccess() && result.getHttpCode() == HttpStatus.SC_PRECONDITION_FAILED) {
                 result = new RemoteOperationResult(ResultCode.SYNC_CONFLICT);
             }
@@ -841,7 +841,7 @@ public class UploadFileOperation extends SyncOperation {
                 result = mUploadOperation.execute(client, mFile.isEncrypted());
 
                 /// move local temporal file or original file to its corresponding
-                // location in the Nextcloud local folder
+                // location in the spryCloud local folder
                 if (!result.isSuccess() && result.getHttpCode() == HttpStatus.SC_PRECONDITION_FAILED) {
                     result = new RemoteOperationResult(ResultCode.SYNC_CONFLICT);
                 }

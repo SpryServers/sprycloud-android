@@ -64,7 +64,7 @@
     <string name="auth_host_url">Endereço do servidor https://&#8230;</string>
     <string name="auth_username">Nome de usuário</string>
     <string name="auth_password">Senha</string>
-    <string name="auth_register">Sem Nextcloud ainda?\nClique aqui para obter um de um provedor</string>
+    <string name="auth_register">Sem spryCloud ainda?\nClique aqui para obter um de um provedor</string>
     <string name="sync_string_files">Arquivos</string>
     <string name="setup_btn_connect">Conectar</string>
     <string name="uploader_btn_upload_text">Enviar</string>
@@ -397,7 +397,7 @@
     <string name="file_migration_failed_not_enough_space">Mais espaço é necessário</string>
     <string name="file_migration_failed_not_writable">Não foi possível gravar o arquivo de destino</string>
     <string name="file_migration_failed_not_readable">Não foi possível ler o arquivo fonte</string>
-    <string name="file_migration_failed_dir_already_exists">Pasta Nextcloud já existe</string>
+    <string name="file_migration_failed_dir_already_exists">Pasta spryCloud já existe</string>
     <string name="file_migration_failed_while_coping">Falha durante a migração</string>
     <string name="file_migration_failed_while_updating_index">Falha ao atualizar índice</string>
 
@@ -525,7 +525,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Esperando carregar</string>
     <string name="actionbar_search">Pesquisar</string>
-    <string name="files_drop_not_supported">Isso é um recurso do Nextcloud, faça um upgrade.</string>
+    <string name="files_drop_not_supported">Isso é um recurso do spryCloud, faça um upgrade.</string>
     <string name="learn_more">Saiba mais</string>
     <string name="drawer_synced_folders">Auto envio</string>
     <string name="drawer_participate">Participar</string>
@@ -665,8 +665,8 @@
     <string name="resized_image_not_possible_download">Não há imagem redimensionada disponível. Baixar a imagem completa?</string>
     <string name="resized_images_download_full_image">Baixar imagem completa?</string>
 
-    <string name="store_short_desc">O aplicativo Android Nextcloud oferece acesso móvel a todos os arquivos do servidor Nextcloud.</string>
-    <string name="store_full_desc">O aplicativo de código aberto Nextcloud, lhe dá liberdade móvel. \n\nRecursos:\n* Interface fácil e moderna, adequada ao tema do seu servidor\n * Envio de arquivos para seu servidor Nextcloud\n * Compartilhá-los com outros\n * Manter seus arquivos e pastas favoritos sincronizados\n * Pesquisa em todas as pastas no seu servidor\n * Envio automático de fotos e vídeos tirados pelo seu dispositivo\n * Manter-se atualizado com notificações\n * Suporte a múltiplas contas\n * Acesso seguro aos seus dados com impressão digital ou PIN\n * Integração com o DAVdroid para fácil configuração da sincronização do Calendário &amp; Contatos\n\nInforme todos os problemas em https://github.com/nextcloud/android/issues e discuta este aplicativo em https://help.nextcloud.com/c/clients/android\n\nNovo para Nextcloud?  Nextcloud é um servidor privado de comunicação, sincronismo &amp; compartilhamento. É um software livre e você mesmo pode hospedá-lo ou pagar uma empresa para fazê-lo. Dessa forma, você controla suas fotos, calendários e dados de contato, seus documentos e tudo mais.\n\nSaiba mais sobre o Nextcloud em https://nextcloud.com</string>
+    <string name="store_short_desc">O aplicativo Android spryCloud oferece acesso móvel a todos os arquivos do servidor spryCloud.</string>
+    <string name="store_full_desc">O aplicativo de código aberto spryCloud, lhe dá liberdade móvel. \n\nRecursos:\n* Interface fácil e moderna, adequada ao tema do seu servidor\n * Envio de arquivos para seu servidor spryCloud\n * Compartilhá-los com outros\n * Manter seus arquivos e pastas favoritos sincronizados\n * Pesquisa em todas as pastas no seu servidor\n * Envio automático de fotos e vídeos tirados pelo seu dispositivo\n * Manter-se atualizado com notificações\n * Suporte a múltiplas contas\n * Acesso seguro aos seus dados com impressão digital ou PIN\n * Integração com o DAVdroid para fácil configuração da sincronização do Calendário &amp; Contatos\n\nInforme todos os problemas em https://github.com/nextcloud/android/issues e discuta este aplicativo em https://help.nextcloud.com/c/clients/android\n\nNovo para spryCloud?  spryCloud é um servidor privado de comunicação, sincronismo &amp; compartilhamento. É um software livre e você mesmo pode hospedá-lo ou pagar uma empresa para fazê-lo. Dessa forma, você controla suas fotos, calendários e dados de contato, seus documentos e tudo mais.\n\nSaiba mais sobre o spryCloud em https://nextcloud.com</string>
 
     <string name="drawer_current_account">Conta atual</string>
     <string name="drawer_middle_account">Conta média</string>
@@ -700,7 +700,7 @@
     <string name="what_s_new_image">Imagem nova</string>
 
     <string name="store_short_dev_desc">O aplicativo Desenvolvimento é um instantâneo e pode ser instalado em paralelo.</string>
-    <string name="store_full_dev_desc">O aplicativo de código aberto Nextcloud, lhe dá liberdade móvel.\nEsta é a versão oficial de desenvolvimento, com uma amostra diária de qualquer nova funcionalidade não testada, o que pode causar instabilidade e perda de dados. O aplicativo é para usuários dispostos a testar e informar erros se eles ocorrerem. Não o use em ambiente de produção!\n\nAmbas as versões de desenvolvimento e regular estão disponíveis no F-droid e podem ser instalados ao mesmo tempo.</string>
+    <string name="store_full_dev_desc">O aplicativo de código aberto spryCloud, lhe dá liberdade móvel.\nEsta é a versão oficial de desenvolvimento, com uma amostra diária de qualquer nova funcionalidade não testada, o que pode causar instabilidade e perda de dados. O aplicativo é para usuários dispostos a testar e informar erros se eles ocorrerem. Não o use em ambiente de produção!\n\nAmbas as versões de desenvolvimento e regular estão disponíveis no F-droid e podem ser instalados ao mesmo tempo.</string>
 
     <string name="prefs_category_dev">Desenvolvimento</string>
     <string name="dev_version_no_information_available">Nenhuma informação disponível.</string>

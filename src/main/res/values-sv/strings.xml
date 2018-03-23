@@ -63,7 +63,7 @@
     <string name="auth_host_url">Serveradress https://&#8230;</string>
     <string name="auth_username">Användarnamn</string>
     <string name="auth_password">Lösenord</string>
-    <string name="auth_register"> Har du inte Nextcloud än?\nKlicka här för att hämta från leverantör</string>
+    <string name="auth_register"> Har du inte spryCloud än?\nKlicka här för att hämta från leverantör</string>
     <string name="sync_string_files">Filer</string>
     <string name="setup_btn_connect">Anslut</string>
     <string name="uploader_btn_upload_text">Ladda upp</string>
@@ -80,7 +80,7 @@
     <string name="uploader_error_message_source_file_not_found">Filen som valdes för uppladdning kan inte hittas. Vänligen dubbelkolla att den existerar.</string>
     <string name="uploader_error_message_source_file_not_copied">Kunde inte kopiera filen till en temporär mapp. Prova att skicka den igen.</string>
     <string name="uploader_upload_files_behaviour">Uppladdningsalternativ:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Flytta filen till Nextcloud-mappen</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Flytta filen till spryCloud-mappen</string>
     <string name="uploader_upload_files_behaviour_only_upload">Behåll fil i källmappen</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Radera fil från källmappen</string>
     <string name="file_list_seconds_ago">sekunder sedan</string>
@@ -408,7 +408,7 @@
     <string name="deselect_all">Avmarkera alla</string>
 
     <string name="pref_behaviour_entries_keep_file">behållas i orginalmapp</string>
-    <string name="pref_behaviour_entries_move">flyttas till Nextcloud-mapp</string>
+    <string name="pref_behaviour_entries_move">flyttas till spryCloud-mapp</string>
     <string name="pref_behaviour_entries_delete_file">raderas</string>
     <string name="prefs_storage_path">Lagringsplats</string>
 

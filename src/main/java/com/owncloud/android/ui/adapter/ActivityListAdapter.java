@@ -1,5 +1,5 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Alejandro Bautista
  * Copyright (C) 2017 Alejandro Bautista

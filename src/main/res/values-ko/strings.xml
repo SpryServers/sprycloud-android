@@ -64,7 +64,7 @@
     <string name="auth_host_url">서버 주소 https://&#8230;</string>
     <string name="auth_username">사용자 이름</string>
     <string name="auth_password">암호</string>
-    <string name="auth_register">Nextcloud가 없으신가요?\n공급자를 알아보려면 누르십시오</string>
+    <string name="auth_register">spryCloud가 없으신가요?\n공급자를 알아보려면 누르십시오</string>
     <string name="sync_string_files">파일</string>
     <string name="setup_btn_connect">연결</string>
     <string name="uploader_btn_upload_text">업로드</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">업로드하려고 선택한 파일을 찾을 수 없습니다. 파일이 존재하는지 확인하십시오.</string>
     <string name="uploader_error_message_source_file_not_copied">파일을 임시 폴더에 저장할 수 없습니다. 다시 전송을 시도하십시오.</string>
     <string name="uploader_upload_files_behaviour">업로드 설정:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Nextcloud 폴더로 파일 이동</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">spryCloud 폴더로 파일 이동</string>
     <string name="uploader_upload_files_behaviour_only_upload">원본 폴더에 파일 유지</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">원본 폴더에서 파일 삭제</string>
     <string name="file_list_seconds_ago">초 전</string>
@@ -391,7 +391,7 @@
     <string name="file_migration_failed_not_enough_space">공간 부족</string>
     <string name="file_migration_failed_not_writable">대상 파일에 기록할 수 없음</string>
     <string name="file_migration_failed_not_readable">원본 파일에서 읽을 수 없음</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud 폴더가 이미 존재함</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud 폴더가 이미 존재함</string>
     <string name="file_migration_failed_while_coping">마이그레이션 실패</string>
     <string name="file_migration_failed_while_updating_index">색인을 업데이트할 수 없음</string>
 
@@ -517,7 +517,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">충전 대기 중</string>
     <string name="actionbar_search">검색</string>
-    <string name="files_drop_not_supported">이것은 Nextcloud 기능입니다. 업데이트하십시오.</string>
+    <string name="files_drop_not_supported">이것은 spryCloud 기능입니다. 업데이트하십시오.</string>
     <string name="learn_more">자세히 알아보기</string>
     <string name="drawer_synced_folders">자동 업로드</string>
     <string name="drawer_participate">참여</string>
@@ -647,8 +647,8 @@
     <string name="resized_image_not_possible_download">크기 조정된 사진을 사용할 수 없습니다. 원본 크기로 다운로드하시겠습니까?</string>
     <string name="resized_images_download_full_image">원본 크기 다운로드?</string>
 
-    <string name="store_short_desc">Nextcloud Android 앱으로 내 Nextcloud에 있는 모든 파일을 사용하십시오.</string>
-    <string name="store_full_desc">자유 소프트웨어 Nextcloud Android 앱으로 내 Nextcloud에 있는 파일에 접근할 수 있습니다.\n\n기능:\n* 쉽고 간결한 인터페이스, 서버의 테마를 따라가는 테마\n* 내 Nextcloud 서버에 파일 업로드\n* 다른 사람과 파일 공유하기\n* 즐겨찾는 파일과 폴더 동기화\n* 서버에 있는 모든 폴더 검색\n* 내 장치로 찍은 사진과 동영상 자동 업로드\n* 최신 알림 유지\n* 다중 계정 지원\n* 지문이나 PIN으로 데이터 접근 보호\n* DAVDroid 통합을 통한 간편한 캘린더 및 연락처 동기화\n\nhttps://github.com/nextcloud/android/issues 사이트에 버그를 보고해 주십시오. https://help.nextcloud.com/c/clients/android 사이트에서 앱에 대해 토론할 수 있습니다.\n\nNextcloud를 처음 들어 보셨나요? Nextcloud는 개인 파일 동기화 및 공유 서버입니다. 직접 서버에 설치하거나 호스팅 업체에 설치할 수 있는 자유 오픈 소스 프로젝트입니다. 내 사진, 캘린더, 연락처, 문서 및 모든 것의 통제권을 가질 수 있습니다.\n\nNextcloud에 대해 더 알아보려면 https://nextcloud.com 사이트를 방문하십시오</string>
+    <string name="store_short_desc">spryCloud Android 앱으로 내 spryCloud에 있는 모든 파일을 사용하십시오.</string>
+    <string name="store_full_desc">자유 소프트웨어 spryCloud Android 앱으로 내 spryCloud에 있는 파일에 접근할 수 있습니다.\n\n기능:\n* 쉽고 간결한 인터페이스, 서버의 테마를 따라가는 테마\n* 내 spryCloud 서버에 파일 업로드\n* 다른 사람과 파일 공유하기\n* 즐겨찾는 파일과 폴더 동기화\n* 서버에 있는 모든 폴더 검색\n* 내 장치로 찍은 사진과 동영상 자동 업로드\n* 최신 알림 유지\n* 다중 계정 지원\n* 지문이나 PIN으로 데이터 접근 보호\n* DAVDroid 통합을 통한 간편한 캘린더 및 연락처 동기화\n\nhttps://github.com/nextcloud/android/issues 사이트에 버그를 보고해 주십시오. https://help.nextcloud.com/c/clients/android 사이트에서 앱에 대해 토론할 수 있습니다.\n\nspryCloud를 처음 들어 보셨나요? spryCloud는 개인 파일 동기화 및 공유 서버입니다. 직접 서버에 설치하거나 호스팅 업체에 설치할 수 있는 자유 오픈 소스 프로젝트입니다. 내 사진, 캘린더, 연락처, 문서 및 모든 것의 통제권을 가질 수 있습니다.\n\nspryCloud에 대해 더 알아보려면 https://nextcloud.com 사이트를 방문하십시오</string>
 
     <string name="drawer_current_account">현재 계정</string>
     <string name="drawer_middle_account">중간 계정</string>
@@ -681,8 +681,8 @@
     <string name="forward">앞으로</string>
     <string name="what_s_new_image">새로운 기능 사진</string>
 
-    <string name="store_short_dev_desc">Nextcloud Dev 앱은 개발 스냅샷이고 같이 설치될 수 있습니다.</string>
-    <string name="store_full_dev_desc">자유 소프트웨어 Nextcloud Android 앱으로 내 Nextcloud에 있는 파일에 접근할 수 있습니다.\n이 앱은 공식 개발 버전이며, 새로운 기능이 매일 업데이트되기 때문에 불안정할 수도 있으며 데이터가 손실될 수도 있습니다. 이 앱은 사용 중에 발생하는 버그를 테스트하고 보고할 사용자를 대상으로 합니다. 중요한 업무에 사용하지 마십시오!\n\n공식 개발 버전과 일반 버전이 모두 F-Droid에 등록되어 있으며 동시에 설치할 수 있습니다.</string>
+    <string name="store_short_dev_desc">spryCloud Dev 앱은 개발 스냅샷이고 같이 설치될 수 있습니다.</string>
+    <string name="store_full_dev_desc">자유 소프트웨어 spryCloud Android 앱으로 내 spryCloud에 있는 파일에 접근할 수 있습니다.\n이 앱은 공식 개발 버전이며, 새로운 기능이 매일 업데이트되기 때문에 불안정할 수도 있으며 데이터가 손실될 수도 있습니다. 이 앱은 사용 중에 발생하는 버그를 테스트하고 보고할 사용자를 대상으로 합니다. 중요한 업무에 사용하지 마십시오!\n\n공식 개발 버전과 일반 버전이 모두 F-Droid에 등록되어 있으며 동시에 설치할 수 있습니다.</string>
 
     <string name="prefs_category_dev">개발</string>
     <string name="dev_version_no_information_available">정보가 없습니다.</string>

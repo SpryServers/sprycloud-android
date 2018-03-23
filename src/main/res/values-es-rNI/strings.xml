@@ -79,7 +79,7 @@
     <string name="uploader_error_message_source_file_not_found">El archivo seleccionado para cargar no fue encontrado. Por favor verifica si el archivo existe.</string>
     <string name="uploader_error_message_source_file_not_copied">No fue posible copiar el archivo a una carpeta temporal. Por favor intenta enviarlo de nuevo.</string>
     <string name="uploader_upload_files_behaviour">Opción de carga:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Mover el archivo a la carpeta de Nextcloud</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Mover el archivo a la carpeta de spryCloud</string>
     <string name="uploader_upload_files_behaviour_only_upload">Mantener el archivo en la carpeta de origen</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Borrar el archivo de la carpeta de origen</string>
     <string name="file_list_seconds_ago">hace algunos segundos</string>
@@ -595,7 +595,7 @@
     <string name="forward">Adelante</string>
     <string name="what_s_new_image">Imagen de qué es nuevo</string>
 
-    <string name="store_short_dev_desc">La app de Nextcloud Dev es una foto de desarrollo y puede instalarse en paralelo</string>
+    <string name="store_short_dev_desc">La app de spryCloud Dev es una foto de desarrollo y puede instalarse en paralelo</string>
     <string name="prefs_category_dev">Desarrollo</string>
     <string name="dev_version_no_information_available">No hay información disponible.</string>
     <string name="dev_version_no_new_version_available">No hay una nueva versión disponible.</string>

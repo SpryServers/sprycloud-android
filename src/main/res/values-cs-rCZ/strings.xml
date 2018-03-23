@@ -79,7 +79,7 @@
     <string name="uploader_error_message_source_file_not_found">Soubor k nahrání nebyl v tomto umístění nalezen. Zkontrolujte prosím zda soubor existuje.</string>
     <string name="uploader_error_message_source_file_not_copied">Došlo k chybě při kopírování souboru do dočasného adresáře. Zkuste prosím zopakovat odeslání.</string>
     <string name="uploader_upload_files_behaviour">Nahrát možnost:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Přesunout soubor do Nextcloud adresáře</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Přesunout soubor do spryCloud adresáře</string>
     <string name="uploader_upload_files_behaviour_only_upload">Jen uploadovat</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Uploadovat a vymazat ze zdroje</string>
     <string name="file_list_seconds_ago">před pár sekundami</string>
@@ -601,7 +601,7 @@
     <string name="forward">Vpřed</string>
     <string name="what_s_new_image">Obrázek Co je nového</string>
 
-    <string name="store_short_dev_desc">Aplikace Nextcloud Dev je vývojovým snímkem a může být nainstalována paralelně.</string>
+    <string name="store_short_dev_desc">Aplikace spryCloud Dev je vývojovým snímkem a může být nainstalována paralelně.</string>
     <string name="prefs_category_dev">Dev</string>
     <string name="folder_icon">Ikona adresáře</string>
     <string name="version_dev_download">Stáhnout</string>

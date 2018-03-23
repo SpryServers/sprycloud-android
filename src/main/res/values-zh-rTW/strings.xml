@@ -65,7 +65,7 @@
     <string name="auth_host_url">伺服器網址 https://&#8230;</string>
     <string name="auth_username">使用者名稱</string>
     <string name="auth_password">密碼</string>
-    <string name="auth_register">還沒有 Nextcloud？\n點選這裡來選擇供應商</string>
+    <string name="auth_register">還沒有 spryCloud？\n點選這裡來選擇供應商</string>
     <string name="sync_string_files">檔案</string>
     <string name="setup_btn_connect">連線</string>
     <string name="uploader_btn_upload_text">上傳</string>
@@ -82,7 +82,7 @@
     <string name="uploader_error_message_source_file_not_found">該位置無法找到要上傳的檔案，請檢查該檔案是否存在</string>
     <string name="uploader_error_message_source_file_not_copied">複製檔案到暫存資料夾時發生錯誤，請再試一次</string>
     <string name="uploader_upload_files_behaviour">上傳選項：</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">移動檔案到 Nextcloud 資料夾</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">移動檔案到 spryCloud 資料夾</string>
     <string name="uploader_upload_files_behaviour_only_upload">在來源資料夾保留檔案</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">刪除來源資料夾中的檔案</string>
     <string name="file_list_seconds_ago">幾秒前</string>

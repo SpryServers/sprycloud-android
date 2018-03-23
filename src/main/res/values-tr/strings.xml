@@ -64,7 +64,7 @@
     <string name="auth_host_url">Sunucu adresi https://&#8230;</string>
     <string name="auth_username">Kullanıcı Adı</string>
     <string name="auth_password">Parola</string>
-    <string name="auth_register">Henüz Nextcloud kullanmıyor musunuz?\Hizmet sağlayıcılardan yararlanabilirsiniz</string>
+    <string name="auth_register">Henüz spryCloud kullanmıyor musunuz?\Hizmet sağlayıcılardan yararlanabilirsiniz</string>
     <string name="sync_string_files">Dosyalar</string>
     <string name="setup_btn_connect">Bağlan</string>
     <string name="uploader_btn_upload_text">Yükle</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">Yüklenmek üzere seçilmiş dosya bulunamadı. Lütfen dosyanın var olup olmadığını denetleyin.</string>
     <string name="uploader_error_message_source_file_not_copied">Dosya geçici bir klasöre kopyalanırken sorun çıktı. Lütfen yeniden göndermeyi deneyin.</string>
     <string name="uploader_upload_files_behaviour">Yükleme seçeneği:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Dosya Nextcloud klasörüne taşınsın</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Dosya spryCloud klasörüne taşınsın</string>
     <string name="uploader_upload_files_behaviour_only_upload">Dosya kaynak klasörde tutulsun</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Dosya kaynak klasörden silinsin</string>
     <string name="file_list_seconds_ago">saniyeler önce</string>
@@ -397,7 +397,7 @@
     <string name="file_migration_failed_not_enough_space">Disk alanı yetersiz</string>
     <string name="file_migration_failed_not_writable">Hedef dosyaya yazılamadı</string>
     <string name="file_migration_failed_not_readable">Kaynak dosya okunamadı</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud klasörü zaten var</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud klasörü zaten var</string>
     <string name="file_migration_failed_while_coping">Aktarım sırasında sorun çıktı</string>
     <string name="file_migration_failed_while_updating_index">Dizin güncellenirken sorun çıktı</string>
 
@@ -525,7 +525,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Aygıtın şarj olması bekleniyor</string>
     <string name="actionbar_search">Arama</string>
-    <string name="files_drop_not_supported">Bu bir Nextcloud özelliğidir, lütfen güncelleyin.</string>
+    <string name="files_drop_not_supported">Bu bir spryCloud özelliğidir, lütfen güncelleyin.</string>
     <string name="learn_more">Ayrıntılı bilgi alın</string>
     <string name="drawer_synced_folders">Otomatik yükleme</string>
     <string name="drawer_participate">Katkıda bulunun</string>
@@ -665,8 +665,8 @@
     <string name="resized_image_not_possible_download">Boyutu değiştirilmiş bir görsel yok. Tam görsel indirilsin mi?</string>
     <string name="resized_images_download_full_image">Tam görsel indirilsin mi?</string>
 
-    <string name="store_short_desc">Nextcloud Android uygulaması Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.</string>
-    <string name="store_full_desc">Copyleft Nextcloud Android uygulaması, Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.\n\nÖzellikleri:\* Sunucunuzun temasına uygun, kolay kullanılan modern arayüz\n* Dosyalarınızı Nextcloud sunucunuza yükleme\n* Dosyalarınızı başkalarıyla paylaşma\n* Sık kullandığınız dosya ve klasörleri eşitleme\n* Sunucunuzdaki tüm klasörlerde arama yapma\n* Çektiğiniz fotoğraf ve görüntüleri otomatik yükleme\n* Bildirimler ile güncel kalma\n* Birden çok hesap desteği\n*Parmak izi ya da PIN kodu ile verilerinize güvenli erişme\n* Davdroid bütünleştirmesi ile takvim ve kişileri eşitleme\n\nKullanımda karşılaşabileceğiniz hataları https://github.com/nextcloud/android/issues adresinden bildirebilir, uygulama hakkındaki konuları https://help.nextcloud.com/c/clients/android adresinde tartışabilirsiniz\n\nNextcloud ile yeni mi tanıştınız? Nextcloud özel bir veri depolama ve paylaşma ağıdır. Tamamen açık kaynak kodludur. Dosyalarınızı kendi sunucunuzda saklayabileceğiniz gibi ücretli hizmet olarak da satın alabilirsiniz. Böylece fotoğraflarınız, dosyalarınız, takviminiz, belgeleriniz, kişileriniz ve diğer tüm özel bilgileriniz sizin kontrolünüzde olur. \n\nAyrıntılı bilgi almak için web sitemize bakabilirsiniz: https://nextcloud.com</string>
+    <string name="store_short_desc">spryCloud Android uygulaması spryCloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.</string>
+    <string name="store_full_desc">Copyleft spryCloud Android uygulaması, spryCloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.\n\nÖzellikleri:\* Sunucunuzun temasına uygun, kolay kullanılan modern arayüz\n* Dosyalarınızı spryCloud sunucunuza yükleme\n* Dosyalarınızı başkalarıyla paylaşma\n* Sık kullandığınız dosya ve klasörleri eşitleme\n* Sunucunuzdaki tüm klasörlerde arama yapma\n* Çektiğiniz fotoğraf ve görüntüleri otomatik yükleme\n* Bildirimler ile güncel kalma\n* Birden çok hesap desteği\n*Parmak izi ya da PIN kodu ile verilerinize güvenli erişme\n* Davdroid bütünleştirmesi ile takvim ve kişileri eşitleme\n\nKullanımda karşılaşabileceğiniz hataları https://github.com/nextcloud/android/issues adresinden bildirebilir, uygulama hakkındaki konuları https://help.nextcloud.com/c/clients/android adresinde tartışabilirsiniz\n\nspryCloud ile yeni mi tanıştınız? spryCloud özel bir veri depolama ve paylaşma ağıdır. Tamamen açık kaynak kodludur. Dosyalarınızı kendi sunucunuzda saklayabileceğiniz gibi ücretli hizmet olarak da satın alabilirsiniz. Böylece fotoğraflarınız, dosyalarınız, takviminiz, belgeleriniz, kişileriniz ve diğer tüm özel bilgileriniz sizin kontrolünüzde olur. \n\nAyrıntılı bilgi almak için web sitemize bakabilirsiniz: https://nextcloud.com</string>
 
     <string name="drawer_current_account">Geçerli hesap</string>
     <string name="drawer_middle_account">Orta hesap</string>
@@ -699,8 +699,8 @@
     <string name="forward">İlet</string>
     <string name="what_s_new_image">Yenilikler görseli</string>
 
-    <string name="store_short_dev_desc">Nextcloud Dev uygulaması paralel olarak kurulabilen geliştirme sürümü örneğidir.</string>
-    <string name="store_full_dev_desc">Açık Kaynaklı Nextcloud Android uygulaması size mobil özgürlük sağlar.\nBu sürüm resmi Nextcloud uygulamasının geliştirici sürümü olduğundan, kararsız çalışabilir ve veri kaybına yol açabilecek yeterince sınanmamış yeni özellikler bulundurur. Bu sürüm yeni özellikleri sınamak ve hataları bildirmek isteyen kullanıcılar için tasarlanmıştır. Bu sürümü günlük işleriniz için kullanmayın!\n\nNormal ve Geliştirici sürümleri F-Droid üzerinde bulunur ve aynı anda kurulup kullanılabilir.</string>
+    <string name="store_short_dev_desc">spryCloud Dev uygulaması paralel olarak kurulabilen geliştirme sürümü örneğidir.</string>
+    <string name="store_full_dev_desc">Açık Kaynaklı spryCloud Android uygulaması size mobil özgürlük sağlar.\nBu sürüm resmi spryCloud uygulamasının geliştirici sürümü olduğundan, kararsız çalışabilir ve veri kaybına yol açabilecek yeterince sınanmamış yeni özellikler bulundurur. Bu sürüm yeni özellikleri sınamak ve hataları bildirmek isteyen kullanıcılar için tasarlanmıştır. Bu sürümü günlük işleriniz için kullanmayın!\n\nNormal ve Geliştirici sürümleri F-Droid üzerinde bulunur ve aynı anda kurulup kullanılabilir.</string>
 
     <string name="prefs_category_dev">Geliştirici</string>
     <string name="dev_version_no_information_available">Herhangi bir bilgi yok.</string>

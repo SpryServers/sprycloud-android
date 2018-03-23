@@ -398,7 +398,7 @@
     <string name="file_migration_failed_not_enough_space">Hiba: kevés a hely</string>
     <string name="file_migration_failed_not_writable">Hiba: célfájl nem írható</string>
     <string name="file_migration_failed_not_readable">Hiba: forrásfájl nem olvasható</string>
-    <string name="file_migration_failed_dir_already_exists">Hiba: Nextcloud mappa már létezik</string>
+    <string name="file_migration_failed_dir_already_exists">Hiba: spryCloud mappa már létezik</string>
     <string name="file_migration_failed_while_coping">Hiba: sikertelen összevonás</string>
     <string name="file_migration_failed_while_updating_index">Hiba: index nem frissíthető</string>
 
@@ -527,7 +527,7 @@ Lépj kapcsolatba a rendszergazdával</string>
 
     <string name="uploads_view_upload_status_waiting_for_charging">Töltésre vár</string>
     <string name="actionbar_search">Keresés</string>
-    <string name="files_drop_not_supported">Ez egy Nextcloud funkció, kérlek frissíts.</string>
+    <string name="files_drop_not_supported">Ez egy spryCloud funkció, kérlek frissíts.</string>
     <string name="learn_more">Tudj meg többet</string>
     <string name="drawer_synced_folders">Automatikus feltöltés</string>
     <string name="drawer_participate">Részvétel</string>
@@ -668,12 +668,12 @@ hozzáadások, változások és megosztások</string>
     <string name="resized_image_not_possible_download">Átméretezett kép nem elérhető. Letöltsem a teljes képet?</string>
     <string name="resized_images_download_full_image">Teljes kép letöltése?</string>
 
-    <string name="store_short_desc">A Nextcloud Android alkalmazás segítségével hozzáférhetsz a saját Nextcloud-on tárolt fájlaidhoz.</string>
-    <string name="store_full_desc">A nyílt forrású Nextcloud android app segítségével hozzáférhetsz a saját Nextcloudod fájljaihoz.
+    <string name="store_short_desc">A spryCloud Android alkalmazás segítségével hozzáférhetsz a saját spryCloud-on tárolt fájlaidhoz.</string>
+    <string name="store_full_desc">A nyílt forrású spryCloud android app segítségével hozzáférhetsz a saját spryCloudod fájljaihoz.
 
 Szolgáltatások:
 * Egyszerű, modern felület, mely teljesen személyre szabott, igazodik a szerveredhez
-* Fájl feltöltés  a saját Nextcloud szerveredre
+* Fájl feltöltés  a saját spryCloud szerveredre
 * Fájl megosztás másokkal
 * Kedvenc mappád fájljaid szinkronizálása
 * Keresés a szerver mappái között
@@ -685,9 +685,9 @@ Szolgáltatások:
 
 Kérjük jelents minden hibát a https://github.com/nextcloud/android/issues címen és beszélgess az appról itt: https://help.nextcloud.com/c/clients/android
 
-Új neked a Nextcloud? A Nextcloud egy privát fájl szinkronizáló, megosztó és kommunikációs szerver. Teljesen nyílt forrású, melyet magad is futtathatsz, vagy fizethetsz más cégeknek, hogy megtegyék neked. Segítségével teljesen ura lehetsz saját képeidnek, naptáradnak, kapcsolataidnak, fájljaidnak és minden egyebednek.
+Új neked a spryCloud? A spryCloud egy privát fájl szinkronizáló, megosztó és kommunikációs szerver. Teljesen nyílt forrású, melyet magad is futtathatsz, vagy fizethetsz más cégeknek, hogy megtegyék neked. Segítségével teljesen ura lehetsz saját képeidnek, naptáradnak, kapcsolataidnak, fájljaidnak és minden egyebednek.
 
-A Nextcloud itt érhető el: https://nextcloud.com</string>
+A spryCloud itt érhető el: https://nextcloud.com</string>
 
     <string name="drawer_current_account">Jelenlegi fiók</string>
     <string name="drawer_middle_account">Középső fiók</string>
@@ -720,8 +720,8 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="forward">Tovább</string>
     <string name="what_s_new_image">Mi újság gomb</string>
 
-    <string name="store_short_dev_desc">A Nextcloud Dev app egy fejlesztői pillanatkép és párhuzamosan telepíthető.</string>
-    <string name="store_full_dev_desc">A nyílt forráskódú Nextcloud Android app lehetővé teszi a fáljaid elérését a Nextcloud-odban.\nEz a hivatalos Nextcloud app fejlesztői változata és új, esetleg instabil megoldásokat tartalmazhat, melyek hibákhoz, adatvesztéshez vezethetnek. Az appot olyanoknak szánjuk, akik hajlandóak tesztelni azt és jelenteni az esetleges hibákat. Ne használd éles környezetben.\n\nA fejlesztői verzió párhuzamosan telepíthető és az F-Droidból is elérhető.. Naponta egyszer kerül ellenőrzésre a forráskód változása, így lehetséges nagyobb kihagyás két kiadás között.</string>
+    <string name="store_short_dev_desc">A spryCloud Dev app egy fejlesztői pillanatkép és párhuzamosan telepíthető.</string>
+    <string name="store_full_dev_desc">A nyílt forráskódú spryCloud Android app lehetővé teszi a fáljaid elérését a spryCloud-odban.\nEz a hivatalos spryCloud app fejlesztői változata és új, esetleg instabil megoldásokat tartalmazhat, melyek hibákhoz, adatvesztéshez vezethetnek. Az appot olyanoknak szánjuk, akik hajlandóak tesztelni azt és jelenteni az esetleges hibákat. Ne használd éles környezetben.\n\nA fejlesztői verzió párhuzamosan telepíthető és az F-Droidból is elérhető.. Naponta egyszer kerül ellenőrzésre a forráskód változása, így lehetséges nagyobb kihagyás két kiadás között.</string>
 
     <string name="prefs_category_dev">Dev</string>
     <string name="dev_version_no_information_available">Nincs információ.</string>

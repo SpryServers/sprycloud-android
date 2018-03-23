@@ -64,7 +64,7 @@
     <string name="auth_host_url">Adresa e serverit https://&#8230;</string>
     <string name="auth_username">Emër përdoruesi</string>
     <string name="auth_password">Fjalëkalim</string>
-    <string name="auth_register">Nuk keni akoma Nextcloud?\nKlikoni këtu për të marrë një nga ofruesit</string>
+    <string name="auth_register">Nuk keni akoma spryCloud?\nKlikoni këtu për të marrë një nga ofruesit</string>
     <string name="sync_string_files">Kartela</string>
     <string name="setup_btn_connect">Lidhuni</string>
     <string name="uploader_btn_upload_text">Ngarkoni</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">Skedari i përzgjedhur për ngarkim nuk u gjet. Ju lutem kontrolloni nëse skedari ekziston.</string>
     <string name="uploader_error_message_source_file_not_copied">Ndodhi një gabim teksa kopjohej skedari në një dosje e përkohshme. Ju lutem, provo ta ridërgosh.</string>
     <string name="uploader_upload_files_behaviour">Mundësitë e ngarkimit:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Lëviz kartelën tek dosja e Nextcloud-it</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Lëviz kartelën tek dosja e spryCloud-it</string>
     <string name="uploader_upload_files_behaviour_only_upload">Mbani kartelën tek dosja burim</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Fshij kartelën nga dosja burim</string>
     <string name="file_list_seconds_ago">sekonda më parë</string>
@@ -396,7 +396,7 @@
     <string name="file_migration_failed_not_enough_space">Ka nevojë për më shumë hapësirë</string>
     <string name="file_migration_failed_not_writable">Nuk mund të shkruhet në skedarin e destinacionit</string>
     <string name="file_migration_failed_not_readable">Nuk mund të lexohet skedari i burimit</string>
-    <string name="file_migration_failed_dir_already_exists">Dosja Nextcloud ekziston tashmë</string>
+    <string name="file_migration_failed_dir_already_exists">Dosja spryCloud ekziston tashmë</string>
     <string name="file_migration_failed_while_coping">Dështoi gjatë migrimit</string>
     <string name="file_migration_failed_while_updating_index">Dështoi në përditësimin e indeksit</string>
 
@@ -524,7 +524,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Duke pritur që pajisja të karikohet</string>
     <string name="actionbar_search">Kërkoni</string>
-    <string name="files_drop_not_supported">Ky është një tipar i Nextcloud-it, ju lutemi përditësojeni.</string>
+    <string name="files_drop_not_supported">Ky është një tipar i spryCloud-it, ju lutemi përditësojeni.</string>
     <string name="learn_more">Mësoni më shumë</string>
     <string name="drawer_synced_folders">Ngarkim automatik</string>
     <string name="drawer_participate">Merni pjesë</string>
@@ -664,8 +664,8 @@
     <string name="resized_image_not_possible_download">Nuk ka në gjëndje asnjë imazh me përmasa të reja. Doni të shkarkoni imazhin e plotë?</string>
     <string name="resized_images_download_full_image">Shkarko imazhin e plotë?</string>
 
-    <string name="store_short_desc">Aplikacioni Android i Nextcloud jep akses te të gjithë skedarët në Nextcloud-in tuaj.</string>
-    <string name="store_full_desc">Aplikacioni copyleft për Android Nextcloud, që ju ofron liri në celularin tuaj.\n\nKarakteristika:\n* Ndërfaqe e thjeshtë, moderne, e përshtatshme për strukturën e serverit tuaj\n* Ngarko skedarët në serverin tuaj Nextcloud\n* Ndajini ato me të tjerët\n* Mbani skedarët dhe dosjet e tua të preferuara të sinkronizuara\n* Kërkoni në të gjitha dosjet në serverin tuaj\n* Ngarkoni automatikisht fotot dhe videot e marra nga pajisja juaj\n* Qëndroni të përditësuar me njoftimet\n* Mbështetje me shumë llogari\n* Qasje e sigurt në të dhënat tuaja me gjurmët e gishtave ose PIN-in\n* Integrimi me DAVdroid për konfigurim të lehtë të kalendarit &amp; \nSinkronizimi i kontakteve\nJu lutem raportoni problematikat në https://github.com/nextcloud/android/issues dhe bisedoni rreth aplikacionit në https://help.nextcloud.com/c/clients/android\n\nI ri në Nextcloud? Nextcloud është sinkronizim privat &amp; shpërndarje dhe komunikim në server. Është software pa pagesë, dhe mund ta strehosh vetë ose të paguash një kompani për ta bërë atë për ju. Në këtë mënyrë, ju jeni në kontroll të fotove tuaja, kalendarin tuaj dhe të dhënat e kontaktit, dokumentet tuaja dhe gjithçka tjetër.\n\nVizito https://nextcloud.com</string>
+    <string name="store_short_desc">Aplikacioni Android i spryCloud jep akses te të gjithë skedarët në spryCloud-in tuaj.</string>
+    <string name="store_full_desc">Aplikacioni copyleft për Android spryCloud, që ju ofron liri në celularin tuaj.\n\nKarakteristika:\n* Ndërfaqe e thjeshtë, moderne, e përshtatshme për strukturën e serverit tuaj\n* Ngarko skedarët në serverin tuaj spryCloud\n* Ndajini ato me të tjerët\n* Mbani skedarët dhe dosjet e tua të preferuara të sinkronizuara\n* Kërkoni në të gjitha dosjet në serverin tuaj\n* Ngarkoni automatikisht fotot dhe videot e marra nga pajisja juaj\n* Qëndroni të përditësuar me njoftimet\n* Mbështetje me shumë llogari\n* Qasje e sigurt në të dhënat tuaja me gjurmët e gishtave ose PIN-in\n* Integrimi me DAVdroid për konfigurim të lehtë të kalendarit &amp; \nSinkronizimi i kontakteve\nJu lutem raportoni problematikat në https://github.com/nextcloud/android/issues dhe bisedoni rreth aplikacionit në https://help.nextcloud.com/c/clients/android\n\nI ri në spryCloud? spryCloud është sinkronizim privat &amp; shpërndarje dhe komunikim në server. Është software pa pagesë, dhe mund ta strehosh vetë ose të paguash një kompani për ta bërë atë për ju. Në këtë mënyrë, ju jeni në kontroll të fotove tuaja, kalendarin tuaj dhe të dhënat e kontaktit, dokumentet tuaja dhe gjithçka tjetër.\n\nVizito https://nextcloud.com</string>
 
     <string name="drawer_current_account">Llogaria e tanishme</string>
     <string name="drawer_middle_account">Llogari e mesit</string>
@@ -699,7 +699,7 @@
     <string name="what_s_new_image">Imazhi me çfarë është e re</string>
 
     <string name="store_short_dev_desc">Aplikacioni Dev është një snapshot zhvillimi dhe mund të instalohet paralelisht.</string>
-    <string name="store_full_dev_desc">Aplikacioni copyleft Android Nextcloud, ju ofron liri të lëvizshme.\nKy është versioni zyrtar i zhvillimit, duke shfaqur një shembull të përditshëm të çdo funksionaliteti të ri të paprovuar, që mund të shkaktojë paqëndrueshmëri dhe humbje të të dhënave. Aplikacioni është për përdoruesit që dëshirojnë të testojnë dhe raportojnë gabime nëse ato ndodhin. Mos e përdorni atë për punën tuaj produktive!\n\nPërveç kësaj, versioni dev dhe versioni i rregullt janë në dispozicion në F-droid dhe mund të instalohen në të njëjtën kohë.</string>
+    <string name="store_full_dev_desc">Aplikacioni copyleft Android spryCloud, ju ofron liri të lëvizshme.\nKy është versioni zyrtar i zhvillimit, duke shfaqur një shembull të përditshëm të çdo funksionaliteti të ri të paprovuar, që mund të shkaktojë paqëndrueshmëri dhe humbje të të dhënave. Aplikacioni është për përdoruesit që dëshirojnë të testojnë dhe raportojnë gabime nëse ato ndodhin. Mos e përdorni atë për punën tuaj produktive!\n\nPërveç kësaj, versioni dev dhe versioni i rregullt janë në dispozicion në F-droid dhe mund të instalohen në të njëjtën kohë.</string>
 
     <string name="prefs_category_dev">Dev</string>
     <string name="dev_version_no_information_available">Nuk ka informacion në gjëndje.</string>

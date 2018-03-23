@@ -64,7 +64,7 @@
     <string name="auth_host_url">სერვერის მისამართი https://&#8230;</string>
     <string name="auth_username">მომხმარებლის სახელი</string>
     <string name="auth_password">პაროლი</string>
-    <string name="auth_register">ჯერ არ გაქვთ Nextcloud-ი?\nპროვაიდერისგან მიღებისთვის დააწკაპუნეთ აქ</string>
+    <string name="auth_register">ჯერ არ გაქვთ spryCloud-ი?\nპროვაიდერისგან მიღებისთვის დააწკაპუნეთ აქ</string>
     <string name="sync_string_files">ფაილები</string>
     <string name="setup_btn_connect">დაკავშირება</string>
     <string name="uploader_btn_upload_text">ატვირთვა</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">ატვირთვისთვის არჩეული ფაილი ვერ იქნა ნაპოვნი. გთხოვთ დაამოწმოთ ფაილის არსებობა.</string>
     <string name="uploader_error_message_source_file_not_copied">ფაილის ასლი დროებით დირექტორიაში ვერ შეიქმნა. სცადეთ მისი ახლიდან გაგზავნა.</string>
     <string name="uploader_upload_files_behaviour">ატვირთვის ოპციონი:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">ფაილის გადატანა Nextcloud დირექტორიაში</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">ფაილის გადატანა spryCloud დირექტორიაში</string>
     <string name="uploader_upload_files_behaviour_only_upload">ფაილის საწყის დირექტორიაში დატოვება</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">ფაილის საწყისი დირექტორიიდან გაუქმება</string>
     <string name="file_list_seconds_ago">წამის წინ</string>
@@ -395,7 +395,7 @@
     <string name="file_migration_failed_not_enough_space">საჭიროა მეტი სივრცე</string>
     <string name="file_migration_failed_not_writable">სამიზნე ფაილში ჩაწერა ვერ მოხერხდა</string>
     <string name="file_migration_failed_not_readable">წყარო-ფაილის წაკითხვა ვერ მოხერხდა</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud დირექტორია უკვე არსებობს</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud დირექტორია უკვე არსებობს</string>
     <string name="file_migration_failed_while_coping">მიგრაციისას წარმოიქმნა შეცდომა</string>
     <string name="file_migration_failed_while_updating_index">ინდექსის განახლება ვერ მოხერხდა</string>
 
@@ -521,7 +521,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">გადახდის მოლოდინშია</string>
     <string name="actionbar_search">ძიება</string>
-    <string name="files_drop_not_supported">ეს Nextcloud ფუნქციაა, გთხოვთ განაახლოთ.</string>
+    <string name="files_drop_not_supported">ეს spryCloud ფუნქციაა, გთხოვთ განაახლოთ.</string>
     <string name="learn_more">შეიტყვეთ მეტი</string>
     <string name="drawer_synced_folders">ავტო-ატვირთვა</string>
     <string name="drawer_participate">მონაწილეობის მიღება</string>
@@ -660,8 +660,8 @@
     <string name="resized_image_not_possible_download">ზომა-შეცვლილი სურათი არაა ხელმისაწვდომი. გადმოვწეროთ მთლიანი სურათი?</string>
     <string name="resized_images_download_full_image">გადმოვწეროთ მთელი სურათი?</string>
 
-    <string name="store_short_desc">Nextcloud Android აპლიკაცია, იძლევა თქვენს Nextcloud-ზე ყველა არსებულ ფაილთან მობილური წვდომის საშუალებას.</string>
-    <string name="store_full_desc">ღია Nextcloud Android აპლიკაცია, გაწვდით მობილურ თავისუფლებას.\n\nფუნქციები:\n* თქვენს სერვერის თემაზე მორგებული, მარტივი, თანამედროვე ინტერფეისი\n* ატვირთეთ თქვენი ფაილები თქვენს Nexcloud სერვერზე\n* გააზიარეთ ისინი სხვებთან\n* სინქრონიზირებულად იქონიეთ რჩეული ფაილები და დირექტორიები\n* მოიძიეთ არსებულ დირექორიებში\n* ავტომატურად ატვირთეთ თქვენი მოწყობილობით გადაღებული ფოტოები და ვიდეოები\n* არ ჩამოუვარდეთ შეტყობინებებს\n* მულტი-ანგარიშების მხარდაჭერა\n* დაცული წვდომა თქვენს მონაცემებზე PIN-ით ან თითის ანაბეჭდებით\n* ინტეგრაცია DAVdroid-თან კალენდარისა და კონტაქტების სინქრონიზაციის მარტივი მოწყობითვის\n\nგთხოვთ გვამცნობოთ ნებისმიერი პრობლემის შესახებ https://github.com/nextcloud/android/issues მისამართზე და განვიხილოთ ეს აპლიკაცია https://help.nextcloud.com/c/clients/android ბმულზე.\n\nახალია თქვენთვის Nextcloud-ი? Nextcloud-ი პირადი ფილების სინქრონიზაციის, გაზიარებისა და კომუნიკაციის სერვერია. ის სრულად ღიაა, შეგიძლიათ თავად დააყენოთ ან სერვერზე გასამართად გადაუხადოთ კომპანიას. ამ გზით თქვენი ფოტოები, კალენდარი, საკონტაქტო ინფორმაცია, დოკუმენტები და ყველაფერი სხვა თქვენს კონტროლს ქვეშაა.\n\nიხილეთ Nextcloud https://nextcloud.com მისამართზე.</string>
+    <string name="store_short_desc">spryCloud Android აპლიკაცია, იძლევა თქვენს spryCloud-ზე ყველა არსებულ ფაილთან მობილური წვდომის საშუალებას.</string>
+    <string name="store_full_desc">ღია spryCloud Android აპლიკაცია, გაწვდით მობილურ თავისუფლებას.\n\nფუნქციები:\n* თქვენს სერვერის თემაზე მორგებული, მარტივი, თანამედროვე ინტერფეისი\n* ატვირთეთ თქვენი ფაილები თქვენს Nexcloud სერვერზე\n* გააზიარეთ ისინი სხვებთან\n* სინქრონიზირებულად იქონიეთ რჩეული ფაილები და დირექტორიები\n* მოიძიეთ არსებულ დირექორიებში\n* ავტომატურად ატვირთეთ თქვენი მოწყობილობით გადაღებული ფოტოები და ვიდეოები\n* არ ჩამოუვარდეთ შეტყობინებებს\n* მულტი-ანგარიშების მხარდაჭერა\n* დაცული წვდომა თქვენს მონაცემებზე PIN-ით ან თითის ანაბეჭდებით\n* ინტეგრაცია DAVdroid-თან კალენდარისა და კონტაქტების სინქრონიზაციის მარტივი მოწყობითვის\n\nგთხოვთ გვამცნობოთ ნებისმიერი პრობლემის შესახებ https://github.com/nextcloud/android/issues მისამართზე და განვიხილოთ ეს აპლიკაცია https://help.nextcloud.com/c/clients/android ბმულზე.\n\nახალია თქვენთვის spryCloud-ი? spryCloud-ი პირადი ფილების სინქრონიზაციის, გაზიარებისა და კომუნიკაციის სერვერია. ის სრულად ღიაა, შეგიძლიათ თავად დააყენოთ ან სერვერზე გასამართად გადაუხადოთ კომპანიას. ამ გზით თქვენი ფოტოები, კალენდარი, საკონტაქტო ინფორმაცია, დოკუმენტები და ყველაფერი სხვა თქვენს კონტროლს ქვეშაა.\n\nიხილეთ spryCloud https://nextcloud.com მისამართზე.</string>
 
     <string name="drawer_current_account">მიმდინარე ანგარიში</string>
     <string name="drawer_middle_account">შუა ანგარიში</string>
@@ -694,8 +694,8 @@
     <string name="forward">წინ</string>
     <string name="what_s_new_image">რა არის ახალი სურათი</string>
 
-    <string name="store_short_dev_desc">Nextcloud დევ. აპლიკაცია დევ. კადრია და შესაძლებელია მისი პარალელური დაყენება.</string>
-    <string name="store_full_dev_desc">ღია Nextcloud Android აპლიკაცია ხელმისაწვდომს ხდის ყველა თქვენს ფაილს Nextcloud-ში.\nეს ოფიციალური Nextcloud აპლიკაციის დეველოპმენტ ვერსიაა და მოიცავს უახლეს, შეუმოწმებელ ფუნქციებს, რამაც შეიძლება გამოიწვიოს არასტაბილურობა და მონაცემების დაკარგვა. აპლიკაცია დამზადებულია მომხმარებლებისთვის, რომლებსაც სურთ ახალი ფუნქციების შემოწმება და გამოჩენილ შეცდომებზე განაცხადის გაკეთება. არ გამოიყენოთ საწარმოო სამუშაოსთვის!\n\nოფიცლუალური დევ. და რეგულარული ვერსია ხელმისაწვდომია F-droid-ზე და შეიძყება დაყენდეს ნებისმიერ დროს.</string>
+    <string name="store_short_dev_desc">spryCloud დევ. აპლიკაცია დევ. კადრია და შესაძლებელია მისი პარალელური დაყენება.</string>
+    <string name="store_full_dev_desc">ღია spryCloud Android აპლიკაცია ხელმისაწვდომს ხდის ყველა თქვენს ფაილს spryCloud-ში.\nეს ოფიციალური spryCloud აპლიკაციის დეველოპმენტ ვერსიაა და მოიცავს უახლეს, შეუმოწმებელ ფუნქციებს, რამაც შეიძლება გამოიწვიოს არასტაბილურობა და მონაცემების დაკარგვა. აპლიკაცია დამზადებულია მომხმარებლებისთვის, რომლებსაც სურთ ახალი ფუნქციების შემოწმება და გამოჩენილ შეცდომებზე განაცხადის გაკეთება. არ გამოიყენოთ საწარმოო სამუშაოსთვის!\n\nოფიცლუალური დევ. და რეგულარული ვერსია ხელმისაწვდომია F-droid-ზე და შეიძყება დაყენდეს ნებისმიერ დროს.</string>
 
     <string name="prefs_category_dev">დევ.</string>
     <string name="dev_version_no_information_available">ინფორმაცია ხელმიუწვდომელია</string>

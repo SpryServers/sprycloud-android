@@ -52,29 +52,27 @@ repositories {
 }
 
 // semantic versioning for version code
-def versionMajor = 3
-def versionMinor = 1
-def versionPatch = 0
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 1
 def versionBuild = 0 // 0-49=Alpha / 50-98=RC / 99=stable
 
 android {
+
     lintOptions {
         abortOnError false
         htmlReport true
         htmlOutput file("$project.buildDir/reports/lint/lint.html")
         disable 'MissingTranslation'
     }
-
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
-
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26 
+        targetSdkVersion 26
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -90,9 +88,9 @@ android {
         if (versionBuild > 98) {
             versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         } else if (versionBuild > 49) {
-            versionName "${versionMajor}.${versionMinor}.${versionPatch} RC"+(versionBuild-49)
+            versionName "${versionMajor}.${versionMinor}.${versionPatch} RC" + (versionBuild - 49)
         } else {
-            versionName "${versionMajor}.${versionMinor}.${versionPatch} Alpha"+(versionBuild+1)
+            versionName "${versionMajor}.${versionMinor}.${versionPatch} Alpha" + (versionBuild + 1)
         }
 
         // adapt structure from Eclipse to Gradle/Android Studio expectations;
@@ -103,12 +101,12 @@ android {
         productFlavors {
             // used for f-droid
             generic {
-                applicationId 'com.nextcloud.client'
+                applicationId 'net.spryservers.sprycloud'
                 dimension "default"
             }
 
             gplay {
-                applicationId 'com.nextcloud.client'
+                applicationId 'net.spryservers.sprycloud'
                 dimension "default"
             }
 
@@ -120,21 +118,16 @@ android {
             }
         }
     }
-
-
     // adapt structure from Eclipse to Gradle/Android Studio expectations;
     // see http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Configuring-the-Structure
-
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/LICENSE'
     }
-
     task checkstyle(type: Checkstyle) {
         configFile = file("${rootProject.projectDir}/checkstyle.xml")
         configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/config/quality/checkstyle/suppressions.xml").absolutePath
@@ -143,7 +136,6 @@ android {
         exclude '**/gen/**'
         classpath = files()
     }
-
     task pmd(type: Pmd) {
         ruleSetFiles = files("${project.rootDir}/pmd-ruleset.xml")
         ignoreFailures = false
@@ -164,7 +156,6 @@ android {
             }
         }
     }
-
     task findbugs(type: FindBugs) {
         ignoreFailures = false
         effort = "max"
@@ -179,26 +170,34 @@ android {
             xml.enabled = false
             html.enabled = true
             html {
-                destination  = file("$project.buildDir/reports/findbugs/findbugs.html")
+                destination = file("$project.buildDir/reports/findbugs/findbugs.html")
             }
         }
         classpath = files()
     }
     check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    productFlavors {
+        generic {
+            signingConfig signingConfigs.spryCloud
+        }
+    }
 }
 
 dependencies {
+
     // dependencies for app building
     implementation 'com.android.support:multidex:1.0.2'
-//    implementation project('nextcloud-android-library')
+
+    //    implementation project('nextcloud-android-library')
     genericImplementation "com.github.nextcloud:android-library:${androidLibraryVersion}"
     gplayImplementation "com.github.nextcloud:android-library:${androidLibraryVersion}"
-    versionDevImplementation 'com.github.nextcloud:android-library:master-SNAPSHOT' // use always latest master
+    versionDevImplementation 'com.github.nextcloud:android-library:master-SNAPSHOT'
+
+    // use always latest master
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.android.support:design:${supportLibraryVersion}"
     implementation 'com.jakewharton:disklrucache:2.0.2'
@@ -219,9 +218,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
 
     // uncomment for gplay
+
     // implementation "com.google.firebase:firebase-messaging:${googleLibraryVersion}"
+
     // implementation "com.google.android.gms:play-services-base:${googleLibraryVersion}"
+
     // implementation "com.google.android.gms:play-services-gcm:${googleLibraryVersion}"
+
     // implementation "com.google.firebase:firebase-core:${googleLibraryVersion}"
     implementation 'org.parceler:parceler-api:1.1.9'
     annotationProcessor 'org.parceler:parceler:1.1.9'
@@ -233,21 +236,26 @@ dependencies {
     // dependencies for local unit tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
+
     // dependencies for instrumented tests
+
     // JUnit4 Rules
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
+
     // Android JUnit Runner
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
 
     // Espresso core
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+
     // UIAutomator - for cross-app UI tests, and to grant screen is turned on in Espresso tests
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+
     // fix conflict in dependencies; see http://g.co/androidstudio/app-test-app-conflict for details
+
     //androidTestImplementation "com.android.support:support-annotations:${supportLibraryVersion}"
     implementation 'org.jetbrains:annotations:15.0'
-
     androidTestCompile 'tools.fastlane:screengrab:1.0.0'
 }
 

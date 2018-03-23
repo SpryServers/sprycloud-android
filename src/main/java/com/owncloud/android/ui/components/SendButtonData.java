@@ -1,11 +1,11 @@
 package com.owncloud.android.ui.components;
 
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Tobias Kaminsky
  * Copyright (C) 2017 Tobias Kaminsky
- * Copyright (C) 2017 Nextcloud GmbH.
+ * Copyright (C) 2017 spryCloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by

@@ -64,7 +64,7 @@
     <string name="auth_host_url">Adres serwera https://&#8230;</string>
     <string name="auth_username">Nazwa użytkownika</string>
     <string name="auth_password">Hasło</string>
-    <string name="auth_register">Nie masz jeszcze Nextcloud?\nKliknij tutaj, aby znaleźć dostawcę</string>
+    <string name="auth_register">Nie masz jeszcze spryCloud?\nKliknij tutaj, aby znaleźć dostawcę</string>
     <string name="sync_string_files">Pliki</string>
     <string name="setup_btn_connect">Połącz</string>
     <string name="uploader_btn_upload_text">Wyślij</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">Wybrany plik nie został znaleziony. Proszę sprawdzić czy plik istnieje.</string>
     <string name="uploader_error_message_source_file_not_copied">Nie udało się skopiować pliku do folderu tymczasowego. Spróbuj ponownie.</string>
     <string name="uploader_upload_files_behaviour">Opcja wysłania:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Przenieś plik do folderu Nextcloud</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Przenieś plik do folderu spryCloud</string>
     <string name="uploader_upload_files_behaviour_only_upload">Zachowaj plik w katalogu źródłowym</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Skasuj plik z katalogu źródłowego</string>
     <string name="file_list_seconds_ago">sekund temu</string>
@@ -628,8 +628,8 @@ Przycisk wysyłania elementu</string>
     <string name="what_s_new_image">Obraz \"co nowego\"</string>
 
     <string name="store_short_dev_desc">
-Wersja Nextcloud Dev jest wersją rozwojową, można ją zainstalować równolegle.</string>
-    <string name="store_full_dev_desc">Aplikacja Nextcloud na Android jest wolnym oprogramowaniem na licencji copyleft, co zapewnia pełną mobilną wolność.\nTo jest oficjalna wersja rozwojowa (development version), w której można zapoznać się z codzienną porcją nowych i nieprzetestowanych funkcji, co może powodować niestabilne działanie i utratę danych. Ta aplikacja jest dla osób, które chcą ją testować i zgłaszać ewentualne błędy. Nie używaj tej aplikacji do pracy produkcyjnej!\n\nW serwisie F-droid dostępna jest zarówno wersja deweloperska, jak i zwykła wersja tej aplikacji i można zainstalować obie z nich równocześnie.</string>
+Wersja spryCloud Dev jest wersją rozwojową, można ją zainstalować równolegle.</string>
+    <string name="store_full_dev_desc">Aplikacja spryCloud na Android jest wolnym oprogramowaniem na licencji copyleft, co zapewnia pełną mobilną wolność.\nTo jest oficjalna wersja rozwojowa (development version), w której można zapoznać się z codzienną porcją nowych i nieprzetestowanych funkcji, co może powodować niestabilne działanie i utratę danych. Ta aplikacja jest dla osób, które chcą ją testować i zgłaszać ewentualne błędy. Nie używaj tej aplikacji do pracy produkcyjnej!\n\nW serwisie F-droid dostępna jest zarówno wersja deweloperska, jak i zwykła wersja tej aplikacji i można zainstalować obie z nich równocześnie.</string>
 
     <string name="prefs_category_dev">Rozwojowa</string>
     <string name="dev_version_no_new_version_available">Brak nowej wersji</string>

@@ -64,7 +64,7 @@
     <string name="auth_host_url">Indirizzo server https://&#8230;</string>
     <string name="auth_username">Nome utente</string>
     <string name="auth_password">Password</string>
-    <string name="auth_register">Non hai ancora Nextcloud?\nFai clic qui per ottenerne uno da un fornitore</string>
+    <string name="auth_register">Non hai ancora spryCloud?\nFai clic qui per ottenerne uno da un fornitore</string>
     <string name="sync_string_files">File</string>
     <string name="setup_btn_connect">Connetti</string>
     <string name="uploader_btn_upload_text">Carica</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">File selezionato per il caricamento non trovato. Controlla se il file esiste.</string>
     <string name="uploader_error_message_source_file_not_copied">Impossibile copiare il file in una cartella temporanea. Prova a inviarlo nuovamente.</string>
     <string name="uploader_upload_files_behaviour">Opzione di caricamento:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Sposta il file nella cartella di Nextcloud</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Sposta il file nella cartella di spryCloud</string>
     <string name="uploader_upload_files_behaviour_only_upload">Mantieni il file nella cartella di origine</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Elimina il file dalla cartella di origine</string>
     <string name="file_list_seconds_ago">secondi fa</string>
@@ -397,7 +397,7 @@
     <string name="file_migration_failed_not_enough_space">Altro spazio necessario</string>
     <string name="file_migration_failed_not_writable">Impossibile scrivere il file di destinazione</string>
     <string name="file_migration_failed_not_readable">Impossibile leggere il file di origine</string>
-    <string name="file_migration_failed_dir_already_exists">La cartella di Nextcloud esiste già</string>
+    <string name="file_migration_failed_dir_already_exists">La cartella di spryCloud esiste già</string>
     <string name="file_migration_failed_while_coping">Problema durante la migrazione</string>
     <string name="file_migration_failed_while_updating_index">Aggiornamento dell\'indice non riuscito</string>
 
@@ -525,7 +525,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">In attesa della carica</string>
     <string name="actionbar_search">Cerca</string>
-    <string name="files_drop_not_supported">Questa è una funzionalità di Nextcloud, aggiorna.</string>
+    <string name="files_drop_not_supported">Questa è una funzionalità di spryCloud, aggiorna.</string>
     <string name="learn_more">Scopri altro</string>
     <string name="drawer_synced_folders">Caricamento automatico</string>
     <string name="drawer_participate">Partecipa</string>
@@ -665,8 +665,8 @@
     <string name="resized_image_not_possible_download">Immagine ridimensionata non disponibile. Scaricare l\'immagine completa?</string>
     <string name="resized_images_download_full_image">Vuoi scaricare l\'immagine completa?</string>
 
-    <string name="store_short_desc">L\'applicazione per Android di Nextcloud ti consente di accedere in mobilità a tutti i file sul tuo Nextcloud. </string>
-    <string name="store_full_desc">L\'applicazione libera e priva di copyright per Android di Nextcloud ti offre libertà in mobilità.\n* Interfaccia semplice e moderna, allineata al tema del tuo server\n* Carica i file sul tuo server Nextcloud\n* Condividi i tuoi file con altri\n* Mantieni i tuoi file e le cartelle preferite sincronizzate\n* Ricerca attraverso tutte le cartelle sul tuo server\n* Caricamento automatico per le foto e i video acquisiti con il tuo dispositivo\n* Tieniti aggiornato con le notifiche\n* Supporto di più account\n* Proteggi l\'accesso ai tuoi dati con impronta digitale o PIN\n* Integrazione con DAVdroid per una facile configurazione della sincronizzazione di calendari e contatti\n\nSegnala tutti i problemi su https://github.com/nextcloud/android/issues e discuti questa applicazione su https://help.nextcloud.com/c/clients/android\n\nNuovo di Nextcloud? Nextcloud è un server privato di sincronizzazione e condivisione dei file e un server di comunicazione. È software libero e puoi ospitarlo a casa tua o pagare una società che lo faccia per conto tuo. In questo modo, avrai il controllo delle tue foto, del tuo calendario e dei tuoi contatti, dei tuoi documenti e di qualsiasi altra cosa.\n\nDai un\'occhiata a Nextcloud su https://nextcloud.com</string>
+    <string name="store_short_desc">L\'applicazione per Android di spryCloud ti consente di accedere in mobilità a tutti i file sul tuo spryCloud. </string>
+    <string name="store_full_desc">L\'applicazione libera e priva di copyright per Android di spryCloud ti offre libertà in mobilità.\n* Interfaccia semplice e moderna, allineata al tema del tuo server\n* Carica i file sul tuo server spryCloud\n* Condividi i tuoi file con altri\n* Mantieni i tuoi file e le cartelle preferite sincronizzate\n* Ricerca attraverso tutte le cartelle sul tuo server\n* Caricamento automatico per le foto e i video acquisiti con il tuo dispositivo\n* Tieniti aggiornato con le notifiche\n* Supporto di più account\n* Proteggi l\'accesso ai tuoi dati con impronta digitale o PIN\n* Integrazione con DAVdroid per una facile configurazione della sincronizzazione di calendari e contatti\n\nSegnala tutti i problemi su https://github.com/nextcloud/android/issues e discuti questa applicazione su https://help.nextcloud.com/c/clients/android\n\nNuovo di spryCloud? spryCloud è un server privato di sincronizzazione e condivisione dei file e un server di comunicazione. È software libero e puoi ospitarlo a casa tua o pagare una società che lo faccia per conto tuo. In questo modo, avrai il controllo delle tue foto, del tuo calendario e dei tuoi contatti, dei tuoi documenti e di qualsiasi altra cosa.\n\nDai un\'occhiata a spryCloud su https://nextcloud.com</string>
 
     <string name="drawer_current_account">Account attuale</string>
     <string name="drawer_middle_account">Account centrale</string>
@@ -699,8 +699,8 @@
     <string name="forward">Inoltra</string>
     <string name="what_s_new_image">Immagine Cosa c\'è di nuovo</string>
 
-    <string name="store_short_dev_desc">Nextcloud Dev è un\'istantanea di sviluppo, installabile parallelamente.</string>
-    <string name="store_full_dev_desc">L\'applicazione libera senza copyright per Android di Nextcloud, ti offre libertà in movimento.\nQuesta è la versione di sviluppo ufficiale e include funzionalità nuove, non testate che potrebbero provocare instabilità e perdite di dati. Questa applicazione è pensata per gli utenti che desiderano provare le nuove funzionalità e segnalare bug, se si verificano. Non utilizzarla in ambienti di produzione!\n\nSia la versione di sviluppo che quella normale sono disponibili su F-droid, e possono essere installate contemporaneamente.</string>
+    <string name="store_short_dev_desc">spryCloud Dev è un\'istantanea di sviluppo, installabile parallelamente.</string>
+    <string name="store_full_dev_desc">L\'applicazione libera senza copyright per Android di spryCloud, ti offre libertà in movimento.\nQuesta è la versione di sviluppo ufficiale e include funzionalità nuove, non testate che potrebbero provocare instabilità e perdite di dati. Questa applicazione è pensata per gli utenti che desiderano provare le nuove funzionalità e segnalare bug, se si verificano. Non utilizzarla in ambienti di produzione!\n\nSia la versione di sviluppo che quella normale sono disponibili su F-droid, e possono essere installate contemporaneamente.</string>
 
     <string name="prefs_category_dev">Sviluppo</string>
     <string name="dev_version_no_information_available">Nessuna informazione disponibile</string>

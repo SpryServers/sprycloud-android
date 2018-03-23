@@ -1,1 +1,1 @@
-Nextcloud Dev è un'istantanea di sviluppo, installabile parallelamente.
+spryCloud Dev è un'istantanea di sviluppo, installabile parallelamente.

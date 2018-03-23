@@ -1,5 +1,5 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Tobias Kaminsky
  * Copyright (C) 2017 Tobias Kaminsky

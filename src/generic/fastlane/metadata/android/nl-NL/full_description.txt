@@ -1,8 +1,8 @@
-De Open Source Nextcloud Android app geeft je mobiele vrijheid.
+De Open Source spryCloud Android app geeft je mobiele vrijheid.
 
 Functies:
 * Simpel & modern uiterlijk, helemaal in dezelfde stijl als jouw server
-* Upload bestanden naar je Nextcloud server
+* Upload bestanden naar je spryCloud server
 * Deel bestanden met anderen
 * Hou je favoriete bestanden en mappen gesynchroniseerd
 * Zoek in al je bestanden op de server
@@ -14,6 +14,6 @@ Functies:
 
 Meld alsjeblieft alle bugs en problemen op https://github.com/nextcloud/android/issues en doe je zegje over deze app in ons forum https://help.nextcloud.com/c/clients/android
 
-Nieuw bij Nextcloud? Nextcloud is je persoonlijke bestanden- en communicatieserver. Het is volledig open source en je kunt het zelf hosten of een bedrijf betalen om dat voor je te doen. Zo heb je volledige controle over je foto's, kalender, adresboek, document en al het andere.
+Nieuw bij spryCloud? spryCloud is je persoonlijke bestanden- en communicatieserver. Het is volledig open source en je kunt het zelf hosten of een bedrijf betalen om dat voor je te doen. Zo heb je volledige controle over je foto's, kalender, adresboek, document en al het andere.
 
-Check Nextcloud op https://nextcloud.com
+Check spryCloud op https://nextcloud.com

@@ -1,7 +1,7 @@
-L'application, libre de copie, Nextcloud pour Android, vous donne accès à tous les fichiers dans votre Nextcloud.
+L'application, libre de copie, spryCloud pour Android, vous donne accès à tous les fichiers dans votre spryCloud.
 Fonctionnalitées :
 * Interface moderne et simple d'utilisation, adapté au thème de votre serveur
-* Envoyer des fichiers sur votre serveur Nextcloud
+* Envoyer des fichiers sur votre serveur spryCloud
 * Partage de fichiers avec d'autres personnes
 * Conserver vos fichiers et dossiers favoris synchronisés
 * Rechercher parmis tout vos dossiers sur votre serveur
@@ -13,6 +13,6 @@ Fonctionnalitées :
 
 S'il vous plait, rapporter les bogues à l'adresse suivante : https://github.com/nextcloud/android/issues et parler de cette application à l'adresse suivante : https://help.nextcloud.com/c/clients/android
 
-Nouveau sur Nextcloud? Nextcloud est un serveur privé de synchronisation & partage de fichier, et de communication. C'est un logiciel libre, et vous pouvez héberger vous même ou payez une companie pour le faire pour vous. Vous êtes en total contrôle de vos photos, votre calendrier, vos contacts, vos documents et tout le reste.
+Nouveau sur spryCloud? spryCloud est un serveur privé de synchronisation & partage de fichier, et de communication. C'est un logiciel libre, et vous pouvez héberger vous même ou payez une companie pour le faire pour vous. Vous êtes en total contrôle de vos photos, votre calendrier, vos contacts, vos documents et tout le reste.
 
-Allez voir Nextcloud à l'adresse suivante https://nextcloud.com
+Allez voir spryCloud à l'adresse suivante https://nextcloud.com

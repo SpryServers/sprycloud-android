@@ -1,11 +1,11 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Tobias Kaminsky
  * @author Andy Scherzinger
  * Copyright (C) 2017 Tobias Kaminsky
  * Copyright (C) 2017 Andy Scherzinger
- * Copyright (C) 2017 Nextcloud GmbH.
+ * Copyright (C) 2017 spryCloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -108,7 +108,7 @@ public class ThemeUtils {
         return elementColor(null);
     }
 
-    @NextcloudServer(max = 12)
+    @spryCloudServer(max = 12)
     public static int elementColor(Account account) {
         OCCapability capability = getCapability(account);
 
@@ -278,7 +278,7 @@ public class ThemeUtils {
     }
 
     /**
-     * set the Nextcloud standard colors for the snackbar.
+     * set the spryCloud standard colors for the snackbar.
      *
      * @param context  the context relevant for setting the color according to the context's theme
      * @param snackbar the snackbar to be colored

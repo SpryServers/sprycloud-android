@@ -1,4 +1,4 @@
-These instructions will help you to set up your development environment, get the source code of the Nextcloud for Android app and build it by yourself. If you want to help developing the app take a look to the [contribution guidelines][0].
+These instructions will help you to set up your development environment, get the source code of the spryCloud for Android app and build it by yourself. If you want to help developing the app take a look to the [contribution guidelines][0].
 
 Sections 1) and 2) are common for any environment. The rest of the sections describe how to set up a project in different tool environments. Nowadays we recommend to use Android Studio (section 2), but you can also build the app from the command line (section 3).
 
@@ -9,11 +9,11 @@ If you have any problem, remove the 'android' folder, start again from 1) and wo
 
 There are some tools needed, no matter what is your specific IDE or build tool of preference.
 
-[git][1] is used to access to the different versions of the Nextcloud's source code. Download and install the version appropriate for your operating system from [here][2]. Add the full path to the 'bin/' directory from your git installation into the PATH variable of your environment so that it can be used from any location.
+[git][1] is used to access to the different versions of the spryCloud's source code. Download and install the version appropriate for your operating system from [here][2]. Add the full path to the 'bin/' directory from your git installation into the PATH variable of your environment so that it can be used from any location.
 
 The [Android SDK][3] is necessary to build the app. There are different options to install it in your system, depending of the IDE you decide to use. Check Google documentation about [installation][4] for more details on these options. After installing it, add the full path to the directories 'tools/' and 'platform-tools/' from your Android SDK installation into the PATH variable of your environment.
 
-Open a terminal and type 'android' to start the Android SDK Manager. To build the Nextcloud for Android app you will need to install at least the next SDK packages:
+Open a terminal and type 'android' to start the Android SDK Manager. To build the spryCloud for Android app you will need to install at least the next SDK packages:
 
 * Android SDK Tools and Android SDK Platform-tools (already installed); upgrade to their last versions is usually a good idea.
 * Android SDK Build-Tools 24.0.2.
@@ -26,7 +26,7 @@ For other software dependencies check the details in the section corresponding t
 
 ### 1. Fork and download the nextcloud/android repository.
 
-You will need [git][1] to access to the different versions of the Nextcloud's source code. The source code is hosted on GitHub and may be read by anybody, without a GitHub account. You will need one if you want to contribute to the development of the app with your own code.
+You will need [git][1] to access to the different versions of the spryCloud's source code. The source code is hosted on GitHub and may be read by anybody, without a GitHub account. You will need one if you want to contribute to the development of the app with your own code.
 
 The next steps will assume you have a GitHub account and that you will get the code from your own fork.
 
@@ -35,7 +35,7 @@ The next steps will assume you have a GitHub account and that you will get the c
 * Clone your forked repository: ```git clone --recursive https://github.com/YOURGITHUBNAME/android.git```.
 * Move to the project folder with ```cd android```.
 * Pull any changes from your remote branch 'master': ```git pull origin master```
-* Make official Nextcloud repo known as upstream: ```git remote add upstream https://github.com/nextcloud/android.git```
+* Make official spryCloud repo known as upstream: ```git remote add upstream https://github.com/nextcloud/android.git```
 * Make sure to get the latest changes from official android/master branch: ```git pull upstream master```
 
 At this point you can continue using different tools to build the project. Section 2 and 3 describe the existing alternatives.
@@ -71,7 +71,7 @@ The generated APK file is saved in android/build/outputs/apk as android-debug.ap
 ### 4. App flavours
 
 The app is currently equipped to be built with two flavours:
-* generic - the regular build, released as a Nextcloud Android app on the Play store
+* generic - the regular build, released as a spryCloud Android app on the Play store
 * custom - a customized build, to be used by people who need features we can't or
   won't include into the traditional build (like Firebase Analytics)
 

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
-public @interface NextcloudServer {
+public @interface spryCloudServer {
     int min() default -1;
 
     int max();

@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">Voor upload geselecteerde bestand niet gevonden. Controleer of het bestaat.</string>
     <string name="uploader_error_message_source_file_not_copied">Er trad een fout op bij het kopiëren van het bestand naar een tijdelijke map. Probeer het opnieuw te versturen.</string>
     <string name="uploader_upload_files_behaviour">Uploadoptie:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Verplaats bestand naar Nextcloud-map</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Verplaats bestand naar spryCloud-map</string>
     <string name="uploader_upload_files_behaviour_only_upload">Bewaar het bestand in de bronmap</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Verwijder bestand uit bronmap</string>
     <string name="file_list_seconds_ago">seconden geleden</string>
@@ -397,7 +397,7 @@
     <string name="file_migration_failed_not_enough_space">Meer ruimte nodig</string>
     <string name="file_migration_failed_not_writable">Kon niet schrijven naar bestand</string>
     <string name="file_migration_failed_not_readable">Kan bestand niet lezen</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud map bestaat al</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud map bestaat al</string>
     <string name="file_migration_failed_while_coping">Fout tijdens migratie</string>
     <string name="file_migration_failed_while_updating_index">Index bijwerken mislukt</string>
 
@@ -525,7 +525,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Wachten to apparaat wordt opgeladen</string>
     <string name="actionbar_search">Zoeken</string>
-    <string name="files_drop_not_supported">Dit is een Nextcloud optie, graag bijwerken.</string>
+    <string name="files_drop_not_supported">Dit is een spryCloud optie, graag bijwerken.</string>
     <string name="learn_more">Meer weten</string>
     <string name="drawer_synced_folders">Automatisch uploaden</string>
     <string name="drawer_participate">Meedoen</string>
@@ -665,8 +665,8 @@
     <string name="resized_image_not_possible_download">Geen verkleinde afbeelding beschikbaar. Volledige afbeelding downloaden?</string>
     <string name="resized_images_download_full_image">Volledige afbeelding downloaden?</string>
 
-    <string name="store_short_desc">De Nextcloud Android app geeft je toegang tot al je Nextcloud bestanden.</string>
-    <string name="store_full_desc">De Open Source Nextcloud Android app geeft je mobiele vrijheid.\n\nFuncties:\n* Simpel &amp; modern uiterlijk, helemaal in dezelfde stijl als jouw server\n* Upload bestanden naar je Nextcloud server\n* Deel bestanden met anderen\n* Hou je favoriete bestanden en mappen gesynchroniseerd\n* Zoek in al je bestanden op de server\n* Automatisch uploaden voor al je foto\'s en video\'s\n* Blijf op de hoogte met notificaties\n* Ondersteuning voor meerdere accounts en servers\n* Beveilig toegang tot je gegevens met vingerafdruk of pincode\n* Integratie met DAVdroid voor makkelijk synchroniseren van je kalender &amp; contacten\n\nMeld alsjeblieft alle bugs en problemen op https://github.com/nextcloud/android/issues en doe je zegje over deze app in ons forum https://help.nextcloud.com/c/clients/android\n\nNieuw bij Nextcloud? Nextcloud is je persoonlijke bestanden- en communicatieserver. Het is volledig open source en je kunt het zelf hosten of een bedrijf betalen om dat voor je te doen. Zo heb je volledige controle over je foto\'s, kalender, adresboek, document en al het andere.\n\nCheck Nextcloud op https://nextcloud.com</string>
+    <string name="store_short_desc">De spryCloud Android app geeft je toegang tot al je spryCloud bestanden.</string>
+    <string name="store_full_desc">De Open Source spryCloud Android app geeft je mobiele vrijheid.\n\nFuncties:\n* Simpel &amp; modern uiterlijk, helemaal in dezelfde stijl als jouw server\n* Upload bestanden naar je spryCloud server\n* Deel bestanden met anderen\n* Hou je favoriete bestanden en mappen gesynchroniseerd\n* Zoek in al je bestanden op de server\n* Automatisch uploaden voor al je foto\'s en video\'s\n* Blijf op de hoogte met notificaties\n* Ondersteuning voor meerdere accounts en servers\n* Beveilig toegang tot je gegevens met vingerafdruk of pincode\n* Integratie met DAVdroid voor makkelijk synchroniseren van je kalender &amp; contacten\n\nMeld alsjeblieft alle bugs en problemen op https://github.com/nextcloud/android/issues en doe je zegje over deze app in ons forum https://help.nextcloud.com/c/clients/android\n\nNieuw bij spryCloud? spryCloud is je persoonlijke bestanden- en communicatieserver. Het is volledig open source en je kunt het zelf hosten of een bedrijf betalen om dat voor je te doen. Zo heb je volledige controle over je foto\'s, kalender, adresboek, document en al het andere.\n\nCheck spryCloud op https://nextcloud.com</string>
 
     <string name="drawer_current_account">Huidige account</string>
     <string name="drawer_middle_account">Gemiddelde account</string>
@@ -699,8 +699,8 @@
     <string name="forward">Doorsturen</string>
     <string name="what_s_new_image">Wat is nieuw afbeelding</string>
 
-    <string name="store_short_dev_desc">De Nextcloud Dev app is een ontwikkelversie. Kan parallel worden geïnstalleerd.</string>
-    <string name="store_full_dev_desc">De Open Source Nextcloud Android app geeft je mobiele vrijheid.\nDit is de officiële ontwikkelversie die gloednieuwe, ongeteste mogelijkheden heeft, die tot instabiliteit en gegevensverlies zouden kunnen leiden. De app is voor gebruikers die de nieuwe functies willen testen en eventuele bugs willen melden. Gebruik de app niet voor productiewerkzaamheden!\n\nZowel de ontwikkelversie als de reguliere versie zijn beschikbaar is in F-Droid en ze kunnen naast elkaar gebruikt worden.</string>
+    <string name="store_short_dev_desc">De spryCloud Dev app is een ontwikkelversie. Kan parallel worden geïnstalleerd.</string>
+    <string name="store_full_dev_desc">De Open Source spryCloud Android app geeft je mobiele vrijheid.\nDit is de officiële ontwikkelversie die gloednieuwe, ongeteste mogelijkheden heeft, die tot instabiliteit en gegevensverlies zouden kunnen leiden. De app is voor gebruikers die de nieuwe functies willen testen en eventuele bugs willen melden. Gebruik de app niet voor productiewerkzaamheden!\n\nZowel de ontwikkelversie als de reguliere versie zijn beschikbaar is in F-Droid en ze kunnen naast elkaar gebruikt worden.</string>
 
     <string name="prefs_category_dev">Dev</string>
     <string name="dev_version_no_information_available">Geen informatie beschikbaar.</string>

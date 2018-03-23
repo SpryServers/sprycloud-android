@@ -64,7 +64,7 @@
 - Further bug fixes and improvements
 
 ## 1.4.1 (January 27, 2017)
-- Share URLs to Nextcloud
+- Share URLs to spryCloud
 - Improve performance of Auto Upload view
 - Fix for removing files
 - Proper email sharee handling
@@ -90,7 +90,7 @@
 ## 1.3.1 (September 20, 2016)
 - Move action hard to discover - difference between single/multi selection
 - Show move/copy context in toolbar title
-- Share file with dictadroid to Nextcloud
+- Share file with dictadroid to spryCloud
 - Don't show upload failure notification for already deleted files
 
 ## 1.3.0 (September 17, 2016)
@@ -102,7 +102,7 @@
 - Mix folders and files on sort by date
 - Upload when charging option
 - Revamp upload options Move/Copy/Just-Upload
-- Text can be selected and shared to Nextcloud
+- Text can be selected and shared to spryCloud
 - Respect metered wifi and block instant uploads
 - Proper handling of .djvu files
 - Bugfixes and design improvements
@@ -122,7 +122,7 @@
 
 ## 1.1.0 (July 6, 2016)
 - New main menu to switch accounts easily
-- Ability to open Nextcloud hosted files (read-only) from other apps that support the standard file chooser (requires Android 4.4 / KitKat or higher)
+- Ability to open spryCloud hosted files (read-only) from other apps that support the standard file chooser (requires Android 4.4 / KitKat or higher)
 - "Select all files" for upload within a folder
 - Optional feature to auto-create monthly folders for your instant uploads
 - Revamped login screen
@@ -134,4 +134,4 @@
 - Optimized uploader layout
 
 ## 1.0.0 (June 12, 2016)
-- Initial release of the Nextcloud Android app
+- Initial release of the spryCloud Android app

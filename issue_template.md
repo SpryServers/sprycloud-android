@@ -17,9 +17,9 @@ Device model:
 
 Stock or customized system:
 
-Nextcloud app version:
+spryCloud app version:
 
-Nextcloud server version:
+spryCloud server version:
 
 ### Logs
 #### Web server error log
@@ -27,8 +27,8 @@ Nextcloud server version:
 Insert your webserver log here
 ```
 
-#### Nextcloud log (data/nextcloud.log)
+#### spryCloud log (data/nextcloud.log)
 ```
-Insert your Nextcloud log here
+Insert your spryCloud log here
 ```
 **NOTE:** Be super sure to remove sensitive data like passwords, note that everybody can look here! You can use the Issue Template application to prefill some of the required information: https://apps.nextcloud.com/apps/issuetemplate

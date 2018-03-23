@@ -64,7 +64,7 @@
     <string name="auth_host_url">Server address https://&#8230;</string>
     <string name="auth_username">Username</string>
     <string name="auth_password">Password</string>
-    <string name="auth_register">No Nextcloud yet?\nClick here to get one from a provider</string>
+    <string name="auth_register">No spryCloud yet?\nClick here to get one from a provider</string>
     <string name="sync_string_files">Files</string>
     <string name="setup_btn_connect">Connect</string>
     <string name="uploader_btn_upload_text">Upload</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">File selected for upload not found. Please check whether the file exists.</string>
     <string name="uploader_error_message_source_file_not_copied">Could not copy file to a temporary folder. Try to resend it.</string>
     <string name="uploader_upload_files_behaviour">Upload option:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Move file to Nextcloud folder</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Move file to spryCloud folder</string>
     <string name="uploader_upload_files_behaviour_only_upload">Keep file in source folder</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Delete file from source folder</string>
     <string name="file_list_seconds_ago">seconds ago</string>
@@ -398,7 +398,7 @@
     <string name="file_migration_failed_not_enough_space">More space needed</string>
     <string name="file_migration_failed_not_writable">Could not write to destination file</string>
     <string name="file_migration_failed_not_readable">Could not read source file</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud folder already exists</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud folder already exists</string>
     <string name="file_migration_failed_while_coping">Failed during migration</string>
     <string name="file_migration_failed_while_updating_index">Failed to update index</string>
 
@@ -526,7 +526,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Awaiting charge</string>
     <string name="actionbar_search">Search</string>
-    <string name="files_drop_not_supported">This is a Nextcloud feature, please upgrade.</string>
+    <string name="files_drop_not_supported">This is a spryCloud feature, please upgrade.</string>
     <string name="learn_more">Learn more</string>
     <string name="drawer_synced_folders">Auto upload</string>
     <string name="drawer_participate">Participate</string>
@@ -680,8 +680,8 @@
     <string name="resized_image_not_possible_download">No resized image available. Download full image?</string>
     <string name="resized_images_download_full_image">Download full image?</string>
 
-    <string name="store_short_desc">The Nextcloud Android app gives mobile access to all files on your Nextcloud.</string>
-    <string name="store_full_desc">The copylefted libre Nextcloud Android app, giving you mobile freedom.\n\nFeatures:\n* Easy, modern interface, suited to the theme of your server\n* Upload files to your Nextcloud server\n* Share them with others\n* Keep your favorite files and folders synced\n* Search across all folders on your server\n* Auto Upload for photos and videos taken by your device\n* Keep up to date with notifications\n* Multi-account support\n* Secure access to your data with fingerprint or PIN\n* Integration with DAVdroid for easy setup of calendar &amp; Contacts synchronization\n\nPlease report all issues at https://github.com/nextcloud/android/issues and discuss this app at https://help.nextcloud.com/c/clients/android\n\nNew to Nextcloud? Nextcloud is a private file sync &amp; share and communication server. It is libre software, and you can host it yourself or pay a company to do it for you. That way, you are in control of your photos, your calendar and contact data, your documents and everything else.\n\nCheck out Nextcloud at https://nextcloud.com</string>
+    <string name="store_short_desc">The spryCloud Android app gives mobile access to all files on your spryCloud.</string>
+    <string name="store_full_desc">The copylefted libre spryCloud Android app, giving you mobile freedom.\n\nFeatures:\n* Easy, modern interface, suited to the theme of your server\n* Upload files to your spryCloud server\n* Share them with others\n* Keep your favorite files and folders synced\n* Search across all folders on your server\n* Auto Upload for photos and videos taken by your device\n* Keep up to date with notifications\n* Multi-account support\n* Secure access to your data with fingerprint or PIN\n* Integration with DAVdroid for easy setup of calendar &amp; Contacts synchronization\n\nPlease report all issues at https://github.com/nextcloud/android/issues and discuss this app at https://help.nextcloud.com/c/clients/android\n\nNew to spryCloud? spryCloud is a private file sync &amp; share and communication server. It is libre software, and you can host it yourself or pay a company to do it for you. That way, you are in control of your photos, your calendar and contact data, your documents and everything else.\n\nCheck out spryCloud at https://nextcloud.com</string>
 
     <string name="drawer_current_account">Current account</string>
     <string name="drawer_middle_account">Middle account</string>
@@ -714,8 +714,8 @@
     <string name="forward">Forward</string>
     <string name="what_s_new_image">What\'s new image</string>
 
-    <string name="store_short_dev_desc">The Nextcloud Dev app is a development snapshot and can be installed parallel.</string>
-    <string name="store_full_dev_desc">The copylefted libre Nextcloud Android app, gives you mobile freedom.\nThis is the official development version, featuring a daily sample of any new untested functionality, which may cause instability and data loss. The app is for users willing to test, and report bugs should they occur. Do not use it for your productive work!\n\nBoth the official dev and regular version are available on F-droid, and can be installed at the same time.</string>
+    <string name="store_short_dev_desc">The spryCloud Dev app is a development snapshot and can be installed parallel.</string>
+    <string name="store_full_dev_desc">The copylefted libre spryCloud Android app, gives you mobile freedom.\nThis is the official development version, featuring a daily sample of any new untested functionality, which may cause instability and data loss. The app is for users willing to test, and report bugs should they occur. Do not use it for your productive work!\n\nBoth the official dev and regular version are available on F-droid, and can be installed at the same time.</string>
 
     <string name="prefs_category_dev">Dev</string>
     <string name="dev_version_no_information_available">No information available.</string>

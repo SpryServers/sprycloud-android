@@ -64,7 +64,7 @@
     <string name="auth_host_url">Уеб адрес https://&#8230;</string>
     <string name="auth_username">Потребител</string>
     <string name="auth_password">Парола</string>
-    <string name="auth_register">Нямате Nextcloud все още? Натиснете тук за да получите един от доставчик</string>
+    <string name="auth_register">Нямате spryCloud все още? Натиснете тук за да получите един от доставчик</string>
     <string name="sync_string_files">Файлове</string>
     <string name="setup_btn_connect">Свързване</string>
     <string name="uploader_btn_upload_text">Качване</string>
@@ -81,7 +81,7 @@
     <string name="uploader_error_message_source_file_not_found">Селектирания за качване файл не е намерен. Моля проверете дали файлът съществува.</string>
     <string name="uploader_error_message_source_file_not_copied">Неуспешно копиране на файл във временна папка. Моля опитайте да го изпратите отново</string>
     <string name="uploader_upload_files_behaviour">Опции за качване:</string>
-    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Преместване на файла в папката на Nextcloud</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Преместване на файла в папката на spryCloud</string>
     <string name="uploader_upload_files_behaviour_only_upload">Запазване на файла в оригиналната папка</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Изтриване на файла от оригиналната папка</string>
     <string name="file_list_seconds_ago">преди секунди</string>
@@ -398,7 +398,7 @@
     <string name="file_migration_failed_not_enough_space">Нужно е повече пространство</string>
     <string name="file_migration_failed_not_writable">Писане към медия файла беше неуспешно</string>
     <string name="file_migration_failed_not_readable">Неуспешно прочитане на файла</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud папката вече съществува</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud папката вече съществува</string>
     <string name="file_migration_failed_while_coping">Грешка при мигрирането</string>
     <string name="file_migration_failed_while_updating_index">Грешка при обновяването на индекса</string>
 
@@ -526,7 +526,7 @@
 
     <string name="uploads_view_upload_status_waiting_for_charging">Изчакване за зареждане на устройството</string>
     <string name="actionbar_search">Търсене</string>
-    <string name="files_drop_not_supported">Това е функционалност на Nextcloud, моля актуализирайте.</string>
+    <string name="files_drop_not_supported">Това е функционалност на spryCloud, моля актуализирайте.</string>
     <string name="learn_more">Научете повече</string>
     <string name="drawer_synced_folders">Автоматично качване</string>
     <string name="drawer_participate">Участвайте</string>

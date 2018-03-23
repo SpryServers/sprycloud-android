@@ -1,6 +1,6 @@
 .. _contents:
 
-Nextcloud Android App Manual
+spryCloud Android App Manual
 ============================
 
 .. toctree::

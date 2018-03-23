@@ -1,4 +1,4 @@
-# [Nextcloud](https://nextcloud.com) Android app
+# [spryCloud](https://nextcloud.com) Android app
 
 [![irc](https://img.shields.io/badge/IRC-%23nextcloud%20on%20freenode-orange.svg)](https://webchat.freenode.net/?channels=nextcloud)
 [![irc](https://img.shields.io/badge/IRC-%23nextcloud--mobile%20on%20freenode-blue.svg)](https://webchat.freenode.net/?channels=nextcloud-mobile)
@@ -35,7 +35,7 @@
 
 ## Issue reporting
 * [Report the issue](https://github.com/nextcloud/android/issues/new) using our [template](https://github.com/nextcloud/android/blob/master/issue_template.md), it includes all the information we need to track down the issue.
-* This repository is *only* for issues within the Nextcloud Android app code. Issues in other components should be reported in their own repositories, e.g. [Nextcloud core](https://github.com/nextcloud/core/issues)
+* This repository is *only* for issues within the spryCloud Android app code. Issues in other components should be reported in their own repositories, e.g. [spryCloud core](https://github.com/nextcloud/core/issues)
 * Search the [existing issues](https://github.com/nextcloud/android/issues) first, it's likely that your issue was already reported.
 If your issue appears to be a bug, and hasn't been reported, open a new issue.
 
@@ -63,7 +63,7 @@ If your issue appears to be a bug, and hasn't been reported, open a new issue.
 
 
 # Contributing to Source Code
-Thanks for wanting to contribute source code to Nextcloud. That's great!
+Thanks for wanting to contribute source code to spryCloud. That's great!
 
 New contributions are added under AGPL version 3.
 
@@ -108,7 +108,7 @@ There are three build variants
 
 
 ### 1. Fork and download android/master repository:
-* Please follow [SETUP.md](https://github.com/nextcloud/android/blob/master/SETUP.md) to setup Nextcloud Android app work environment.
+* Please follow [SETUP.md](https://github.com/nextcloud/android/blob/master/SETUP.md) to setup spryCloud Android app work environment.
 
 
 ### 2. Create pull request:
@@ -134,7 +134,7 @@ We manage translations via [Transifex](https://www.transifex.com/nextcloud/nextc
 # Releases
 At the moment we are releasing the app in two app stores:
 
-* [Google Play Store](https://play.google.com/store/apps/details?id=com.nextcloud.client)
+* [Google Play Store](https://play.google.com/store/apps/details?id=net.spryservers.sprycloud)
 * [f-droid](https://f-droid.org/repository/browse/?fdfilter=com.nextcloud)
 
 
