@@ -1,5 +1,5 @@
 /*
- *   Nextcloud Android client application
+ *   spryCloud Android client application
  *
  *   @author Florian Lentz
  *   Copyright (C) 2017 Florian Lentz
@@ -81,7 +81,7 @@ public class FingerprintActivity extends AppCompatActivity {
 
     private KeyStore keyStore;
     // Variable used for storing the key in the Android Keystore container
-    private static final String KEY_NAME = "Nextcloud";
+    private static final String KEY_NAME = "spryCloud";
     private Cipher cipher;
 
     private CancellationSignal cancellationSignal;

@@ -1,5 +1,5 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * Copyright 2014 Google, Inc. All rights reserved.
  * Licenced under the BSD licence

@@ -1,8 +1,8 @@
-Nextcloud-forritið fyrir Android er opið og frjálst, og gefur þér frelsi á ferðinni.
+spryCloud-forritið fyrir Android er opið og frjálst, og gefur þér frelsi á ferðinni.
 
 Eiginleikar:
 * Einfalt, nútímalegt viðmót, með þema í samræmi við netþjóninn þinn
-* Sendir skrár inn á Nextcloud-þjóninn þinn
+* Sendir skrár inn á spryCloud-þjóninn þinn
 * Deilir skránum þínum með öðrum
 * Heldur eftirlætisskránum og möppunum þínum samstilltum
 * Leitar í öllum möppum á þjóninum þínum
@@ -14,6 +14,6 @@ Eiginleikar:
 
 Tilkynntu um vandamál á https://github.com/nextcloud/android/issues og ræddu um þetta forrit á https://help.nextcloud.com/c/clients/android
 
-Nýr í Nextcloud? Nextcloud er þinn eiginn vefþjónn til samstillingar, samskipta og deilingar á skrám. Kóði hugbúnaðarins er fullkomlega opinn og frjáls til afnota; þú getur hýst hann sjálfur eða borgað fyrirtæki fyrir að gera það fyrir þig. Á þennan máta, hefur þú sjálfur full yfirráð yfir myndunum þínum, dagatalinu, tengiliðaskránum, skjölunum þínum og öllu öðru tilheyrandi.
+Nýr í spryCloud? spryCloud er þinn eiginn vefþjónn til samstillingar, samskipta og deilingar á skrám. Kóði hugbúnaðarins er fullkomlega opinn og frjáls til afnota; þú getur hýst hann sjálfur eða borgað fyrirtæki fyrir að gera það fyrir þig. Á þennan máta, hefur þú sjálfur full yfirráð yfir myndunum þínum, dagatalinu, tengiliðaskránum, skjölunum þínum og öllu öðru tilheyrandi.
 
-Skoðaðu fleira um Nextcloud á https://nextcloud.com
+Skoðaðu fleira um spryCloud á https://nextcloud.com

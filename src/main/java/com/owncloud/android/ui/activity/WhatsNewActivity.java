@@ -1,10 +1,10 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Bartosz Przybylski
  * Copyright (C) 2015 Bartosz Przybylski
  * Copyright (C) 2015 ownCloud Inc.
- * Copyright (C) 2016 Nextcloud.
+ * Copyright (C) 2016 spryCloud.
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -386,7 +386,7 @@ public class WhatsNewActivity extends FragmentActivity implements ViewPager.OnPa
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(doubleMargin, standardMargin, doubleMargin, zeroMargin);
-        textView.setTextAppearance(context, R.style.NextcloudTextAppearanceMedium);
+        textView.setTextAppearance(context, R.style.spryCloudTextAppearanceMedium);
         textView.setLayoutParams(layoutParams);
 
         if (showBulletPoints) {

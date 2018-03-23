@@ -1,9 +1,9 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Andy Scherzinger
  * Copyright (C) 2016 Andy Scherzinger
- * Copyright (C) 2016 Nextcloud
+ * Copyright (C) 2016 spryCloud
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -122,7 +122,7 @@ public class MediaProvider {
                     }
                     cursorImages.close();
 
-                    // only do further work if folder is not within the Nextcloud app itself
+                    // only do further work if folder is not within the spryCloud app itself
                     if (mediaFolder.absolutePath != null && !mediaFolder.absolutePath.startsWith(dataPath)) {
 
                         // count images
@@ -224,7 +224,7 @@ public class MediaProvider {
                     }
                     cursorVideos.close();
 
-                    // only do further work if folder is not within the Nextcloud app itself
+                    // only do further work if folder is not within the spryCloud app itself
                     if (mediaFolder.absolutePath != null && !mediaFolder.absolutePath.startsWith(dataPath)) {
 
                         // count images

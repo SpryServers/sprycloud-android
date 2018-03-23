@@ -1,5 +1,5 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Mario Danic
  * Copyright (C) 2017 Mario Danic

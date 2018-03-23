@@ -1,8 +1,8 @@
 /**
- *   Nextcloud Android client application
+ *   spryCloud Android client application
  *
  *   @author Bartosz Przybylski
- *   Copyright (C) 2016 Nextcloud
+ *   Copyright (C) 2016 spryCloud
  *   Copyright (C) 2016 Bartosz Przybylski
  *
  *   This program is free software; you can redistribute it and/or

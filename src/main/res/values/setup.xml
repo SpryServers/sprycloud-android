@@ -5,30 +5,30 @@
     <bool name="dev_version_direct_download_enabled">false</bool>
 
     <!-- App name  and other strings-->
-    <string name="app_name">Nextcloud</string>
-    <string name="account_type">nextcloud</string>     <!-- better if was a domain name; but changing it now would require migrate accounts when the app is updated -->
-    <string name="authority">org.nextcloud</string>    <!-- better if was the app package with ".provider" appended ; it identifies the provider -->
-    <string name="users_and_groups_search_authority">com.nextcloud.android.providers.UsersAndGroupsSearchProvider</string>
-    <string name="users_and_groups_share_with">com.nextcloud.android.providers.UsersAndGroupsSearchProvider.action.SHARE_WITH</string>
-    <string name="document_provider_authority">org.nextcloud.documents</string>
-    <string name="file_provider_authority">org.nextcloud.files</string>
-    <string name="image_cache_provider_authority">org.nextcloud.imageCache.provider</string>
-    <string name="db_file">nextcloud.db</string>
-    <string name="db_name">nextcloud</string>
-    <string name="data_folder">nextcloud</string>
-    <string name="log_name">nextcloud</string>
-    <string name="default_display_name_for_root_folder">Nextcloud</string>
+    <string name="app_name">spryCloud</string>
+    <string name="account_type">sprycloud</string>     <!-- better if was a domain name; but changing it now would require migrate accounts when the app is updated -->
+    <string name="authority">net.sprycloud</string>    <!-- better if was the app package with ".provider" appended ; it identifies the provider -->
+    <string name="users_and_groups_search_authority">net.sprycloud.providers.UsersAndGroupsSearchProvider</string>
+    <string name="users_and_groups_share_with">net.sprycloud.providers.UsersAndGroupsSearchProvider.action.SHARE_WITH</string>
+    <string name="document_provider_authority">net.sprycloud.documents</string>
+    <string name="file_provider_authority">net.sprycloud.files</string>
+    <string name="image_cache_provider_authority">net.sprycloud.imageCache.provider</string>
+    <string name="db_file">sprycloud.db</string>
+    <string name="db_name">sprycloud</string>
+    <string name="data_folder">sprycloud</string>
+    <string name="log_name">sprycloud</string>
+    <string name="default_display_name_for_root_folder">spryCloud</string>
     <string name="user_agent">Mozilla/5.0 (Android) ownCloud-android/%1$s</string>
-    <string name="nextcloud_user_agent">Mozilla/5.0 (Android) Nextcloud-android/%1$s</string>
-    
+    <string name="nextcloud_user_agent">Mozilla/5.0 (Android) spryCloud-android/%1$s</string>
+
     <!-- URLs and flags related -->
-    <string name="server_url"></string>
-    <bool name="show_server_url_input">true</bool>
+    <string name="server_url">https://cloud.spryservers.net</string>
+    <bool name="show_server_url_input">false</bool>
     <!-- Can be regular (full input), prefix (subdomain input) and suffix (directory input) -->
     <!-- Requires server url to be set -->
     <string name="server_input_type">regular</string>
     <bool name="show_welcome_link">true</bool>
-    <string name="welcome_link_url">"https://nextcloud.com/providers"</string>
+    <string name="welcome_link_url">"https://www.spryservers.net/clients/link.php?id=6"</string>
 
     <!-- Flags to setup the authentication methods available in the app -->
     <string name="auth_method_oauth2">off</string>
@@ -96,18 +96,18 @@
     <bool name="help_enabled">true</bool>
     <string name="url_help">https://help.nextcloud.com/c/feature</string>
     <bool name="privacy_enabled">true</bool>
-    <string name="privacy_url">https://nextcloud.com/privacy</string>
+    <string name="privacy_url" formatted="false">https://www.spryservers.net/legal/privacy</string>
     <bool name="imprint_enabled">false</bool>
     <bool name="recommend_enabled">true</bool>
     <bool name="feedback_enabled">true</bool>
     <bool name="logger_enabled">false</bool>
     <bool name="sourcecode_enabled">true</bool>
-    <string name="sourcecode_url" translatable="false">https://github.com/nextcloud/android</string>
+    <string name="sourcecode_url" translatable="false">https://github.com/SpryServers/spryCloud-android-next</string>
     <bool name="license_enabled">true</bool>
     <string name="license_url" translatable="false">https://www.gnu.org/licenses/gpl-2.0.html</string>
     <string name="url_imprint"></string>
-    <string name="mail_feedback">"mailto:android@nextcloud.com"</string>
-    <string name="url_app_download">"https://play.google.com/store/apps/details?id=com.nextcloud.client"</string>
+    <string name="mail_feedback">"mailto:developer@spryservers.net"</string>
+    <string name="url_app_download">"https://play.google.com/store/apps/details?id=net.spryservers.sprycloud"</string>
     <string name="url_server_install">https://nextcloud.com/install</string>
 
     <!-- synced folder light; if enabled: move to setting & global upload settings -->
@@ -121,12 +121,12 @@
     <string name="mail_logger"></string>
 
     <!-- Determine is participate enabled -->
-    <bool name="participate_enabled">true</bool>
+    <bool name="participate_enabled">false</bool>
     <!-- Participate links -->
     <string name="fdroid_beta_link" translatable="false">https://f-droid.org/repository/browse/?fdid=com.nextcloud.android.beta</string>
     <string name="beta_apk_link" translatable="false">https://download.nextcloud.com/android/dev/latest.apk</string>
-    <string name="play_store_register_beta" translatable="false">https://play.google.com/apps/testing/com.nextcloud.client</string>
-    <string name="fdroid_link" translatable="false">https://f-droid.org/repository/browse/?fdid=com.nextcloud.client</string>
+    <string name="play_store_register_beta" translatable="false">https://play.google.com/apps/testing/net.spryservers.sprycloud</string>
+    <string name="fdroid_link" translatable="false">https://f-droid.org/repository/browse/?fdid=net.spryservers.sprycloud</string>
     <string name="irc_weblink" translatable="false">http://webchat.freenode.net?channels=nextcloud-mobile</string>
     <string name="help_link" translatable="false">https://help.nextcloud.com/c/clients/android</string>
     <string name="translation_link" translatable="false">https://www.transifex.com/nextcloud/nextcloud/android/</string>
@@ -153,5 +153,3 @@
     <string name="dev_latest">https://download.nextcloud.com/android/dev/latest</string>
     <string name="dev_changelog">https://github.com/nextcloud/android/raw/dev/CHANGELOG.md</string>
 </resources>
-
-

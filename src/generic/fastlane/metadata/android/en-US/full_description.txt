@@ -1,8 +1,8 @@
-The copylefted libre Nextcloud Android app, giving you mobile freedom.
+The copylefted libre spryCloud Android app, giving you mobile freedom.
 
 Features:
 * Easy, modern interface, suited to the theme of your server
-* Upload files to your Nextcloud server
+* Upload files to your spryCloud server
 * Share them with others
 * Keep your favorite files and folders synced
 * Search across all folders on your server
@@ -14,6 +14,6 @@ Features:
 
 Please report all issues at https://github.com/nextcloud/android/issues and discuss this app at https://help.nextcloud.com/c/clients/android
 
-New to Nextcloud? Nextcloud is a private file sync & share and communication server. It is libre software, and you can host it yourself or pay a company to do it for you. That way, you are in control of your photos, your calendar and contact data, your documents and everything else.
+New to spryCloud? spryCloud is a private file sync & share and communication server. It is libre software, and you can host it yourself or pay a company to do it for you. That way, you are in control of your photos, your calendar and contact data, your documents and everything else.
 
-Check out Nextcloud at https://nextcloud.com
+Check out spryCloud at https://nextcloud.com

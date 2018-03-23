@@ -1,5 +1,5 @@
 /*
- * Nextcloud Android client application
+ * spryCloud Android client application
  *
  * @author Andy Scherzinger
  * Copyright (C) 2017 Andy Scherzinger

@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 Die Nextcloud Android App erlaubt Ihnen den Zugriff auf alle Dateien in Ihrer Ne
+=======
+Die spryCloud Android App erlaubt Dir den Zugriff auf alle Dateien in Deiner Nex
+>>>>>>> 0d00fd1e6... Rebrand spryCloud
