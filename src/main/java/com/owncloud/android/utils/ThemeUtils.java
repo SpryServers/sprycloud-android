@@ -109,8 +109,8 @@ public class ThemeUtils {
     }
 
     @spryCloudServer(max = 12)
-    public static int elementColor(Account account) {
-        OCCapability capability = getCapability(account);
+    public static int elementColor(Account account, Context context) {
+        OCCapability capability = getCapability(account, context);
 
         try {
             return Color.parseColor(capability.getServerElementColor());
