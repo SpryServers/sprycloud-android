@@ -62,6 +62,7 @@
     <string name="recommend_urls">%1$s或%2$s</string>
 
     <string name="auth_check_server">檢查伺服器</string>
+    <string name="auth_host_url">伺服器位址 https://...</string>
     <string name="auth_username">使用者名稱</string>
     <string name="auth_password">密碼</string>
     <string name="auth_register">還沒有 Nextcloud？\n點選這裡來選擇供應商</string>
@@ -254,7 +255,6 @@
     <string name="unfavorite">取消離線可用設定</string>
     <string name="favorite_real">設置為收藏</string>
     <string name="unset_favorite_real">解除設置收藏</string>
-    <string name="favorite_switch">離線可用</string>
     <string name="encrypted">設為已加密的</string>
     <string name="unset_encrypted">取消加密</string>
     <string name="common_rename">重新命名</string>
