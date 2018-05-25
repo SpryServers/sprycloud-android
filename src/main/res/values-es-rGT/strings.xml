@@ -266,8 +266,6 @@
 
     <string name="favorite">Establer como disponible sin conexión</string>
     <string name="unfavorite">Establecer como disponible con conexión</string>
-    <string name="favorite_real">Establecer como favorito</string>
-    <string name="unset_favorite_real">Quitar de los favoritos</string>
     <string name="encrypted">Establecer como encriptado</string>
     <string name="unset_encrypted">Desestablecer encripción</string>
     <string name="common_rename">Renombrar</string>
@@ -767,4 +765,5 @@
     <string name="upload_content_from_other_apps">Cargar contenido de otras aplicaciones</string>
     <string name="create_new_folder">Crear nueva carpeta</string>
     <string name="uploads_view_upload_status_virus_detected">Virus detectado. ¡La carga no puede ser completada!</string>
-    </resources>
+    <string name="tags">Etiquetas</string>
+</resources>

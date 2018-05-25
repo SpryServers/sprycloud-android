@@ -53,7 +53,6 @@ import com.owncloud.android.syncadapter.FileSyncAdapter;
 import com.owncloud.android.ui.dialog.CreateFolderDialogFragment;
 import com.owncloud.android.ui.fragment.FileFragment;
 import com.owncloud.android.ui.fragment.OCFileListFragment;
-import com.owncloud.android.utils.AnalyticsUtils;
 import com.owncloud.android.utils.DataHolderUtil;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.ErrorMessageAdapter;
@@ -75,8 +74,6 @@ public class FolderPickerActivity extends FileActivity implements FileFragment.C
     private SyncBroadcastReceiver mSyncBroadcastReceiver;
 
     private static final String TAG = FolderPickerActivity.class.getSimpleName();
-
-    private static final String SCREEN_NAME = "Choose upload folder";
 
     private static final String TAG_LIST_OF_FOLDERS = "LIST_OF_FOLDERS";
        
@@ -264,8 +261,6 @@ public class FolderPickerActivity extends FileActivity implements FileFragment.C
     protected void onResume() {
         super.onResume();
         Log_OC.e(TAG, "onResume() start");
-
-        AnalyticsUtils.setCurrentScreenName(this, SCREEN_NAME, TAG);
 
         // refresh list of files
         refreshListOfFilesFragment(false);

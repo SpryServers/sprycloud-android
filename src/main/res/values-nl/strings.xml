@@ -266,8 +266,6 @@
 
     <string name="favorite">Offline beschikbaar maken</string>
     <string name="unfavorite">Niet langer offline beschikbaar maken</string>
-    <string name="favorite_real">Instellen als favoriet</string>
-    <string name="unset_favorite_real">Weghalen als favoriet</string>
     <string name="encrypted">Instellen als versleuteld</string>
     <string name="unset_encrypted">Niet ingestelde versleuteling</string>
     <string name="common_rename">Hernoemen</string>
@@ -762,4 +760,5 @@
     <string name="hint_password">Wachtwoord</string>
     <string name="upload_files">Bestanden uploaden</string>
     <string name="create_new_folder">Nieuwe map aanmaken</string>
+    <string name="uploads_view_upload_status_virus_detected">Virus gevonden. Upload kan niet vervolledigd worden!</string>
     </resources>

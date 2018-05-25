@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomNavigationView;
@@ -97,7 +98,6 @@ import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface;
 import com.owncloud.android.ui.preview.PreviewImageFragment;
 import com.owncloud.android.ui.preview.PreviewMediaFragment;
 import com.owncloud.android.ui.preview.PreviewTextFragment;
-import com.owncloud.android.utils.AnalyticsUtils;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.EncryptionUtils;
 import com.owncloud.android.utils.FileSortOrder;
@@ -148,8 +148,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
     private static final String KEY_CURRENT_SEARCH_TYPE = "CURRENT_SEARCH_TYPE";
 
     private static final String DIALOG_CREATE_FOLDER = "DIALOG_CREATE_FOLDER";
-
-    private static final String SCREEN_NAME = "Remote/Server file browser";
 
     private FileFragment.ContainerActivity mContainerActivity;
 
@@ -273,15 +271,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (getActivity() != null) {
-            AnalyticsUtils.setCurrentScreenName(getActivity(), SCREEN_NAME, TAG);
-        }
-    }
-
-    @Override
     public void onDetach() {
         setOnRefreshListener(null);
         mContainerActivity = null;
@@ -331,9 +320,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
         searchEvent = Parcels.unwrap(getArguments().getParcelable(OCFileListFragment.SEARCH_EVENT));
         prepareCurrentSearch(searchEvent);
-        if (searchEvent != null && savedInstanceState == null) {
-            onMessageEvent(searchEvent);
-        }
 
         if (isGridViewPreferred(getCurrentFile())) {
             switchToGridView();
@@ -448,12 +434,12 @@ public class OCFileListFragment extends ExtendedListFragment implements
         private HashSet<OCFile> mSelectionWhenActionModeClosedByDrawer = new HashSet<>();
 
         @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
             // nothing to do
         }
 
         @Override
-        public void onDrawerOpened(View drawerView) {
+        public void onDrawerOpened(@NonNull View drawerView) {
             // nothing to do
         }
 
@@ -464,7 +450,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
          * @param drawerView Navigation drawer just closed.
          */
         @Override
-        public void onDrawerClosed(View drawerView) {
+        public void onDrawerClosed(@NonNull View drawerView) {
             if (mActionModeClosedByDrawer && mSelectionWhenActionModeClosedByDrawer.size() > 0) {
                 FragmentActivity actionBarActivity = getActivity();
                 actionBarActivity.startActionMode(mMultiChoiceModeListener);
@@ -1404,6 +1390,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
             new Handler(Looper.getMainLooper()).post(switchViewsRunnable);
         }
 
+        final Account currentAccount = AccountUtils.getCurrentOwnCloudAccount(MainApp.getAppContext());
+
         final RemoteOperation remoteOperation;
         if (!currentSearchType.equals(SearchType.SHARED_FILTER)) {
             boolean searchOnlyFolders = false;
@@ -1411,12 +1399,14 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 searchOnlyFolders = true;
             }
 
-            remoteOperation = new SearchOperation(event.getSearchQuery(), event.getSearchType(), searchOnlyFolders);
+            String userId = AccountManager.get(MainApp.getAppContext()).getUserData(currentAccount,
+                    com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
+
+            remoteOperation = new SearchOperation(event.getSearchQuery(), event.getSearchType(), searchOnlyFolders,
+                    userId);
         } else {
             remoteOperation = new GetRemoteSharesOperation();
         }
-
-        final Account currentAccount = AccountUtils.getCurrentOwnCloudAccount(MainApp.getAppContext());
 
         remoteOperationAsyncTask = new AsyncTask() {
             @Override

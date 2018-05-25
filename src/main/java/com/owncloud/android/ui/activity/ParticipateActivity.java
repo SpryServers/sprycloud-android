@@ -33,16 +33,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.owncloud.android.R;
-import com.owncloud.android.utils.AnalyticsUtils;
 import com.owncloud.android.utils.ThemeUtils;
 
 /**
  * Activity providing information about ways to participate in the app's development.
  */
 public class ParticipateActivity extends FileActivity {
-
-    private static final String TAG = ParticipateActivity.class.getSimpleName();
-    private static final String SCREEN_NAME = "Participate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +58,6 @@ public class ParticipateActivity extends FileActivity {
         }
 
         setupContent();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        AnalyticsUtils.setCurrentScreenName(this, SCREEN_NAME, TAG);
     }
 
     private void setupContent() {

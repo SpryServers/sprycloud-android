@@ -56,7 +56,6 @@ import com.owncloud.android.operations.CheckCurrentCredentialsOperation;
 import com.owncloud.android.ui.EmptyRecyclerView;
 import com.owncloud.android.ui.adapter.UploadListAdapter;
 import com.owncloud.android.ui.decoration.MediaGridItemDecoration;
-import com.owncloud.android.utils.AnalyticsUtils;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.FilesSyncHelper;
 
@@ -75,8 +74,6 @@ import static com.owncloud.android.ui.activity.Preferences.PREFERENCE_EXPERT_MOD
 public class UploadListActivity extends FileActivity {
 
     private static final String TAG = UploadListActivity.class.getSimpleName();
-
-    private static final String SCREEN_NAME = "Uploads";
 
     private UploadMessagesReceiver mUploadMessagesReceiver;
 
@@ -197,8 +194,6 @@ public class UploadListActivity extends FileActivity {
     protected void onResume() {
         Log_OC.v(TAG, "onResume() start");
         super.onResume();
-
-        AnalyticsUtils.setCurrentScreenName(this, SCREEN_NAME, TAG);
 
         // Listen for upload messages
         mUploadMessagesReceiver = new UploadMessagesReceiver();
