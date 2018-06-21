@@ -39,9 +39,6 @@
     <string name="prefs_category_general">عام</string>
     <string name="prefs_category_more">المزيد</string>
     <string name="prefs_manage_accounts">إدارة الحسابات</string>
-    <string name="prefs_passcode">الرقم السري</string>
-    <string name="prefs_fingerprint">قفل بصمه الاصبع</string>
-    <string name="prefs_fingerprint_notsetup">لم يتم ادخال اى بصمات </string>
     <string name="prefs_expert_mode">وضع متقدم</string>
     <string name="prefs_show_hidden_files">عرض الملفات المخفية</string>
     <string name="prefs_log_delete_history_button">حذف البيانات التاريخية</string>
@@ -104,7 +101,6 @@
     <string name="upload_list_empty_headline">لا توجد تحميلات</string>
     <string name="upload_list_empty_text_auto_upload">قم بتحميل بعض الملفات أو قم بتفعيل التحميل التلقائي.</string>
     <string name="file_list_folder">مجلد</string>
-    <string name="filedetails_select_file">اضغظ على الملف ليتم عرض خيارات أكثر</string>
     <string name="filedetails_download">تحميل</string>
     <string name="filedetails_sync_file">زامن</string>
     <string name="action_send_share">إرسال/مشاركة</string>
@@ -170,7 +166,6 @@
     <string name="foreign_files_local_text">محلّي : %1$s</string>
     <string name="foreign_files_remote_text">عن بعد : %1$s</string>
     <string name="pass_code_enter_pass_code">إدخل رمزك السري من فضلك</string>
-    
     <string name="pass_code_configure_your_pass_code">إدخل رمزك السري</string>
     <string name="pass_code_reenter_your_pass_code">أعد إدخال رمزك السري</string>
     <string name="pass_code_remove_your_pass_code">إحذف رمز مرورك</string>
@@ -209,9 +204,7 @@
 	<string name="auth_expired_basic_auth_toast">إدخل كلمة المرور الخاصة بك من فضلك</string>
 	<string name="auth_expired_saml_sso_token_toast">مدة الجلسة انتهت , يرجى اعادة الاتصال</string>
     <string name="auth_unsupported_multiaccount">%1$s لا يدعم الحسابات المتعددة </string>
-	<string name="auth_access_failed">فشلت عملية النفاذ</string>
-
-    <string name="favorite">حدد كمتوفر بدون اتصال الانترنت</string>
+	<string name="favorite">حدد كمتوفر بدون اتصال الانترنت</string>
     <string name="unfavorite">الغ التحدد كمتوفر بدون اتصال الانترنت</string>
     <string name="common_rename">إعادة التسمية</string>
     <string name="common_remove">حذف</string>
@@ -321,27 +314,14 @@
     <string name="share_with_user_section_title">شارك مع مستخدمين أو مجموعات</string>
     <string name="share_add_user_or_group">إضافة مستخدم أو فريق</string>
     <string name="share_via_link_section_title">شارك الرابط</string>
-    <string name="share_via_link_expiration_date_label">تعيين تاريخ إنتهاء الصلاحية</string>
-    <string name="share_via_link_password_label">التأمين بكلمة سرية</string>
-    <string name="share_via_link_password_title">مؤَمَّن</string>
-    <string name="share_via_link_edit_permission_label">السماح بإدخال تعديلات</string>
     <string name="share_get_public_link_button">تحصل على رابط</string>
     <string name="share_with_title">شارك مع…</string>
     <string name="share_with_edit_title">شارك مع %1$s</string>
-
-    <string name="share_search">البحث</string>
-
     <string name="search_users_and_groups_hint">إبحث عن مستخدمين أو مجموعات</string>
     <string name="share_group_clarification">%1$s(مجموعة)</string>
     <string name="share_email_clarification">%1$s(بريد)</string>
-    <string name="filedetails_share_link_disable">لم يتم مشاركته بعد بواسطة رابط</string>
-    <string name="filedetails_share_users_with_access">المجموعات و المستخدمون المرخص لهم</string>
     <string name="share_privilege_can_share">يمكن المشاركة</string>
     <string name="share_privilege_can_edit">يمكن التحرير</string>
-    <string name="share_privilege_can_edit_create">إنشاء</string>
-    <string name="share_privilege_can_edit_change">تغيير</string>
-    <string name="share_privilege_can_edit_delete">حذف</string>
-
     <string name="action_switch_grid_view">عرض شبكي</string>
     <string name="action_switch_list_view">عرض على شكل قائمة</string>
 
@@ -384,9 +364,6 @@
     <string name="whats_new_ipv6_title">دعم IPv6</string>
     <string name="whats_new_skip">تخطى</string>
 
-    <string name="fingerprint_scan_finger">يرجى مسح بصمتك</string>
-    <string name="fingerprint_unknown">تعذر التعرف على بصمتك</string>
-
     <!-- User information -->
     <string name="user_info_email">البريد الإلكتروني</string>
     <string name="user_info_phone"> رقم الهاتف</string>
@@ -427,7 +404,6 @@
     <string name="activity_icon">أيقونة النشاط</string>
     <string name="file_icon">أيقونة الملف</string>
     <string name="user_icon">أيقونة المستخدم</string>
-    <string name="fingerprint_icon">أيقونة بصمة الأصبع</string>
     <string name="favorite_icon">أيقونة المفضلة</string>
     <string name="shared_icon">أيقونة المشاركة</string>
     <string name="sort_by_modification_date_ascending">الأحدث أولا</string>

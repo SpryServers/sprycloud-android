@@ -39,9 +39,6 @@
     <string name="prefs_category_general">Általános</string>
     <string name="prefs_category_more">Több</string>
     <string name="prefs_manage_accounts">Fiókok kezelése</string>
-    <string name="prefs_passcode">Számkódos lezárás</string>
-    <string name="prefs_fingerprint">Lezárás Újjlenyomattal</string>
-    <string name="prefs_fingerprint_notsetup">Nincs újjlenyomat beállítva.</string>
     <string name="prefs_expert_mode">Szakértő mód</string>
     <string name="prefs_show_hidden_files">Rejtett fájlok megjelenítése</string>
     <string name="prefs_log_delete_history_button">Előzmények törlése</string>
@@ -113,7 +110,6 @@
     <string name="upload_list_empty_headline">Nincsenek feltöltések</string>
     <string name="upload_list_empty_text_auto_upload">Az automatikus feltöltés aktiválásához tölts fel valami tartalmat.</string>
     <string name="file_list_folder">mappa</string>
-    <string name="filedetails_select_file">Érintsen meg egy fájlt a további információkért.</string>
     <string name="filedetails_download">Letöltés</string>
     <string name="filedetails_sync_file">Szinkronizálás</string>
     <string name="filedetails_renamed_in_upload_msg">A fájl feltöltés közben átnevezve erre: %1$s</string>
@@ -199,7 +195,6 @@
     <string name="foreign_files_remote_text">Távoli: %1$s</string>
     <string name="upload_query_move_foreign_files">Elégtelem hely miatt nem másolhatók a fájlok ebbe a mappába: %1$s. Át akarod inkább mozdítani őket?</string>
     <string name="pass_code_enter_pass_code">Kérlek add meg a számkódot</string>
-    
     <string name="pass_code_configure_your_pass_code">Írd be a számkódodat</string>
     <string name="pass_code_configure_your_pass_code_explanation">A számkódra minden alkalommal szükség lesz az alkalmazás indításakor</string>
     <string name="pass_code_reenter_your_pass_code">Kérlek add meg újra a számkódot</string>
@@ -260,8 +255,6 @@
 	<string name="auth_fail_get_user_name">A szervered nem megfelelő felhasználó azonosítót ad vissza, lépj kapcsolatba egy rendszergazdával</string>
 	<string name="auth_can_not_auth_against_server">Nem lehet hitelesíteni a szerverhez</string>
     <string name="auth_account_does_not_exist">Az eszközön még nem létezik fiók</string>
-    <string name="auth_access_failed">Hozzáférés sikertelen</string>
-
     <string name="favorite">Állítsa be kapcsolat nélkül is elérhetőnek</string>
     <string name="unfavorite">Törölje a kapcsolat nélküli elérhetőséget</string>
     <string name="encrypted">Titkosítottra állítás</string>
@@ -361,7 +354,6 @@
     <string name="copy_link">Link másolása</string>
     <string name="clipboard_text_copied">Bemásolva a vágólapra</string>
     <string name="clipboard_no_text_to_copy">Nem kaptam szöveget a vágólapra másoláshoz</string>
-    <string name="clipboard_uxexpected_error">Váratlan hiba történ a vágólapra másolás közben</string>
     <string name="clipboard_label">Szöveg másolva innen: %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kritikus hiba: művelet nem végrehajtható</string>
@@ -475,17 +467,10 @@
     <string name="share_no_users">Nincs még semmi megosztva a felhasználókkal</string>
     <string name="share_add_user_or_group">Felhasználó vagy csoport hozzáadás</string>
     <string name="share_via_link_section_title">Megosztás hivatkozással</string>
-    <string name="share_via_link_expiration_date_label">Legyen lejárati idő</string>
-    <string name="share_via_link_password_label">Jelszóval védés</string>
-    <string name="share_via_link_password_title">Biztonságos</string>
-    <string name="share_via_link_edit_permission_label">Szerkesztések engedélyezése</string>
     <string name="share_via_link_hide_file_listing_permission_label">Fájl lista elrejtése</string>
     <string name="share_get_public_link_button">Hivatkozás beszerzése</string>
     <string name="share_with_title">Megosztás vele…</string>
     <string name="share_with_edit_title">Megosztás vele: %1$s</string>
-
-    <string name="share_search">Keresés</string>
-
     <string name="search_users_and_groups_hint">Felhasználók és csoportok keresése</string>
     <string name="share_group_clarification">%1$s (csoport)</string>
     <string name="share_remote_clarification">%1$s (távoli)</string>
@@ -494,15 +479,8 @@
 
     <string name="share_sharee_unavailable">Frissítsd a szerveredet, a felhasználók egymás-közti megosztásának engedélyezéséhez.
 Lépj kapcsolatba a rendszergazdával</string>
-    <string name="filedetails_share_link_enable">Linkben megosztás engedélyezése</string>
-    <string name="filedetails_share_link_disable">Nincs linkkel megosztva</string>
-    <string name="filedetails_share_users_with_access">Hozzáféréssel rendelkező felhasználók és csoportok</string>
     <string name="share_privilege_can_share">megosztható</string>
     <string name="share_privilege_can_edit">módosíthat</string>
-    <string name="share_privilege_can_edit_create">létrehoz</string>
-    <string name="share_privilege_can_edit_change">változtatás</string>
-    <string name="share_privilege_can_edit_delete">törlés</string>
-
     <string name="action_retry_uploads">Sikertelen feltöltések újrapróbálása</string>
     <string name="action_clear_failed_uploads">Sikertelen feltöltések eltávolítása</string>
     <string name="action_clear_successful_uploads">Sikeres feltöltések eltávolítása</string>
@@ -595,9 +573,6 @@ Lépj kapcsolatba a rendszergazdával</string>
 
     <string name="whats_new_skip">Kihagy</string>
 
-    <string name="fingerprint_scan_finger">Kérlek húzd le az ujjad</string>
-    <string name="fingerprint_unknown">Ujj ismeretlen</string>
-
     <!-- User information -->
     <string name="user_info_email">E-mail</string>
     <string name="user_info_phone">Telefonszám</string>
@@ -609,8 +584,6 @@ Lépj kapcsolatba a rendszergazdával</string>
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Nincs még tevékenység</string>
-    <string name="activities_no_results_message">Ez a folyam mutatja az olyan eseményeket mint
-hozzáadások, változások és megosztások</string>
     <string name="prefs_category_about">Névjegy</string>
 
     <string name="actionbar_contacts">Névjegyek biztonsági mentése</string>
@@ -691,7 +664,6 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="activity_icon">Aktivitás ikon</string>
     <string name="file_icon">Fájl ikon</string>
     <string name="user_icon">Felhasználó ikon</string>
-    <string name="fingerprint_icon">Ujjlenyomat ikon</string>
     <string name="favorite_icon">Kedvencek ikon</string>
     <string name="shared_via_link_icon">Link ikonon keresztül megosztva</string>
     <string name="synced_icon">Szinkronizálva ikon</string>

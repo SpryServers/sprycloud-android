@@ -26,6 +26,7 @@ package com.owncloud.android.ui.dialog;
  *  Triggers the removal according to the user response.
  */
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -33,6 +34,7 @@ import com.owncloud.android.R;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.ui.activity.ComponentsGetter;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment.ConfirmationDialogFragmentListener;
+import com.owncloud.android.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,6 +112,18 @@ implements ConfirmationDialogFragmentListener {
         return newInstance(list);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        int color = ThemeUtils.primaryAccentColor(getActivity());
+
+        android.support.v7.app.AlertDialog alertDialog = (android.support.v7.app.AlertDialog) getDialog();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(color);
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color);
+        alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(color);
+    }
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -127,7 +141,7 @@ implements ConfirmationDialogFragmentListener {
     @Override
     public void onConfirmation(String callerTag) {
         ComponentsGetter cg = (ComponentsGetter) getActivity();
-        cg.getFileOperationsHelper().removeFiles(mTargetFiles, false);
+        cg.getFileOperationsHelper().removeFiles(mTargetFiles, false, false);
     }
     
     /**
@@ -136,7 +150,7 @@ implements ConfirmationDialogFragmentListener {
     @Override
     public void onCancel(String callerTag) {
         ComponentsGetter cg = (ComponentsGetter) getActivity();
-        cg.getFileOperationsHelper().removeFiles(mTargetFiles, true);
+        cg.getFileOperationsHelper().removeFiles(mTargetFiles, true, false);
     }
 
     @Override

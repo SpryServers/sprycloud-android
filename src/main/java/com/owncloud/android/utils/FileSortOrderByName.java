@@ -24,7 +24,6 @@ import com.owncloud.android.datamodel.OCFile;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +35,7 @@ import third_parties.daveKoeller.AlphanumComparator;
  */
 public class FileSortOrderByName extends FileSortOrder {
 
-    public FileSortOrderByName(String name, boolean ascending) {
+    FileSortOrderByName(String name, boolean ascending) {
         super(name, ascending);
     }
 
@@ -49,17 +48,15 @@ public class FileSortOrderByName extends FileSortOrder {
     public List<OCFile> sortCloudFiles(List<OCFile> files) {
         final int multiplier = mAscending ? 1 : -1;
 
-        Collections.sort(files, new Comparator<OCFile>() {
-            public int compare(OCFile o1, OCFile o2) {
-                if (o1.isFolder() && o2.isFolder()) {
-                    return multiplier * new AlphanumComparator().compare(o1, o2);
-                } else if (o1.isFolder()) {
-                    return -1;
-                } else if (o2.isFolder()) {
-                    return 1;
-                }
+        Collections.sort(files, (o1, o2) -> {
+            if (o1.isFolder() && o2.isFolder()) {
                 return multiplier * new AlphanumComparator().compare(o1, o2);
+            } else if (o1.isFolder()) {
+                return -1;
+            } else if (o2.isFolder()) {
+                return 1;
             }
+            return multiplier * new AlphanumComparator().compare(o1, o2);
         });
 
         return super.sortCloudFiles(files);
@@ -70,6 +67,7 @@ public class FileSortOrderByName extends FileSortOrder {
      *
      * @param files files to sort
      */
+    @Override
     public List<File> sortLocalFiles(List<File> files) {
         final int multiplier = mAscending ? 1 : -1;
 

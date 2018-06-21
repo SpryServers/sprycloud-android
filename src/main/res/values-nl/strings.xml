@@ -39,9 +39,6 @@
     <string name="prefs_category_general">Algemeen</string>
     <string name="prefs_category_more">Meer</string>
     <string name="prefs_manage_accounts">Accounts beheren</string>
-    <string name="prefs_passcode">Toegangscode</string>
-    <string name="prefs_fingerprint">Vingerafdrukbeveiliging</string>
-    <string name="prefs_fingerprint_notsetup">Er zijn geen vingerafdrukken ingesteld.</string>
     <string name="prefs_expert_mode">Expertmodus</string>
     <string name="prefs_show_hidden_files">Verborgen bestanden weergeven</string>
     <string name="prefs_log_delete_history_button">Verwijder geschiedenis</string>
@@ -113,7 +110,6 @@
     <string name="upload_list_empty_headline">Geen uploads beschikbaar</string>
     <string name="upload_list_empty_text_auto_upload">Upload enkele gegevens of activeer auto-upload.</string>
     <string name="file_list_folder">map</string>
-    <string name="filedetails_select_file">Druk op een bestand om extra informatie weer te geven</string>
     <string name="filedetails_download">Downloaden</string>
     <string name="filedetails_sync_file">Synchroniseren</string>
     <string name="filedetails_renamed_in_upload_msg">Bestand hernoemd %1$s tijdens upload</string>
@@ -132,6 +128,7 @@
     <string name="common_error_unknown">Onbekende fout</string>
     <string name="common_pending">In behandeling</string>
     <string name="common_delete">Verwijderen</string>
+    <string name="common_send">Versturen</string>
     <string name="about_title">Over</string>
     <string name="delete_account">Account verwijderen</string>
     <string name="delete_account_warning">Verwijder account %s met alle lokale bestanden? Het verwijderen kan niet worden teruggedraaid.</string>
@@ -199,7 +196,6 @@
     <string name="foreign_files_remote_text">Extern: %1$s</string>
     <string name="upload_query_move_foreign_files">Er is niet genoeg ruimte om de geselecteerde bestanden te kopiëren naar %1$s. Wil je ze in plaats daarvan verplaatsen?</string>
     <string name="pass_code_enter_pass_code">Voer je toegangscode in</string>
-    
     <string name="pass_code_configure_your_pass_code">Toegangscode invoeren</string>
     <string name="pass_code_configure_your_pass_code_explanation">De toegangscode wordt elke keer gevraagd bij opstarten van de app</string>
     <string name="pass_code_reenter_your_pass_code">Voer nogmaals je toegangscode in</string>
@@ -262,10 +258,11 @@
 	<string name="auth_fail_get_user_name">Je server geeft geen geldige userID terug, neem contact op met je server beheerder</string>
 	<string name="auth_can_not_auth_against_server">Kan niet authenticeren tegen deze server</string>
     <string name="auth_account_does_not_exist">Account bestaat nog niet op dit apparaat</string>
-    <string name="auth_access_failed">Toegang mislukt</string>
-
+    <string name="auth_access_failed">Toegang mislukt: %1$s</string>
     <string name="favorite">Offline beschikbaar maken</string>
     <string name="unfavorite">Niet langer offline beschikbaar maken</string>
+    <string name="favorite_real">Aan favorieten toevoegen</string>
+    <string name="unset_favorite_real">Verwijderen uit favorieten</string>
     <string name="encrypted">Instellen als versleuteld</string>
     <string name="unset_encrypted">Niet ingestelde versleuteling</string>
     <string name="common_rename">Hernoemen</string>
@@ -362,7 +359,6 @@
     <string name="copy_link">Link kopiëren</string>
     <string name="clipboard_text_copied">Gekopieerd naar het klembord</string>
     <string name="clipboard_no_text_to_copy">Geen tekst ontvangen om te kopiëren naar het klembord</string>
-    <string name="clipboard_uxexpected_error">Onverwachte fout bij het kopiëren naar het klembord</string>
     <string name="clipboard_label">Tekst gekopieerd uit %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kritieke fout: kan de acties niet uitvoeren</string>
@@ -475,17 +471,21 @@
     <string name="share_with_user_section_title">Delen met gebruikers en groepen</string>
     <string name="share_no_users">Nog geen gegevens met gebruikers gedeeld</string>
     <string name="share_add_user_or_group">Voeg gebruiker of groep toe</string>
-    <string name="share_via_link_section_title">Deel link</string>
-    <string name="share_via_link_expiration_date_label">Stel vervaldatum in</string>
+    <string name="share_via_link_edit_permission_label">Toestaan bewerken</string>
     <string name="share_via_link_password_label">Beveilig met wachtwoord</string>
     <string name="share_via_link_password_title">Beveiligd</string>
-    <string name="share_via_link_edit_permission_label">Bewerken toestaan</string>
+    <string name="share_via_link_expiration_date_label">Stel vervaldatum in</string>
+    <string name="share_via_link_menu_password_label">Wachtwoord beveiligd (%1$s)</string>
+    <string name="share_expiration_date_label">Vervalt op %1$s</string>
+    <string name="share_no_expiration_date_label">Stel vervaldatum in</string>
+    <string name="share_via_link_section_title">Deel link</string>
+    <string name="share_password_title">Wachtwoord beveiligd</string>
+    <string name="share_no_password_title">Instellen wachtwoord</string>
     <string name="share_via_link_hide_file_listing_permission_label">Verberg bestandsoverzicht</string>
     <string name="share_get_public_link_button">Link ophalen </string>
     <string name="share_with_title">Deel met…</string>
     <string name="share_with_edit_title">Deel met %1$s</string>
-
-    <string name="share_search">Zoeken</string>
+    <string name="share_search">Naam, gefedereerde Cloud ID of een e-mailadres…</string>
 
     <string name="search_users_and_groups_hint">Zoeken naar gebruikers en groepen</string>
     <string name="share_group_clarification">%1$s (groep)</string>
@@ -494,14 +494,12 @@
     <string name="share_known_remote_clarification">%1$s ( op %2$s )</string>
 
     <string name="share_sharee_unavailable">Helaas, je serverversie staat niet toe om binnen clients te delen met andere gebruikers.\nNeem contact op met je server beheerder</string>
-    <string name="filedetails_share_link_enable">Delen via een link ingeschakeld</string>
-    <string name="filedetails_share_link_disable">Niet gedeeld met een link</string>
-    <string name="filedetails_share_users_with_access">Gebruikers en groepen met toegang</string>
+    <string name="share_privilege_unshare">Stop met delen</string>
     <string name="share_privilege_can_share">kan delen</string>
     <string name="share_privilege_can_edit">kan bewerken</string>
-    <string name="share_privilege_can_edit_create">creëer</string>
-    <string name="share_privilege_can_edit_change">wijzig</string>
-    <string name="share_privilege_can_edit_delete">verwijderen</string>
+    <string name="share_privilege_can_edit_create">kan creëren</string>
+    <string name="share_privilege_can_edit_change">kan wijzigen</string>
+    <string name="share_privilege_can_edit_delete">kan verwijderen</string>
 
     <string name="action_retry_uploads">Probeer mislukte uploads opnieuw</string>
     <string name="action_clear_failed_uploads">Wis mislukte uploads</string>
@@ -595,9 +593,6 @@
 
     <string name="whats_new_skip">Overslaan</string>
 
-    <string name="fingerprint_scan_finger">Scan je vinger</string>
-    <string name="fingerprint_unknown">Vinger niet herkend</string>
-
     <!-- User information -->
     <string name="user_info_email">Email</string>
     <string name="user_info_phone">Telefoonnummer</string>
@@ -609,7 +604,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Nog geen activiteit</string>
-    <string name="activities_no_results_message">Deze stream laat gebeurtenissen zoals\ntoevoegingen, veranderingen &amp; gedeelde bestanden zien</string>
     <string name="prefs_category_about">Over</string>
 
     <string name="actionbar_contacts">Maak een backup van de contacten</string>
@@ -672,7 +666,6 @@
     <string name="activity_icon">Activiteitspictogram</string>
     <string name="file_icon">Bestandpictogram</string>
     <string name="user_icon">Gebruikerspictogram</string>
-    <string name="fingerprint_icon">Vingerafdrukpictogram</string>
     <string name="favorite_icon">Favorietenpictogram</string>
     <string name="shared_via_link_icon">Gedeeld via link icoon</string>
     <string name="synced_icon">Gesynch\'d pictogram</string>
@@ -758,7 +751,9 @@
     <string name="sendbutton_description">Verstuur-knop pictogram</string>
     <string name="hint_name">Naam</string>
     <string name="hint_password">Wachtwoord</string>
+    <string name="add_to_cloud">Voeg toe aan %1$s</string>
     <string name="upload_files">Bestanden uploaden</string>
     <string name="create_new_folder">Nieuwe map aanmaken</string>
     <string name="uploads_view_upload_status_virus_detected">Virus gevonden. Upload kan niet vervolledigd worden!</string>
+    <string name="tags">Labels</string>
     </resources>

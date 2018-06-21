@@ -39,9 +39,13 @@
     <string name="prefs_category_general">Genel</string>
     <string name="prefs_category_more">Daha fazla</string>
     <string name="prefs_manage_accounts">Hesap yönetimi</string>
-    <string name="prefs_passcode">Parola kod kilidi</string>
-    <string name="prefs_fingerprint">Parmak izi kilidi</string>
-    <string name="prefs_fingerprint_notsetup">Henüz bir parmak izi ayarlanmamış.</string>
+    <string name="prefs_lock">Kilitle</string>
+    <string name="prefs_lock_title">Şununla kilitle</string>
+    <string name="prefs_lock_none">Yok</string>
+    <string name="prefs_lock_using_passcode">Parola</string>
+    <string name="prefs_lock_using_device_credentials">Aygıt kimlik doğrulama bilgileri</string>
+    <string name="prefs_lock_device_credentials_enabled">Aygıt kimlik doğrulama bilgileri kullanılıyor</string>
+    <string name="prefs_lock_device_credentials_not_setup">Herhangi bir aygıt kimliği doğrulama bilgisi ayarlanmamış</string>
     <string name="prefs_expert_mode">Uzman kipi</string>
     <string name="prefs_show_hidden_files">Gizli dosyaları görüntüle</string>
     <string name="prefs_log_delete_history_button">Geçmişi sil</string>
@@ -64,7 +68,7 @@
     <string name="auth_host_url">Sunucu adresi https://…</string>
     <string name="auth_username">Kullanıcı Adı</string>
     <string name="auth_password">Parola</string>
-    <string name="auth_register">Henüz Nextcloud kullanmıyor musunuz?\Hizmet sağlayıcılardan yararlanabilirsiniz</string>
+    <string name="auth_register">Henüz Nextcloud kullanmıyor musunuz?\Listeden bir hizmet sağlayıcısı seçebilirsiniz</string>
     <string name="sync_string_files">Dosyalar</string>
     <string name="setup_btn_connect">Bağlan</string>
     <string name="uploader_btn_upload_text">Yükle</string>
@@ -113,7 +117,6 @@
     <string name="upload_list_empty_headline">Herhangi bir yükleme yok</string>
     <string name="upload_list_empty_text_auto_upload">Bazı içerikler yükleyin ya da otomatik yüklemeyi etkinleştirin.</string>
     <string name="file_list_folder">klasör</string>
-    <string name="filedetails_select_file">Ek bilgileri görmek için dosyaya dokunun.</string>
     <string name="filedetails_download">İndir</string>
     <string name="filedetails_sync_file">Eşitle</string>
     <string name="filedetails_renamed_in_upload_msg">Dosya adı, yükleme sırasında %1$s olarak değiştirildi</string>
@@ -132,6 +135,7 @@
     <string name="common_error_unknown">Bilinmeyen sorun</string>
     <string name="common_pending">Bekleyen</string>
     <string name="common_delete">Sil</string>
+    <string name="common_send">Gönder</string>
     <string name="about_title">Hakkında</string>
     <string name="delete_account">Hesabı kaldır</string>
     <string name="delete_account_warning">%s hesabı ve tüm yerel dosyalar kaldırılsın mı?\n\nSilme işlemi geri alınamaz.</string>
@@ -199,6 +203,8 @@
     <string name="foreign_files_remote_text">Uzak: %1$s</string>
     <string name="upload_query_move_foreign_files">Seçilmiş dosyaları %1$s klasörüne kopyalamak için yeterli boş alan yok. Bu dosyaları kopyalamak yerine taşımak ister misiniz?</string>
     <string name="pass_code_enter_pass_code">Lütfen parolanızı yazın</string>
+    <string name="default_credentials_wrong">Kimlik doğrulama bilgileri hatalı</string>
+    <string name="credentials_disabled">Kimlik doğrulama bilgileri kullanılmıyor</string>
     
     <string name="pass_code_configure_your_pass_code">Parolanızı yazın</string>
     <string name="pass_code_configure_your_pass_code_explanation">Parola uygulama her başlatıldığında sorulacak</string>
@@ -262,10 +268,13 @@
 	<string name="auth_fail_get_user_name">Sunucunuz doğru bir kullanıcı kodu döndürmüyor, lütfen bir yönetici ile görüşün</string>
 	<string name="auth_can_not_auth_against_server">Bu sunucuda kimlik doğrulanamadı</string>
     <string name="auth_account_does_not_exist">Aygıt üzerinde henüz bu hesap açılmamış</string>
-    <string name="auth_access_failed">Erişilemedi</string>
+    <string name="auth_access_failed">Erişilemedi: %1$s</string>
+    <string name="auth_illegal_login_used">Kullanılan veri adresi geçersiz</string>
 
     <string name="favorite">Çevrimdışı kullanılabilir olarak işaretle</string>
     <string name="unfavorite">Çevrimdışı kullanılabilir işaretini kaldır</string>
+    <string name="favorite_real">Sık kullanılanlara ekle</string>
+    <string name="unset_favorite_real">Sık kullanılanlardan kaldır</string>
     <string name="encrypted">Şifrelensin</string>
     <string name="unset_encrypted">Şifrelemeyi kaldır</string>
     <string name="common_rename">Yeniden adlandır</string>
@@ -362,7 +371,6 @@
     <string name="copy_link">Bağlantıyı kopyala</string>
     <string name="clipboard_text_copied">Panoya kopyalandı</string>
     <string name="clipboard_no_text_to_copy">Panoya kopyalanacak bir metin alınamadı</string>
-    <string name="clipboard_uxexpected_error">Panoya kopyalama sırasında beklenmeyen bir sorun çıktı</string>
     <string name="clipboard_label">Metin %1$s kaynağından kopyalandı</string>
 
     <string name="error_cant_bind_to_operations_service">Ciddi sorun: İşlemler gerçekleştirilemiyor</string>
@@ -475,17 +483,24 @@
     <string name="share_with_user_section_title">Kullanıcı ve Gruplarla paylaş</string>
     <string name="share_no_users">Henüz kullanıcılara paylaşılan bir veri yok</string>
     <string name="share_add_user_or_group">Kullanıcı ya da grup ekle</string>
-    <string name="share_via_link_section_title">Paylaşım bağlantısı</string>
-    <string name="share_via_link_expiration_date_label">Son kullanma tarihini ayarla</string>
-    <string name="share_via_link_password_label">Parola ile korunsun</string>
-    <string name="share_via_link_password_title">Güvenli</string>
     <string name="share_via_link_edit_permission_label">Düzenlenebilsin</string>
+    <string name="share_via_link_password_label">Parola ile koru</string>
+    <string name="share_via_link_password_title">Güvenli</string>
+    <string name="share_via_link_expiration_date_label">Son kullanma tarihini ayarla</string>
+    <string name="share_via_link_menu_password_label">Parola koruması (%1$s)</string>
+    <string name="share_expiration_date_label">%1$s zamanında sona erecek</string>
+    <string name="share_no_expiration_date_label">Son kullanma tarihini ayarla</string>
+    <string name="share_via_link_section_title">Paylaşım bağlantısı</string>
+    <string name="share_password_title">Parola korumalı</string>
+    <string name="share_no_password_title">Parolayı ayarla</string>
+    <string name="edit_permission_label">düzenle</string>
     <string name="share_via_link_hide_file_listing_permission_label">Dosya listeleme gizlensin</string>
     <string name="share_get_public_link_button">Bağlantıyı al</string>
     <string name="share_with_title">Şununla paylaş…</string>
     <string name="share_with_edit_title">%1$s ile paylaş</string>
+    <string name="share_via_link_unset_password">Kaldır</string>
 
-    <string name="share_search">Arama</string>
+    <string name="share_search">Ad, birleşmiş bulut kodu ya da e-posta adresi...</string>
 
     <string name="search_users_and_groups_hint">Kullanıcı ve Grup Arama</string>
     <string name="share_group_clarification">%1$s (grup)</string>
@@ -494,14 +509,12 @@
     <string name="share_known_remote_clarification">%1$s (%2$s üzerinde)</string>
 
     <string name="share_sharee_unavailable">Kullanıcıların istemcileri içinden paylaşım yapabilmesini sağlamak için sunucu sürümünüzü yükseltin.\nLütfen yöneticinizle görüşün</string>
-    <string name="filedetails_share_link_enable">Bağlantı ile paylaşım etkin</string>
-    <string name="filedetails_share_link_disable">Bağlantı ile paylaşılmamış</string>
-    <string name="filedetails_share_users_with_access">Erişim izni olan kullanıcı ve gruplar</string>
+    <string name="share_privilege_unshare">Paylaşımı Kaldır</string>
     <string name="share_privilege_can_share">paylaşabilir</string>
     <string name="share_privilege_can_edit">düzenleyebilir</string>
-    <string name="share_privilege_can_edit_create">oluştur</string>
-    <string name="share_privilege_can_edit_change">değiştir</string>
-    <string name="share_privilege_can_edit_delete">sil</string>
+    <string name="share_privilege_can_edit_create">ekleyebilir</string>
+    <string name="share_privilege_can_edit_change">düzenleyebilir</string>
+    <string name="share_privilege_can_edit_delete">silebilir</string>
 
     <string name="action_retry_uploads">Tamamlanamayan yüklemeler yinelensin</string>
     <string name="action_clear_failed_uploads">Tamamlanamayan yüklemeler silinsin</string>
@@ -541,7 +554,7 @@
     <string name="participate_contribute_forum_forum">forum</string>
     <string name="participate_contribute_translate_translate">Çevirin</string>
     <string name="participate_contribute_translate_text">uygulamayı</string>
-    <string name="participate_contribute_github_text">Kodun gözden geçirilmesine ve geliştirilmesine katkıda bulunun. Ayrıntılı bilgi almak için %1$s dosyasına bakın</string>
+    <string name="participate_contribute_github_text">Kodun gözden geçirilmesine ve geliştirilmesine katkıda bulunun. Ayrıntılı bilgi almak için %1$s dosyasına bakabilirsiniz.</string>
     <string name="participate_rc_play_store">Google Play Mağazasından yayın adayı sürümünü alın</string>
     <string name="participate_rc_fdroid">F-Droid uygulamasından yayın adayı sürümünü alın</string>
     <string name="participate_dev_fdroid">F-Droid uygulamasından geliştirici sürümünü alın</string>
@@ -595,9 +608,6 @@
 
     <string name="whats_new_skip">Atla</string>
 
-    <string name="fingerprint_scan_finger">Lütfen parmağınızı tarayın</string>
-    <string name="fingerprint_unknown">Parmak tanınamadı</string>
-
     <!-- User information -->
     <string name="user_info_email">E-posta</string>
     <string name="user_info_phone">Telefon numarası</string>
@@ -609,7 +619,7 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Henüz bir işlem yapılmamış</string>
-    <string name="activities_no_results_message">Bu akışta ekleme, değiştirme\nve paylaşım gibi işlemler görüntülenir</string>
+    <string name="activities_no_results_message">Henüz ekleme, değiştirme, paylaşım gibi bir işlem yapılmamış</string>
     <string name="prefs_category_about">Hakkında</string>
 
     <string name="actionbar_contacts">Kişileri yedekle</string>
@@ -663,7 +673,7 @@
     <string name="resized_images_download_full_image">Tam görsel indirilsin mi?</string>
 
     <string name="store_short_desc">Nextcloud Android uygulaması Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.</string>
-    <string name="store_full_desc">Copyleft Nextcloud Android uygulaması, Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.\n\nÖzellikleri:\* Sunucunuzun temasına uygun, kolay kullanılan modern arayüz\n* Dosyalarınızı Nextcloud sunucunuza yükleme\n* Dosyalarınızı başkalarıyla paylaşma\n* Sık kullandığınız dosya ve klasörleri eşitleme\n* Sunucunuzdaki tüm klasörlerde arama yapma\n* Çektiğiniz fotoğraf ve görüntüleri otomatik yükleme\n* Bildirimler ile güncel kalma\n* Birden çok hesap desteği\n*Parmak izi ya da PIN kodu ile verilerinize güvenli erişme\n* Davdroid bütünleştirmesi ile takvim ve kişileri eşitleme\n\nKullanımda karşılaşabileceğiniz hataları https://github.com/nextcloud/android/issues adresinden bildirebilir, uygulama hakkındaki konuları https://help.nextcloud.com/c/clients/android adresinde tartışabilirsiniz\n\nNextcloud ile yeni mi tanıştınız? Nextcloud özel bir veri depolama ve paylaşma ağıdır. Tamamen açık kaynak kodludur. Dosyalarınızı kendi sunucunuzda saklayabileceğiniz gibi ücretli hizmet olarak da satın alabilirsiniz. Böylece fotoğraflarınız, dosyalarınız, takviminiz, belgeleriniz, kişileriniz ve diğer tüm özel bilgileriniz sizin kontrolünüzde olur. \n\nAyrıntılı bilgi almak için web sitemize bakabilirsiniz: https://nextcloud.com</string>
+    <string name="store_full_desc">Copyleft Nextcloud Android uygulaması, Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.\n\nÖzellikleri:\* Sunucunuzun temasına uygun, kolay kullanılan modern arayüz\n* Dosyalarınızı Nextcloud sunucunuza yükleme\n* Dosyalarınızı başkalarıyla paylaşma\n* Sık kullandığınız dosya ve klasörleri eşitleme\n* Sunucunuzdaki tüm klasörlerde arama yapma\n* Çektiğiniz fotoğraf ve görüntüleri otomatik yükleme\n* Bildirimler ile güncel kalma\n* Birden çok hesap desteği\n*Parmak izi ya da PIN kodu ile verilerinize güvenli erişme\n* Davdroid bütünleştirmesi ile takvim ve kişileri eşitleme\n\nKullanımda karşılaşabileceğiniz hataları https://github.com/nextcloud/android/issues adresinden bildirebilir, uygulama hakkındaki konuları https://help.nextcloud.com/c/clients/android adresinde tartışabilirsiniz\n\nNextcloud ile yeni mi tanıştınız? Nextcloud özel bir veri depolama ve paylaşma ağıdır. Tamamen açık kaynak kodludur. Dosyalarınızı kendi sunucunuzda saklayabileceğiniz gibi ücretli hizmet olarak da satın alabilirsiniz. Böylece fotoğraflarınız, dosyalarınız, takviminiz, belgeleriniz, kişileriniz ve diğer tüm özel bilgileriniz sizin kontrolünüzde olur. \n\nAyrıntılı bilgi almak için https://nextcloud.com adresinden web sitemize bakabilirsiniz.</string>
 
     <string name="drawer_current_account">Geçerli hesap</string>
     <string name="drawer_middle_account">Orta hesap</string>
@@ -672,7 +682,6 @@
     <string name="activity_icon">İşlem simgesi</string>
     <string name="file_icon">Dosya simgesi</string>
     <string name="user_icon">Kullanıcı simgesi</string>
-    <string name="fingerprint_icon">Parmakizi simgesi</string>
     <string name="favorite_icon">Sık kullanılanlar simgesi</string>
     <string name="shared_via_link_icon">Bağlantı ile paylaşılmış simgesi</string>
     <string name="synced_icon">Eşitlenmiş simgesi</string>
@@ -766,4 +775,13 @@
     <string name="create_new_folder">Yeni klasör ekle</string>
     <string name="uploads_view_upload_status_virus_detected">Virus bulundu. Yükleme tamamlanamadı!</string>
     <string name="tags">Etiketler</string>
-</resources>
+    <string name="sharee_add_failed">Paylaşım eklenemedi</string>
+    <string name="unsharing_failed">Paylaşımdan kaldırılamadı</string>
+    <string name="updating_share_failed">Paylaşım güncellenemedi</string>
+    <string name="whats_new_device_credentials_title">Android aygıt koruması kullanılsın</string>
+    <string name="whats_new_device_credentials_content">Verilerinizin güvenliğini sağlamak için bir şekil, parola, pin ya da parmak izi kullanabilirsiniz.</string>
+    <string name="restore">Dosyayı geri yükle</string>
+    <string name="new_version_was_created">Yeni sürüm oluşturuldu</string>
+    <string name="file_version_restored_successfully">Dosya sürümü geri yüklendi.</string>
+    <string name="file_version_restored_error">Geri yüklenecek dosya sürümünü seçin!</string>
+    </resources>

@@ -22,12 +22,15 @@
 
 package com.owncloud.android.ui.activity;
 
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.owncloud.android.R;
@@ -40,6 +43,7 @@ import com.owncloud.android.utils.ThemeUtils;
  */
 public abstract class ToolbarActivity extends BaseActivity {
     private ProgressBar mProgressBar;
+    private ImageView mPreviewImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public abstract class ToolbarActivity extends BaseActivity {
      * want to use the toolbar.
      */
     protected void setupToolbar(boolean useBackgroundImage) {
-        int primaryColor = ThemeUtils.primaryColor(this);
+        int primaryColor = ThemeUtils.primaryColor(this, false);
         int primaryDarkColor = ThemeUtils.primaryDarkColor(this);
         int fontColor = ThemeUtils.fontColor(this);
 
@@ -63,8 +67,10 @@ public abstract class ToolbarActivity extends BaseActivity {
             mProgressBar.setIndeterminateDrawable(
                     ContextCompat.getDrawable(this, R.drawable.actionbar_progress_indeterminate_horizontal));
 
-            ThemeUtils.colorToolbarProgressBar(this, ThemeUtils.primaryColor(this));
+            ThemeUtils.colorToolbarProgressBar(this, ThemeUtils.primaryColor(this, false));
         }
+
+        mPreviewImage = findViewById(R.id.preview_image);
 
         ThemeUtils.colorStatusBar(this, primaryDarkColor);
 
@@ -81,7 +87,7 @@ public abstract class ToolbarActivity extends BaseActivity {
         }
     }
 
-    protected void setupToolbar() {
+    public void setupToolbar() {
         setupToolbar(false);
     }
 
@@ -146,7 +152,60 @@ public abstract class ToolbarActivity extends BaseActivity {
      * @param indeterminate <code>true</code> to enable the indeterminate mode
      */
     public void setIndeterminate(boolean indeterminate) {
-        mProgressBar.setIndeterminate(indeterminate);
+        if (mProgressBar != null) {
+            mProgressBar.setIndeterminate(indeterminate);
+        }
+    }
+
+    /**
+     * Change the visibility for the toolbar's progress bar.
+     *
+     * @param visibility visibility of the progress bar
+     */
+    public void setProgressBarVisibility(int visibility) {
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(visibility);
+        }
+    }
+
+    /**
+     * Change the visibility for the toolbar's preview image.
+     *
+     * @param visibility visibility of the preview image
+     */
+    public void setPreviewImageVisibility(int visibility) {
+        if (mPreviewImage != null) {
+            mPreviewImage.setVisibility(visibility);
+        }
+    }
+
+    /**
+     * Change the bitmap for the toolbar's preview image.
+     *
+     * @param bitmap bitmap of the preview image
+     */
+    public void setPreviewImageBitmap(Bitmap bitmap) {
+        if (mPreviewImage != null) {
+            mPreviewImage.setImageBitmap(bitmap);
+        }
+    }
+
+    /**
+     * Change the drawable for the toolbar's preview image.
+     *
+     * @param drawable drawable of the preview image
+     */
+    public void setPreviewImageDrawable(Drawable drawable) {
+        if (mPreviewImage != null) {
+            mPreviewImage.setImageDrawable(drawable);
+        }
+    }
+
+    /**
+     * get the toolbar's preview image view.
+     */
+    public ImageView getPreviewImageView() {
+            return mPreviewImage;
     }
 
     /**

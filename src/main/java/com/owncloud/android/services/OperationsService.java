@@ -1,7 +1,11 @@
-/**
+/*
  *   ownCloud Android client application
  *
+ *   @author masensio
+ *   @author David A. Velasco
+ *   @author Andy Scherzinger
  *   Copyright (C) 2015 ownCloud Inc.
+ *   Copyright (C) 2018 Andy Scherzinger
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -14,7 +18,6 @@
  *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 package com.owncloud.android.services;
@@ -49,6 +52,7 @@ import com.owncloud.android.lib.common.operations.OnRemoteOperationListener;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
+import com.owncloud.android.lib.resources.files.FileVersion;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation;
@@ -62,6 +66,7 @@ import com.owncloud.android.operations.MoveFileOperation;
 import com.owncloud.android.operations.OAuth2GetAccessToken;
 import com.owncloud.android.operations.RemoveFileOperation;
 import com.owncloud.android.operations.RenameFileOperation;
+import com.owncloud.android.operations.RestoreFileVersionOperation;
 import com.owncloud.android.operations.SynchronizeFileOperation;
 import com.owncloud.android.operations.SynchronizeFolderOperation;
 import com.owncloud.android.operations.UnshareOperation;
@@ -90,6 +95,7 @@ public class OperationsService extends Service {
     public static final String EXTRA_RESULT = "RESULT";
     public static final String EXTRA_NEW_PARENT_PATH = "NEW_PARENT_PATH";
     public static final String EXTRA_FILE = "FILE";
+    public static final String EXTRA_FILE_VERSION = "FILE_VERSION";
     public static final String EXTRA_SHARE_PASSWORD = "SHARE_PASSWORD";
     public static final String EXTRA_SHARE_TYPE = "SHARE_TYPE";
     public static final String EXTRA_SHARE_WITH = "SHARE_WITH";
@@ -97,6 +103,8 @@ public class OperationsService extends Service {
     public static final String EXTRA_SHARE_PERMISSIONS = "SHARE_PERMISSIONS";
     public static final String EXTRA_SHARE_PUBLIC_UPLOAD = "SHARE_PUBLIC_UPLOAD";
     public static final String EXTRA_SHARE_ID = "SHARE_ID";
+    public static final String EXTRA_USER_ID = "USER_ID";
+    public static final String EXTRA_IN_BACKGROUND = "IN_BACKGROUND";
 
     public static final String EXTRA_COOKIE = "COOKIE";
 
@@ -116,6 +124,7 @@ public class OperationsService extends Service {
     public static final String ACTION_MOVE_FILE = "MOVE_FILE";
     public static final String ACTION_COPY_FILE = "COPY_FILE";
     public static final String ACTION_CHECK_CURRENT_CREDENTIALS = "CHECK_CURRENT_CREDENTIALS";
+    public static final String ACTION_RESTORE_VERSION = "RESTORE_VERSION";
 
     public static final String ACTION_OPERATION_ADDED = OperationsService.class.getName() + ".OPERATION_ADDED";
     public static final String ACTION_OPERATION_FINISHED = OperationsService.class.getName() + ".OPERATION_FINISHED";
@@ -209,7 +218,7 @@ public class OperationsService extends Service {
         // Saving cookies
         try {
             OwnCloudClientManagerFactory.getDefaultSingleton().
-                    saveAllClients(this, MainApp.getAccountType());
+                    saveAllClients(this, MainApp.getAccountType(getApplicationContext()));
 
             // TODO - get rid of these exceptions
         } catch (AccountNotFoundException | IOException | OperationCanceledException | AuthenticatorException e) {
@@ -583,8 +592,12 @@ public class OperationsService extends Service {
 
                     } else if (shareId > 0) {
                         operation = new UpdateSharePermissionsOperation(shareId);
-                        int permissions = operationIntent.getIntExtra(EXTRA_SHARE_PERMISSIONS, 1);
+                        int permissions = operationIntent.getIntExtra(EXTRA_SHARE_PERMISSIONS, -1);
                         ((UpdateSharePermissionsOperation)operation).setPermissions(permissions);
+                        long expirationDateInMillis = operationIntent.getLongExtra(EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS, 0L);
+                        ((UpdateSharePermissionsOperation)operation).setExpirationDate(expirationDateInMillis);
+                        String password = operationIntent.getStringExtra(EXTRA_SHARE_PASSWORD);
+                        ((UpdateSharePermissionsOperation)operation).setPassword(password);
                     }
 
                 } else if (action.equals(ACTION_CREATE_SHARE_WITH_SHAREE)) {
@@ -644,7 +657,9 @@ public class OperationsService extends Service {
                     // Remove file or folder
                     String remotePath = operationIntent.getStringExtra(EXTRA_REMOTE_PATH);
                     boolean onlyLocalCopy = operationIntent.getBooleanExtra(EXTRA_REMOVE_ONLY_LOCAL, false);
-                    operation = new RemoveFileOperation(remotePath, onlyLocalCopy, account, getApplicationContext());
+                    boolean inBackground = operationIntent.getBooleanExtra(EXTRA_IN_BACKGROUND, false);
+                    operation = new RemoveFileOperation(remotePath, onlyLocalCopy, account, inBackground,
+                            getApplicationContext());
                     
                 } else if (action.equals(ACTION_CREATE_FOLDER)) {
                     // Create Folder
@@ -684,6 +699,11 @@ public class OperationsService extends Service {
                 } else if (action.equals(ACTION_CHECK_CURRENT_CREDENTIALS)) {
                     // Check validity of currently stored credentials for a given account
                     operation = new CheckCurrentCredentialsOperation(account);
+                } else if (action.equals(ACTION_RESTORE_VERSION)) {
+                    FileVersion fileVersion = operationIntent.getParcelableExtra(EXTRA_FILE_VERSION);
+                    String userId = operationIntent.getStringExtra(EXTRA_USER_ID);
+                    operation = new RestoreFileVersionOperation(fileVersion.getRemoteId(), fileVersion.getFileName(),
+                            userId);
                 }
             }
                 

@@ -39,9 +39,6 @@
     <string name="prefs_category_general">Umum</string>
     <string name="prefs_category_more">Lainnya</string>
     <string name="prefs_manage_accounts">Kelola akun</string>
-    <string name="prefs_passcode">Kunci kode sandi</string>
-    <string name="prefs_fingerprint">Kunci Fingerprint</string>
-    <string name="prefs_fingerprint_notsetup">Belum ada fingerprint ditambahkan</string>
     <string name="prefs_expert_mode">Mode Ahli</string>
     <string name="prefs_show_hidden_files">Lihat berkas tersembunyi</string>
     <string name="prefs_log_delete_history_button">Hapus riwayat</string>
@@ -98,7 +95,6 @@
     <string name="upload_list_empty_headline">Tidak ada unggahan yang tersedia</string>
     <string name="upload_list_empty_text_auto_upload">Unggah beberapa foto atau aktifkan unggah otomatis.</string>
     <string name="file_list_folder">folder</string>
-    <string name="filedetails_select_file">Sentuh pada berkas untuk menampilkan informasi tambahan</string>
     <string name="filedetails_download">Unduh</string>
     <string name="list_layout">Daftar tampilan</string>
     <string name="common_yes">Ya</string>
@@ -152,7 +148,6 @@
     <string name="sync_current_folder_was_removed">Folder %1$s sudah tidak ada lagi</string>
     <string name="upload_query_move_foreign_files">Ruang tidak cukup untuk menyalin berkas terpilih ke folder %1$s. Apakah Anda ingin memindahkannya?</string>
     <string name="pass_code_enter_pass_code">Masukkan kode kunci Anda</string>
-    
     <string name="pass_code_configure_your_pass_code">Masukkan kode sandi Anda</string>
     <string name="pass_code_configure_your_pass_code_explanation">Kode sandi akan diminta setiap kali apl dijalankan.</string>
     <string name="pass_code_reenter_your_pass_code">Masukkan lagi kode kunci Anda</string>
@@ -201,8 +196,6 @@
 	<string name="auth_expired_saml_sso_token_toast">Sesi Anda telah berakhir. Silakan masuk kembali</string>
     <string name="auth_unsupported_multiaccount">%1$s tidak mendukung banyak akun </string>
 	<string name="auth_can_not_auth_against_server">Tidak terotentikasi ke server ini</string>
-    <string name="auth_access_failed">Akses gagal.</string>
-
     <string name="favorite">Atur untuk tersedia luring</string>
     <string name="unfavorite">Batal atur untuk tersedia luring</string>
     <string name="common_rename">Ubah nama</string>
@@ -279,7 +272,6 @@
     <string name="copy_link">Salin tautan</string>
     <string name="clipboard_text_copied">Disalin ke papan klip</string>
     <string name="clipboard_no_text_to_copy">Tidak ada teks yang disalin ke papan klip.</string>
-    <string name="clipboard_uxexpected_error">Kesalahan tak terduga saat menyalin ke papan klip</string>
     <string name="clipboard_label">Teks tersalin dari %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kesalahan fatal: tidak dapat melakukan operasi</string>
@@ -358,30 +350,17 @@
     <string name="share_no_users">Tidak ada data yang dibagikan dengan pengguna</string>
     <string name="share_add_user_or_group">Tambah pengguna atau grup</string>
     <string name="share_via_link_section_title">Bagikan tautan</string>
-    <string name="share_via_link_expiration_date_label">Atur tanggal kedaluwarsa</string>
-    <string name="share_via_link_password_label">Lindungi dengan kata sandi.</string>
-    <string name="share_via_link_password_title">Diamankan</string>
     <string name="share_via_link_hide_file_listing_permission_label">Sembunyikan daftar berkas</string>
     <string name="share_get_public_link_button">Dapatkan tautan</string>
     <string name="share_with_edit_title">Bagikan dengan %1$s</string>
-
-    <string name="share_search">Cari</string>
-
     <string name="search_users_and_groups_hint">Cari pengguna dan grup</string>
     <string name="share_group_clarification">%1$s (grup)</string>
     <string name="share_remote_clarification">%1$s (remote)</string>
     <string name="share_email_clarification">%1$s (surel)</string>
     <string name="share_known_remote_clarification">%1$s ( di %2$s )</string>
 
-    <string name="filedetails_share_link_enable">Berbagi dengan link diaktifkan</string>
-    <string name="filedetails_share_link_disable">Tidak dibagikan dengan tautan.</string>
-    <string name="filedetails_share_users_with_access">Pengguna dan Grup dengan hak akses.</string>
     <string name="share_privilege_can_share">dapat berbagi</string>
     <string name="share_privilege_can_edit">dapat disunting</string>
-    <string name="share_privilege_can_edit_create">buat</string>
-    <string name="share_privilege_can_edit_change">ubah</string>
-    <string name="share_privilege_can_edit_delete">hapus</string>
-
     <string name="action_retry_uploads">Ulangi unggahan yang gagal.</string>
     <string name="action_clear_failed_uploads">Bersihkan unggahan gagal.</string>
     <string name="action_clear_successful_uploads">Bersihkan unggahan yang berhasil.</string>
@@ -448,9 +427,6 @@
 
     <string name="whats_new_skip">Lewat</string>
 
-    <string name="fingerprint_scan_finger">Pindai jari anda.</string>
-    <string name="fingerprint_unknown">Jari tidak dikenali.</string>
-
     <!-- User information -->
     <string name="user_info_email">Surel</string>
     <string name="user_info_phone">Nomor telepon</string>
@@ -460,7 +436,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Tidak ada aktivitas.</string>
-    <string name="activities_no_results_message">Stream ini akan menampilkan \npenambahan, perubahan atau pembagian.</string>
     <string name="prefs_category_about">Tentang.</string>
 
     <string name="actionbar_contacts">Cadangkan kontak.</string>

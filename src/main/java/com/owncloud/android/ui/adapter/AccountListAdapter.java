@@ -121,7 +121,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListItem> implements
 
         TextView userName = actionView.findViewById(R.id.user_name);
         userName.setText(R.string.prefs_add_account);
-        userName.setTextColor(ThemeUtils.primaryColor(getContext()));
+        userName.setTextColor(ThemeUtils.primaryColor(getContext(), true));
 
         ((ImageView) actionView.findViewById(R.id.user_icon)).setImageResource(R.drawable.ic_account_plus);
 
@@ -153,7 +153,7 @@ public class AccountListAdapter extends ArrayAdapter<AccountListItem> implements
             View viewItem = viewHolder.imageViewItem;
             viewItem.setTag(account.name);
             DisplayUtils.setAvatar(account, this, mAccountAvatarRadiusDimension, mContext.getResources(),
-                    mContext.getStorageManager(), viewItem);
+                    mContext.getStorageManager(), viewItem, mContext);
         } catch (Exception e) {
             Log_OC.e(TAG, "Error calculating RGB value for account list item.", e);
             // use user icon as a fallback

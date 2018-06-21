@@ -1,19 +1,20 @@
-/**
+/*
  * ownCloud Android client application
  *
  * @author Andy Scherzinger
  * @author Tobias Kaminsiky
  * Copyright (C) 2016 ownCloud Inc.
- * <p/>
+ * Copyright (C) 2018 Andy Scherzinger
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -98,9 +99,26 @@ public class TextDrawable extends Drawable {
     @NonNull
     @spryCloudServer(max = 12)
     public static TextDrawable createAvatar(String accountName, float radiusInDp) throws
-            UnsupportedEncodingException, NoSuchAlgorithmException {
+            NoSuchAlgorithmException {
         String username = AccountUtils.getAccountUsername(accountName);
         return createNamedAvatar(username, radiusInDp);
+    }
+
+    /**
+     * creates an avatar in form of a TextDrawable with the first letter of the account name in a circle with the
+     * given radius.
+     *
+     * @param userId      userId to use
+     * @param radiusInDp  the circle's radius
+     * @return the avatar as a TextDrawable
+     * @throws UnsupportedEncodingException if the charset is not supported when calculating the color values
+     * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
+     */
+    @NonNull
+    @NextcloudServer(max = 12)
+    public static TextDrawable createAvatarByUserId(String userId, float radiusInDp) throws
+            NoSuchAlgorithmException {
+        return createNamedAvatar(userId, radiusInDp);
     }
 
     /**
@@ -110,12 +128,10 @@ public class TextDrawable extends Drawable {
      * @param name       the name
      * @param radiusInDp the circle's radius
      * @return the avatar as a TextDrawable
-     * @throws UnsupportedEncodingException if the charset is not supported when calculating the color values
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    public static TextDrawable createNamedAvatar(String name, float radiusInDp) throws
-            UnsupportedEncodingException, NoSuchAlgorithmException {
+    public static TextDrawable createNamedAvatar(String name, float radiusInDp) throws NoSuchAlgorithmException {
         int[] hsl = BitmapUtils.calculateHSL(name);
         int[] rgb = BitmapUtils.HSLtoRGB(hsl[0], hsl[1], hsl[2], 1);
 
@@ -130,7 +146,7 @@ public class TextDrawable extends Drawable {
      * @param canvas The canvas to draw into
      */
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         canvas.drawCircle(mRadius, mRadius, mRadius, mBackground);
         canvas.drawText(mText, mRadius, mRadius - ((mTextPaint.descent() + mTextPaint.ascent()) / 2), mTextPaint);
     }

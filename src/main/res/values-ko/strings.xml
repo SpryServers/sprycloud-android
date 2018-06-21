@@ -39,9 +39,7 @@
     <string name="prefs_category_general">일반</string>
     <string name="prefs_category_more">더 보기</string>
     <string name="prefs_manage_accounts">계정 관리</string>
-    <string name="prefs_passcode">암호 잠금</string>
-    <string name="prefs_fingerprint">지문 잠금</string>
-    <string name="prefs_fingerprint_notsetup">설정된 지문이 없습니다.</string>
+    <string name="prefs_lock_using_device_credentials">기기 인증 정보</string>
     <string name="prefs_expert_mode">전문가 모드</string>
     <string name="prefs_show_hidden_files">숨겨진 파일 보기</string>
     <string name="prefs_log_delete_history_button">과거 기록 삭제</string>
@@ -61,6 +59,7 @@
     <string name="recommend_urls">%1$s 및 %2$s</string>
 
     <string name="auth_check_server">서버 확인</string>
+    <string name="auth_host_url">서버 주소 https://…</string>
     <string name="auth_username">사용자 이름</string>
     <string name="auth_password">암호</string>
     <string name="auth_register">Nextcloud가 없으신가요?\n공급자를 알아보려면 누르십시오</string>
@@ -80,6 +79,7 @@
     <string name="uploader_error_message_source_file_not_found">업로드하려고 선택한 파일을 찾을 수 없습니다. 파일이 존재하는지 확인하십시오.</string>
     <string name="uploader_error_message_source_file_not_copied">파일을 임시 폴더에 저장할 수 없습니다. 다시 전송을 시도하십시오.</string>
     <string name="uploader_upload_files_behaviour">업로드 설정:</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">%1$s폴더로 이동</string>
     <string name="uploader_upload_files_behaviour_only_upload">원본 폴더에 파일 유지</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">원본 폴더에서 파일 삭제</string>
     <string name="file_list_seconds_ago">초 전</string>
@@ -88,6 +88,7 @@
     <string name="file_list_empty">콘텐츠를 업로드하거나 기기와 동기화 하십시오.</string>
     <string name="file_list_empty_favorites_filter_list">즐겨찾기 표시한 파일과 폴더가 여기에 나타납니다</string>
     <string name="file_list_empty_favorites_filter">검색 결과에 즐겨찾기 항목이 없습니다.</string>
+    <string name="file_list_loading">불러오는 중…</string>
     <string name="file_list_no_app_for_file_type">이 파일을 위한 앱이 존재하지 않습니다.</string>
     <string name="local_file_list_empty">이 폴더에 파일이 없습니다.</string>
     <string name="local_folder_list_empty">더 이상의 폴더가 없습니다.</string>
@@ -110,9 +111,9 @@
     <string name="upload_list_empty_headline">업로드 없음</string>
     <string name="upload_list_empty_text_auto_upload">콘텐츠를 업로드하거나 자동 업로드를 활성화하십시오.</string>
     <string name="file_list_folder">폴더</string>
-    <string name="filedetails_select_file">파일을 누르면 추가 정보가 표시됩니다.</string>
     <string name="filedetails_download">다운로드</string>
     <string name="filedetails_sync_file">동기화</string>
+    <string name="filedetails_renamed_in_upload_msg">업로드 중 파일 이름이 %1$s(으)로 변경됨</string>
     <string name="list_layout">목록 보기</string>
     <string name="action_send_share">보내기/공유</string>
     <string name="common_yes">예</string>
@@ -123,16 +124,20 @@
     <string name="common_back">뒤로</string>
     <string name="common_save">저장</string>
     <string name="common_error">오류</string>
+    <string name="common_loading">불러오는 중…</string>
     <string name="common_unknown">알 수 없음</string>
     <string name="common_error_unknown">알 수 없는 오류</string>
     <string name="common_pending">대기 중</string>
     <string name="common_delete">삭제</string>
+    <string name="common_send">전송</string>
     <string name="about_title">정보</string>
     <string name="delete_account">계정 삭제</string>
     <string name="delete_account_warning">%s 계정 및 모든 로컬 파일을 삭제하시겠습니까\n\n삭제 작업은 취소할 수 없습니다.</string>
     <string name="avatar">아바타</string>
     <string name="active_user">활성 사용자</string>
+    <string name="upload_chooser_title">다음에서 업로드…</string>
     <string name="uploader_info_dirname">폴더 이름</string>
+    <string name="uploader_upload_in_progress_ticker">업로드 중…</string>
     <string name="uploader_upload_in_progress_content">%1$d%% %2$s 업로드 중</string>
     <string name="uploader_upload_succeeded_ticker">업로드 완료</string>
     <string name="uploader_upload_succeeded_content_single">%1$s 업로드 완료</string>
@@ -158,6 +163,7 @@
     <string name="uploads_view_upload_status_waiting_for_wifi">Wi-Fi 대기 중</string>
     <string name="uploads_view_upload_status_waiting_exit_power_save_mode">배터리 절약 모드 종료를 기다리는 중</string>
     <string name="uploads_view_later_waiting_to_upload">업로드 대기 중</string>
+    <string name="downloader_download_in_progress_ticker">다운로드 중…</string>
     <string name="downloader_download_in_progress_content">%1$d%% %2$s 다운로드 중</string>
     <string name="downloader_download_succeeded_ticker">다운로드됨</string>
     <string name="downloader_download_succeeded_content">%1$s 다운로드됨</string>
@@ -189,7 +195,6 @@
     <string name="foreign_files_remote_text">원격: %1$s</string>
     <string name="upload_query_move_foreign_files">공간이 부족해서 선택한 파일을 %1$s 폴더로 복사할 수 없습니다. 대신 이동하시겠습니까?</string>
     <string name="pass_code_enter_pass_code">암호를 입력하십시오</string>
-    
     <string name="pass_code_configure_your_pass_code">암호를 입력하십시오</string>
     <string name="pass_code_configure_your_pass_code_explanation">앱을 시작할 때마다 암호를 물어봅니다</string>
     <string name="pass_code_reenter_your_pass_code">암호를 다시 입력하십시오</string>
@@ -219,14 +224,18 @@
     <string name="media_play_pause_description">재생 혹은 일시 정지 단추</string>
     <string name="media_forward_description">빨리감기 단추</string>
 
-    <string name="auth_no_net_conn_title">네트워크에 연결할 수 없음</string>
+    <string name="auth_getting_authorization">인증 중…</string>
+    <string name="auth_trying_to_login">로그인 시도 중…</string>
+	<string name="auth_no_net_conn_title">네트워크에 연결할 수 없음</string>
 	<string name="auth_nossl_plain_ok_title">암호화된 연결을 사용할 수 없습니다.</string>
 	<string name="auth_connection_established">연결됨</string>
 	<string name="auth_testing_connection">연결 테스트 중</string>
 	<string name="auth_not_configured_title">서버 설정이 잘못됨</string>
 	<string name="auth_account_not_new">이 장치에 같은 사용자 이름과 서버를 사용하는 계정이 이미 존재합니다</string>
 	<string name="auth_account_not_the_same">입력한 사용자가 이 계정의 사용자와 일치하지 않습니다</string>
+	<string name="auth_unknown_error_http_title">알 수 없는 HTTP오류가 발생했습니다!</string>
 	<string name="auth_unknown_error_title">알 수 없는 오류가 발생했습니다!</string>
+	<string name="auth_unknown_error_exception_title">알 수 없는 오류: %1$s</string>
 	<string name="auth_unknown_host_title">호스트를 찾을 수 없음</string>
 	<string name="auth_incorrect_path_title">서버를 찾을 수 없음</string>
 	<string name="auth_timeout_title">서버 응답 시간이 초과됨</string>
@@ -243,14 +252,16 @@
 	<string name="auth_expired_oauth_token_toast">인증이 만료되었습니다. 다시 인증하십시오</string>
 	<string name="auth_expired_basic_auth_toast">현재 암호를 입력하십시오</string>
 	<string name="auth_expired_saml_sso_token_toast">세션이 만료되었습니다. 다시 접속하십시오</string>
-    <string name="auth_unsupported_multiaccount">%1$s에서 다중 계정을 지원하지 않습니다</string>
+    <string name="auth_connecting_auth_server">인증 서버에 연결…</string>
+	<string name="auth_unsupported_multiaccount">%1$s에서 다중 계정을 지원하지 않습니다</string>
 	<string name="auth_fail_get_user_name">서버에서 올바른 사용자 ID를 반환하지 않습니다. 시스템 관리자에게 연락하십시오</string>
 	<string name="auth_can_not_auth_against_server">이 서버에 인증할 수 없음</string>
     <string name="auth_account_does_not_exist">이 장치에 아직 계정이 추가되지 않았음</string>
-    <string name="auth_access_failed">접근 실패</string>
-
+    <string name="auth_access_failed">접근 실패: %1$s</string>
     <string name="favorite">오프라인 사용 가능으로 설정</string>
     <string name="unfavorite">오프라인 사용 불가능으로 설정</string>
+    <string name="favorite_real">즐겨찾기에 추가</string>
+    <string name="unset_favorite_real">즐겨찾기에서 삭제</string>
     <string name="encrypted">암호화하도록 설정</string>
     <string name="unset_encrypted">암호화 해제</string>
     <string name="common_rename">이름 바꾸기</string>
@@ -261,16 +272,22 @@
     <string name="remove_success_msg">삭제함</string>
     <string name="remove_fail_msg">삭제할 수 없음</string>
     <string name="rename_dialog_title">새 이름 입력</string>
+    <string name="rename_local_fail_msg">로컬 파일의 이름을 변경할 수 없습니다. 다른 이름을 입력하십시오</string>
+    <string name="rename_server_fail_msg">이름을 변경할 수 없음. 이름이 이미 사용중입니다.</string>
     <string name="sync_file_nothing_to_do_msg">파일 내용이 이미 동기화됨</string>
     <string name="create_dir_fail_msg">폴더를 만들 수 없음</string>
     <string name="filename_forbidden_characters">사용할 수 없는 문자: / \\ &lt; &gt; : \" | ? *</string>
     <string name="filename_forbidden_charaters_from_server">파일 이름에 잘못된 글자가 한 자 이상 있음</string>
     <string name="filename_empty">파일 이름이 비어 있을 수 없음</string>
+    <string name="wait_a_moment">잠시 기다려 주십시오…</string>
     <string name="wait_checking_credentials">저장된 인증 정보 확인 중</string>
     <string name="filedisplay_no_file_selected">선택한 파일 없음</string>
+    <string name="activity_chooser_title">다음으로 링크 보내기…</string>
     <string name="wait_for_tmp_copy_from_private_storage">개인 저장소에서 파일 복사</string>
     
     <string name="oauth_check_onoff">OAuth 2.0으로 로그인</string>
+    <string name="oauth_login_connection">OAuth 2.0 서버에 연결 중…</string>
+        
     <string name="ssl_validator_header">서버를 검증할 수 없습니다</string>
     <string name="ssl_validator_reason_cert_not_trusted">- 서버 인증서를 신뢰할 수 없습니다</string>
     <string name="ssl_validator_reason_cert_expired">- 서버 인증서가 만료되었습니다</string>
@@ -305,6 +322,7 @@
     <string name="placeholder_timestamp">2012년 05월 18일 오후 12:23</string>
     <string name="placeholder_media_time">12:23:45</string>
 
+    <string name="auto_upload_on_wifi">Wi-Fi에서만 업로드</string>
     <string name="instant_upload_on_charging">충전 중에만 업로드</string>
     <string name="instant_upload_path">/InstantUpload</string>
     <string name="auto_upload_path">/자동 업로드</string>
@@ -340,7 +358,6 @@
     <string name="copy_link">링크 주소 복사</string>
     <string name="clipboard_text_copied">클립보드로 복사됨</string>
     <string name="clipboard_no_text_to_copy">클립보드에 복사할 텍스트가 없음</string>
-    <string name="clipboard_uxexpected_error">클립보드에 복사하는 중 예기치 않은 오류</string>
     <string name="clipboard_label">%1$s에서 텍스트를 복사함</string>
 
     <string name="error_cant_bind_to_operations_service">치명적 오류: 작업을 수행할 수 없음</string>
@@ -361,6 +378,14 @@
     <string name="downloader_download_file_not_found">이 파일을 서버에서 더 이상 사용할 수 없음</string>
 
     <string name="file_migration_dialog_title">저장소 경로 업데이트 중</string>
+    <string name="file_migration_preparing">이전 준비 중…</string>
+    <string name="file_migration_checking_destination">대상 점검 중…</string>
+    <string name="file_migration_saving_accounts_configuration">계정 설정 저장중…</string>
+    <string name="file_migration_waiting_for_unfinished_sync">모든 동기화가 완료되기를 기다리는 중…</string>
+    <string name="file_migration_migrating">데이터 이동 중…</string>
+    <string name="file_migration_updating_index">색인 업데이트 중…</string>
+    <string name="file_migration_cleaning">정리 중…</string>
+    <string name="file_migration_restoring_accounts_configuration">계정 설정 복원 중…</string>
     <string name="file_migration_ok_finished">완료됨</string>
     <string name="file_migration_failed_not_enough_space">공간 부족</string>
     <string name="file_migration_failed_not_writable">대상 파일에 기록할 수 없음</string>
@@ -384,7 +409,9 @@
 	<string name="log_send_history_button">기록 보내기</string>
 	<string name="log_send_no_mail_app">로그를 보내는 데 사용할 수 있는 앱이 없습니다. 이메일 앱을 설치하십시오.</string>
 	<string name="log_send_mail_subject">%1$s Android 앱 로그</string>
-    <string name="saml_authentication_required_text">암호가 필요함</string>
+    <string name="log_progress_dialog_text">데이터 불러오는 중…</string>
+
+	<string name="saml_authentication_required_text">암호가 필요함</string>
 	<string name="saml_authentication_wrong_pass">잘못된 암호</string>
 	<string name="actionbar_move">이동</string>
     <string name="actionbar_copy">복사</string>
@@ -426,6 +453,8 @@
     <string name="set_picture_as">다음으로 사진 사용</string>
     <string name="set_as">다음으로 설정</string>
 
+    <string name="prefs_instant_behaviour_dialogTitle">원래 파일은</string>
+    <string name="prefs_instant_behaviour_title">원래 파일은…</string>
     <string name="select_all">모두 선택</string>
     <string name="deselect_all">모두 선택 해제</string>
 
@@ -439,17 +468,14 @@
     <string name="share_with_user_section_title">사용자와 그룹과 공유하기</string>
     <string name="share_no_users">사용자와 공유한 데이터 없음</string>
     <string name="share_add_user_or_group">사용자 또는 그룹 추가</string>
-    <string name="share_via_link_section_title">링크 공유</string>
-    <string name="share_via_link_expiration_date_label">만료 날짜 설정</string>
+    <string name="share_via_link_edit_permission_label">편집 허용</string>
     <string name="share_via_link_password_label">암호로 보호</string>
     <string name="share_via_link_password_title">보호됨</string>
-    <string name="share_via_link_edit_permission_label">편집 허용</string>
+    <string name="share_via_link_expiration_date_label">만료 날짜 설정</string>
+    <string name="share_via_link_section_title">링크 공유</string>
     <string name="share_via_link_hide_file_listing_permission_label">파일 목록 숨김</string>
     <string name="share_get_public_link_button">링크 얻기</string>
     <string name="share_with_edit_title">%1$s 님과 공유</string>
-
-    <string name="share_search">검색</string>
-
     <string name="search_users_and_groups_hint">사용자와 그룹 검색</string>
     <string name="share_group_clarification">%1$s(그룹)</string>
     <string name="share_remote_clarification">%1$s(원격)</string>
@@ -457,15 +483,8 @@
     <string name="share_known_remote_clarification">%1$s(%2$s에서)</string>
 
     <string name="share_sharee_unavailable">클라이언트에서 사용자간 공유를 사용하려면 서버를 업그레이드해야 합니다.\n시스템 관리자에게 문의하십시오</string>
-    <string name="filedetails_share_link_enable">링크로 공유 활성화됨</string>
-    <string name="filedetails_share_link_disable">링크로 공유하지 않음</string>
-    <string name="filedetails_share_users_with_access">접근 가능한 사용자와 그룹</string>
     <string name="share_privilege_can_share">공유 가능</string>
     <string name="share_privilege_can_edit">편집 가능</string>
-    <string name="share_privilege_can_edit_create">생성</string>
-    <string name="share_privilege_can_edit_change">변경</string>
-    <string name="share_privilege_can_edit_delete">삭제</string>
-
     <string name="action_retry_uploads">실패한 업로드 다시 시도</string>
     <string name="action_clear_failed_uploads">실패한 업로드 삭제</string>
     <string name="action_clear_successful_uploads">성공한 업로드 삭제</string>
@@ -538,11 +557,9 @@
     <string name="welcome_feature_3_title">자동 업로드</string>
     <string name="welcome_feature_3_text">내 사진을 안전하게 보관</string>
 
+    <string name="whats_new_end_to_end_encryption_title">종단간 암호화</string>
     <string name="whats_new_ipv6_title">IPv6 지원</string>
     <string name="whats_new_skip">건너뛰기</string>
-
-    <string name="fingerprint_scan_finger">지문을 스캔하십시오</string>
-    <string name="fingerprint_unknown">지문을 인식할 수 없음</string>
 
     <!-- User information -->
     <string name="user_info_email">이메일</string>
@@ -555,7 +572,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">아직 활동 없음</string>
-    <string name="activities_no_results_message">이 스트림은 추가, 변경, 공유 등\n이벤트를 표시합니다</string>
     <string name="prefs_category_about">정보</string>
 
     <string name="actionbar_contacts">주소록 백업</string>
@@ -615,7 +631,6 @@
     <string name="activity_icon">활동 아이콘</string>
     <string name="file_icon">파일 아이콘</string>
     <string name="user_icon">사용자 아이콘</string>
-    <string name="fingerprint_icon">지문 아이콘</string>
     <string name="favorite_icon">즐겨찾기 아이콘</string>
     <string name="shared_via_link_icon">링크로 공유됨 아이콘</string>
     <string name="synced_icon">동기화됨 아이콘</string>
@@ -684,6 +699,7 @@
     <string name="end_to_end_encryption_title">암호화 설정</string>
     <string name="end_to_end_encryption_passphrase_title">12단어 암구호를 기록해 두십시오</string>
     <string name="end_to_end_encryption_not_supported">암호화 기능은 KitKat(4.4) 이상에서만 지원합니다.</string>
+    <string name="end_to_end_encryption_not_enabled">종단간 암호화가 서버단에서 사용 해제 되어 있습니다.</string>
     <string name="end_to_end_encryption_confirm_button">암호화 설정</string>
     <string name="end_to_end_encryption_dialog_close">닫기</string>
     <string name="end_to_end_encryption_storing_keys">키 저장 중</string>

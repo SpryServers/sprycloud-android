@@ -1,5 +1,5 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Andy Scherzinger
  * @author Bartek Przybylski
@@ -25,6 +25,7 @@
 package com.owncloud.android.utils;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -112,8 +113,8 @@ public class DisplayUtils {
     private static final int RELATIVE_THRESHOLD_CRITICAL = 95;
     private static final String MIME_TYPE_UNKNOWN = "Unknown type";
 
-    private static final String HTTP_PROTOCOLL = "http://";
-    private static final String HTTPS_PROTOCOLL = "https://";
+    private static final String HTTP_PROTOCOL = "http://";
+    private static final String HTTPS_PROTOCOL = "https://";
     private static final String TWITTER_HANDLE_PREFIX = "@";
 
     private static Map<String, String> mimeType2HumanReadable;
@@ -200,12 +201,12 @@ public class DisplayUtils {
             return "";
         }
 
-        if (url.length() >= 7 && url.substring(0, 7).equalsIgnoreCase(HTTP_PROTOCOLL)) {
-            return url.substring(HTTP_PROTOCOLL.length()).trim();
+        if (url.length() >= 7 && url.substring(0, 7).equalsIgnoreCase(HTTP_PROTOCOL)) {
+            return url.substring(HTTP_PROTOCOL.length()).trim();
         }
 
-        if (url.length() >= 8 && url.substring(0, 8).equalsIgnoreCase(HTTPS_PROTOCOLL)) {
-            return url.substring(HTTPS_PROTOCOLL.length()).trim();
+        if (url.length() >= 8 && url.substring(0, 8).equalsIgnoreCase(HTTPS_PROTOCOL)) {
+            return url.substring(HTTPS_PROTOCOL.length()).trim();
         }
 
         return url.trim();
@@ -433,50 +434,72 @@ public class DisplayUtils {
     }
 
     /**
-     * fetches and sets the avatar of the current account in the drawer in case the drawer is available.
+     * fetches and sets the avatar of the given account in the passed callContext
      *
-     * @param account        the account to be set in the drawer
+     * @param account        the account to be used to connect to server
      * @param avatarRadius   the avatar radius
      * @param resources      reference for density information
      * @param storageManager reference for caching purposes
+     * @param callContext    which context is called to set the generated avatar
      */
-    public static void setAvatar(Account account, AvatarGenerationListener listener, float avatarRadius,
-                                 Resources resources, FileDataStorageManager storageManager, Object callContext) {
-        if (account != null) {
-            if (callContext instanceof View) {
-                ((View) callContext).setContentDescription(account.name);
+    public static void setAvatar(@NonNull Account account, AvatarGenerationListener listener,
+                                 float avatarRadius, Resources resources, FileDataStorageManager storageManager,
+                                 Object callContext, Context context) {
+
+        AccountManager accountManager = AccountManager.get(context);
+        String userId = accountManager.getUserData(account,
+                com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
+
+        setAvatar(account, userId, listener, avatarRadius, resources, storageManager, callContext, context);
+    }
+
+    /**
+     * fetches and sets the avatar of the given account in the passed callContext
+     *
+     * @param account        the account to be used to connect to server
+     * @param userId         the userId which avatar should be set
+     * @param avatarRadius   the avatar radius
+     * @param resources      reference for density information
+     * @param storageManager reference for caching purposes
+     * @param callContext    which context is called to set the generated avatar
+     */
+    public static void setAvatar(@NonNull Account account, @NonNull String userId, AvatarGenerationListener listener,
+                                 float avatarRadius, Resources resources, FileDataStorageManager storageManager,
+                                 Object callContext, Context context) {
+        if (callContext instanceof View) {
+            ((View) callContext).setContentDescription(account.name);
+        }
+
+        ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(context.getContentResolver());
+
+        String serverName = account.name.substring(account.name.lastIndexOf('@') + 1, account.name.length());
+        String eTag = arbitraryDataProvider.getValue(userId + "@" + serverName, ThumbnailsCacheManager.AVATAR);
+        String avatarKey = "a_" + userId + "_" + serverName + "_" + eTag;
+
+        // first show old one
+        Drawable avatar = BitmapUtils.bitmapToCircularBitmapDrawable(resources,
+                ThumbnailsCacheManager.getBitmapFromDiskCache(avatarKey));
+
+        // if no one exists, show colored icon with initial char
+        if (avatar == null) {
+            try {
+                avatar = TextDrawable.createAvatarByUserId(userId, avatarRadius);
+            } catch (Exception e) {
+                Log_OC.e(TAG, "Error calculating RGB value for active account icon.", e);
+                avatar = resources.getDrawable(R.drawable.account_circle_white);
             }
+        }
 
-            ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(
-                    MainApp.getAppContext().getContentResolver());
+        // check for new avatar, eTag is compared, so only new one is downloaded
+        if (ThumbnailsCacheManager.cancelPotentialAvatarWork(userId, callContext)) {
+            final ThumbnailsCacheManager.AvatarGenerationTask task =
+                    new ThumbnailsCacheManager.AvatarGenerationTask(listener, callContext, storageManager,
+                            account, resources, avatarRadius, userId, serverName, context);
 
-            String eTag = arbitraryDataProvider.getValue(account, ThumbnailsCacheManager.AVATAR);
-
-            // first show old one
-            Drawable avatar = BitmapUtils.bitmapToCircularBitmapDrawable(resources,
-                    ThumbnailsCacheManager.getBitmapFromDiskCache("a_" + account.name + "_" + eTag));
-
-            // if no one exists, show colored icon with initial char
-            if (avatar == null) {
-                try {
-                    avatar = TextDrawable.createAvatar(account.name, avatarRadius);
-                } catch (Exception e) {
-                    Log_OC.e(TAG, "Error calculating RGB value for active account icon.", e);
-                    avatar = resources.getDrawable(R.drawable.account_circle_white);
-                }
-            }
-
-            // check for new avatar, eTag is compared, so only new one is downloaded
-            if (ThumbnailsCacheManager.cancelPotentialAvatarWork(account.name, callContext)) {
-                final ThumbnailsCacheManager.AvatarGenerationTask task =
-                        new ThumbnailsCacheManager.AvatarGenerationTask(listener, callContext, storageManager,
-                                account, resources, avatarRadius);
-
-                final ThumbnailsCacheManager.AsyncAvatarDrawable asyncDrawable =
-                        new ThumbnailsCacheManager.AsyncAvatarDrawable(resources, avatar, task);
-                listener.avatarGenerated(asyncDrawable, callContext);
-                task.execute(account.name);
-            }
+            final ThumbnailsCacheManager.AsyncAvatarDrawable asyncDrawable =
+                    new ThumbnailsCacheManager.AsyncAvatarDrawable(resources, avatar, task);
+            listener.avatarGenerated(asyncDrawable, callContext);
+            task.execute(userId);
         }
     }
 
@@ -644,38 +667,80 @@ public class DisplayUtils {
     }
 
     /**
-     * Show a temporary message in a Snackbar bound to the content view.
+     * Show a temporary message in a {@link Snackbar} bound to the content view.
      *
-     * @param activity Activity to which's content view the Snackbar is bound.
-     * @param messageResource Message to show.
+     * @param activity        The {@link Activity} to which's content view the {@link Snackbar} is bound.
+     * @param messageResource The resource id of the string resource to use. Can be formatted text.
      */
     public static void showSnackMessage(Activity activity, @StringRes int messageResource) {
-        Snackbar.make(activity.findViewById(android.R.id.content), messageResource, Snackbar.LENGTH_LONG).show();
+        showSnackMessage(activity.findViewById(android.R.id.content), messageResource);
     }
 
     /**
-     * Show a temporary message in a Snackbar bound to the content view.
+     * Show a temporary message in a {@link Snackbar} bound to the content view.
      *
-     * @param activity        Activity to which's content view the Snackbar is bound.
-     * @param messageResource Resource id for the format string - message to show.
-     * @param formatArgs      The format arguments that will be used for substitution.
-     */
-    public static void showSnackMessage(Activity activity, @StringRes int messageResource, Object... formatArgs) {
-        Snackbar.make(
-                activity.findViewById(android.R.id.content),
-                String.format(activity.getString(messageResource, formatArgs)),
-                Snackbar.LENGTH_LONG)
-                .show();
-    }
-
-    /**
-     * Show a temporary message in a Snackbar bound to the content view.
-     *
-     * @param activity Activity to which's content view the Snackbar is bound.
-     * @param message Message to show.
+     * @param activity The {@link Activity} to which's content view the {@link Snackbar} is bound.
+     * @param message  Message to show.
      */
     public static void showSnackMessage(Activity activity, String message) {
         Snackbar.make(activity.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * Show a temporary message in a {@link Snackbar} bound to the given view.
+     *
+     * @param view            The view the {@link Snackbar} is bound to.
+     * @param messageResource The resource id of the string resource to use. Can be formatted text.
+     */
+    public static void showSnackMessage(View view, @StringRes int messageResource) {
+        Snackbar.make(view, messageResource, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * Show a temporary message in a {@link Snackbar} bound to the given view.
+     *
+     * @param view    The view the {@link Snackbar} is bound to.
+     * @param message The message.
+     */
+    public static void showSnackMessage(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * create a temporary message in a {@link Snackbar} bound to the given view.
+     *
+     * @param view            The view the {@link Snackbar} is bound to.
+     * @param messageResource The resource id of the string resource to use. Can be formatted text.
+     */
+    public static Snackbar createSnackbar(View view, @StringRes int messageResource, int length) {
+        return Snackbar.make(view, messageResource, length);
+    }
+
+    /**
+     * Show a temporary message in a {@link Snackbar} bound to the content view.
+     *
+     * @param activity        The {@link Activity} to which's content view the {@link Snackbar} is bound.
+     * @param messageResource The resource id of the string resource to use. Can be formatted text.
+     * @param formatArgs      The format arguments that will be used for substitution.
+     */
+    public static void showSnackMessage(Activity activity, @StringRes int messageResource, Object... formatArgs) {
+        showSnackMessage(activity, activity.findViewById(android.R.id.content), messageResource, formatArgs);
+    }
+
+    /**
+     * Show a temporary message in a {@link Snackbar} bound to the content view.
+     *
+     * @param context         to load resources.
+     * @param view            The content view the {@link Snackbar} is bound to.
+     * @param messageResource The resource id of the string resource to use. Can be formatted text.
+     * @param formatArgs      The format arguments that will be used for substitution.
+     */
+    public static void showSnackMessage(Context context, View view, @StringRes int messageResource, Object... formatArgs) {
+        Snackbar.make(
+                view,
+                String.format(context.getString(messageResource, formatArgs)),
+                Snackbar.LENGTH_LONG)
+                .show();
     }
 
     // Solution inspired by https://stackoverflow.com/questions/34936590/why-isnt-my-vector-drawable-scaling-as-expected
@@ -702,4 +767,11 @@ public class DisplayUtils {
         }
     }
 
+    static public void showServerOutdatedSnackbar(Activity activity) {
+        Snackbar.make(activity.findViewById(android.R.id.content),
+                R.string.outdated_server, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.dismiss, v -> {
+                })
+                .show();
+    }
 }

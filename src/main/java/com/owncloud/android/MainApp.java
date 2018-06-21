@@ -59,6 +59,7 @@ import com.owncloud.android.jobs.NCJobCreator;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory.Policy;
 import com.owncloud.android.lib.common.utils.Log_OC;
+import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.ui.activity.ContactsPreferenceActivity;
 import com.owncloud.android.ui.activity.Preferences;
 import com.owncloud.android.ui.activity.SyncedFoldersActivity;
@@ -88,6 +89,8 @@ import static com.owncloud.android.ui.activity.ContactsPreferenceActivity.PREFER
  * classes
  */
 public class MainApp extends MultiDexApplication {
+
+    public static final OwnCloudVersion OUTDATED_SERVER_VERSION = OwnCloudVersion.nextcloud_12;
 
     private static final String TAG = MainApp.class.getSimpleName();
 
@@ -382,8 +385,8 @@ public class MainApp extends MultiDexApplication {
     // Methods to obtain Strings referring app_name 
     //   From AccountAuthenticator 
     //   public static final String ACCOUNT_TYPE = "owncloud";    
-    public static String getAccountType() {
-        return getAppContext().getResources().getString(R.string.account_type);
+    public static String getAccountType(Context context) {
+        return context.getResources().getString(R.string.account_type);
     }
 
     // Non gradle build systems do not provide BuildConfig.VERSION_CODE

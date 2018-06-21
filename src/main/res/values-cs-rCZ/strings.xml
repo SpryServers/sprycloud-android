@@ -7,7 +7,7 @@
     <string name="actionbar_upload_from_apps">Obsah z ostatních aplikací</string>
     <string name="actionbar_upload_files">Soubory</string>
     <string name="actionbar_open_with">Otevřít pomocí</string>
-    <string name="actionbar_mkdir">Nový adresář</string>
+    <string name="actionbar_mkdir">Nová složka</string>
     <string name="actionbar_settings">Nastavení</string>
     <string name="actionbar_see_details">Podrobnosti</string>
     <string name="actionbar_send_file">Odeslat</string>
@@ -16,7 +16,7 @@
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
     <string name="menu_item_sort_by_name_z_a">Z - A</string>
     <string name="menu_item_sort_by_date_newest_first">První nejnovější</string>
-    <string name="menu_item_sort_by_date_oldest_first">První nejstarší</string>
+    <string name="menu_item_sort_by_date_oldest_first">Nejstarší jako první</string>
     <string name="menu_item_sort_by_size_biggest_first">První největší</string>
     <string name="menu_item_sort_by_size_smallest_first">Nejprve nejmenší</string>
 
@@ -39,14 +39,12 @@
     <string name="prefs_category_general">Obecné</string>
     <string name="prefs_category_more">Více</string>
     <string name="prefs_manage_accounts">Spravovat účty</string>
-    <string name="prefs_passcode">Zámek bezpečnostního kódu</string>
-    <string name="prefs_fingerprint">Zámek otiskem prstu</string>
-    <string name="prefs_fingerprint_notsetup">Nebyly nastaveny žádné otisky prstů.</string>
     <string name="prefs_expert_mode">Režim pro experty</string>
     <string name="prefs_show_hidden_files">Zobrazit skryté soubory</string>
     <string name="prefs_log_delete_history_button">Smazat historii</string>
     <string name="prefs_calendar_contacts">Synchronizovat kalendář &amp; kontakty</string>
     <string name="prefs_calendar_contacts_summary">Nastavit DAVdroid (v1.3.0+) pro aktuální účet</string>
+    <string name="prefs_calendar_contacts_address_resolve_error">Počítačová adresa konta pro DAVdroid nebyla nalezena</string>
     <string name="prefs_calendar_contacts_no_store_error">F-Droid ani Google Play není nainstalováno</string>
     <string name="prefs_calendar_contacts_sync_setup_successful">Synchronizace kalendáře &amp; kontaktů úspěšně dokončena</string>
     <string name="prefs_daily_contacts_sync_summary">Denní záloha vašich kontaktů</string>
@@ -79,6 +77,7 @@
     <string name="uploader_error_message_source_file_not_found">Soubor k nahrání nebyl v tomto umístění nalezen. Zkontrolujte prosím zda soubor existuje.</string>
     <string name="uploader_error_message_source_file_not_copied">Došlo k chybě při kopírování souboru do dočasného adresáře. Zkuste prosím zopakovat odeslání.</string>
     <string name="uploader_upload_files_behaviour">Nahrát možnost:</string>
+    <string name="uploader_upload_files_behaviour_move_to_nextcloud_folder">Přesunout soubor do %1$s adresáře</string>
     <string name="uploader_upload_files_behaviour_only_upload">Jen uploadovat</string>
     <string name="uploader_upload_files_behaviour_upload_and_delete_from_source">Uploadovat a vymazat ze zdroje</string>
     <string name="file_list_seconds_ago">před pár sekundami</string>
@@ -107,8 +106,8 @@
     <string name="upload_list_empty_headline">Nic k nahrání</string>
     <string name="upload_list_empty_text_auto_upload">Nahrajte nějaký obsah nebo aktivujte automatické nahrávání.</string>
     <string name="file_list_folder">adresář</string>
-    <string name="filedetails_select_file">Více informací získáte klepnutím na soubor.</string>
     <string name="filedetails_download">Stáhnout</string>
+    <string name="filedetails_sync_file">Synchronizovat</string>
     <string name="list_layout">Náhled seznamu</string>
     <string name="action_send_share">Poslat/sdílet</string>
     <string name="common_yes">Ano</string>
@@ -124,6 +123,7 @@
     <string name="common_error_unknown">Neznámá chyba</string>
     <string name="common_pending">Čekající</string>
     <string name="common_delete">Smazat</string>
+    <string name="common_send">Odeslat</string>
     <string name="about_title">O aplikaci</string>
     <string name="delete_account">Odebrat účet</string>
     <string name="delete_account_warning">Odebrat účet %s a smazat všechny místní soubory?\n\nTuto akci nelze vzít zpět.</string>
@@ -180,7 +180,6 @@
     <string name="foreign_files_remote_text">Vzdálené: %1$s</string>
     <string name="upload_query_move_foreign_files">Pro zkopírování vybraných souborů do %1$s adresáře není dostatek volného místa. Chcete je místo toho přesunout?</string>
     <string name="pass_code_enter_pass_code">Zadejte prosím svůj bezpečnostní kód</string>
-    
     <string name="pass_code_configure_your_pass_code">Zadejte svůj bezpečnostní kód</string>
     <string name="pass_code_configure_your_pass_code_explanation">Bezpečnostní kód bude vyžadován při každém spuštění aplikace</string>
     <string name="pass_code_reenter_your_pass_code">Zopakujte prosím svůj bezpečnostní kód</string>
@@ -209,7 +208,9 @@
     <string name="media_play_pause_description">Tlačítko Přehrát/Pozastavit</string>
     <string name="media_forward_description">Tlačítko Rychle vpřed</string>
 
-    <string name="auth_no_net_conn_title">Žádné síťové spojení</string>
+    <string name="auth_getting_authorization">Příjem autorizace…</string>
+    <string name="auth_trying_to_login">Pokus o přihlášení…</string>
+	<string name="auth_no_net_conn_title">Žádné síťové spojení</string>
 	<string name="auth_nossl_plain_ok_title">Zabezpečené spojení není k dispozici</string>
 	<string name="auth_connection_established">Spojení navázáno</string>
 	<string name="auth_testing_connection">Testuje se připojení</string>
@@ -235,12 +236,14 @@
 	<string name="auth_expired_oauth_token_toast">Vaše přihlášení vypršelo. Přihlaste se prosím znovu</string>
 	<string name="auth_expired_basic_auth_toast">Zadejte prosím aktuální heslo</string>
 	<string name="auth_expired_saml_sso_token_toast">Vaše přihlášení vypršelo. Přihlaste se prosím znovu</string>
-    <string name="auth_unsupported_multiaccount">%1$s nepodporuje více účtů</string>
+    <string name="auth_connecting_auth_server">Připojování k ověřovacímu serveru…</string>
+	<string name="auth_unsupported_multiaccount">%1$s nepodporuje více účtů</string>
+	<string name="auth_fail_get_user_name">Váš server nevrací správné přihlašovací ID, kontaktujte prosím svého správce systému</string>
 	<string name="auth_can_not_auth_against_server">Na tomto serveru nelze ověřit</string>
-    <string name="auth_access_failed">Přístup selhal</string>
-
     <string name="favorite">Nastavit jako dostupné offline</string>
     <string name="unfavorite">Zrušit nastavení dostupnosti offline</string>
+    <string name="favorite_real">Přidat do oblíbených</string>
+    <string name="unset_favorite_real">Odebrat z oblíbených</string>
     <string name="common_rename">Přejmenovat</string>
     <string name="common_remove">Odstranit</string>
     <string name="confirmation_remove_file_alert">Opravdu chcete odstranit %1$s?</string>
@@ -256,9 +259,12 @@
     <string name="wait_a_moment">Počkej chvíli…</string>
     <string name="wait_checking_credentials">Ověřování uložených přihlašovacích údajů</string>
     <string name="filedisplay_no_file_selected">Žádný soubor nebyl vybrán</string>
+    <string name="activity_chooser_title">Odeslat odkaz…</string>
     <string name="wait_for_tmp_copy_from_private_storage">Kopírování souboru z privátního úložiště</string>
     
     <string name="oauth_check_onoff">Přihlásit se s OAuth 2.0</string>
+    <string name="oauth_login_connection">Připojuji se k OAuth 2.0 serveru…</string>
+        
     <string name="ssl_validator_header">Identitu serveru se nepodařilo ověřit</string>
     <string name="ssl_validator_reason_cert_not_trusted">- Certifikát serveru je nedůvěryhodný</string>
     <string name="ssl_validator_reason_cert_expired">- Certifikátu serveru vypršela platnost</string>
@@ -328,7 +334,6 @@
     <string name="copy_link">Zkopírovat odkaz</string>
     <string name="clipboard_text_copied">Zkopírováno do schránky</string>
     <string name="clipboard_no_text_to_copy">Žádný výběr textu pro kopírování do schránky</string>
-    <string name="clipboard_uxexpected_error">Neočekávaná chyba při kopírování do schránky</string>
     <string name="clipboard_label">Text zkopírován z %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kritická chyba: operace nelze provést</string>
@@ -347,7 +352,9 @@
 
     <string name="file_migration_dialog_title">Aktualizace cesty k úložišti</string>
     <string name="file_migration_preparing">Příprava migrace…</string>
+    <string name="file_migration_checking_destination">Prověřování cílového umístění…</string>
     <string name="file_migration_saving_accounts_configuration">Ukládání natavení účtu…</string>
+    <string name="file_migration_waiting_for_unfinished_sync">Čekání na nedokončené synchronizace…</string>
     <string name="file_migration_migrating">Přesouvání dat…</string>
     <string name="file_migration_updating_index">Aktualizace rejstříku…</string>
     <string name="file_migration_cleaning">Čištění…</string>
@@ -436,17 +443,21 @@
     <string name="share_with_user_section_title">Sdílet s uživateli a skupinami</string>
     <string name="share_no_users">Zatím nebyla s uživateli sdílena žádná data</string>
     <string name="share_add_user_or_group">Přidat uživatele nebo skupinu</string>
-    <string name="share_via_link_section_title">Sdílet odkaz</string>
-    <string name="share_via_link_expiration_date_label">Nastavit datum vypršení platnosti</string>
+    <string name="share_via_link_edit_permission_label">Povolit úpravy</string>
     <string name="share_via_link_password_label">Chránit heslem</string>
     <string name="share_via_link_password_title">Zabezpečeno</string>
-    <string name="share_via_link_edit_permission_label">Umožnit úpravy</string>
+    <string name="share_via_link_expiration_date_label">Nastavit datum vypršení</string>
+    <string name="share_via_link_menu_password_label">Chránit heslem (%1$s)</string>
+    <string name="share_expiration_date_label">Platnost skončí %1$s</string>
+    <string name="share_no_expiration_date_label">Nastavit datum vypršení</string>
+    <string name="share_via_link_section_title">Sdílet odkaz</string>
+    <string name="share_password_title">Chráněno heslem</string>
+    <string name="share_no_password_title">Nastavit heslo</string>
     <string name="share_via_link_hide_file_listing_permission_label">Skrýt seznam souborů</string>
     <string name="share_get_public_link_button">Vytvořit odkaz</string>
     <string name="share_with_title">Sdílet s…</string>
     <string name="share_with_edit_title">Sdílet s %1$s</string>
-
-    <string name="share_search">Hledat</string>
+    <string name="share_search">Jméno, sdružené cloud ID, nebo e-mailová adresa…</string>
 
     <string name="search_users_and_groups_hint">Prohledat uživatele a skupiny</string>
     <string name="share_group_clarification">%1$s (skupina)</string>
@@ -454,14 +465,12 @@
     <string name="share_email_clarification">%1$s (e-mail)</string>
     <string name="share_known_remote_clarification">%1$s ( v %2$s )</string>
 
-    <string name="filedetails_share_link_enable">Sdílení odkazem povoleno</string>
-    <string name="filedetails_share_link_disable">Není sdílen odkazem</string>
-    <string name="filedetails_share_users_with_access">Uživatelé a skupiny s přístupem</string>
+    <string name="share_privilege_unshare">Zrušit sdílení</string>
     <string name="share_privilege_can_share">může sdílet</string>
     <string name="share_privilege_can_edit">lze upravovat</string>
-    <string name="share_privilege_can_edit_create">vytvořit</string>
-    <string name="share_privilege_can_edit_change">změnit</string>
-    <string name="share_privilege_can_edit_delete">smazat</string>
+    <string name="share_privilege_can_edit_create">může vytvořit</string>
+    <string name="share_privilege_can_edit_change">může měnit</string>
+    <string name="share_privilege_can_edit_delete">může smazat</string>
 
     <string name="action_retry_uploads">Zkusit znovu selhavší nahrání</string>
     <string name="action_clear_failed_uploads">Vyčistit selhaná nahrávání</string>
@@ -551,9 +560,6 @@
     <string name="whats_new_ipv6_title">Podpora IPv6</string>
     <string name="whats_new_skip">Přeskočit</string>
 
-    <string name="fingerprint_scan_finger">Prosím, naskenujte svůj otisk prstu</string>
-    <string name="fingerprint_unknown">Otisk prstu nerozpoznán</string>
-
     <!-- User information -->
     <string name="user_info_email">E-mail</string>
     <string name="user_info_phone">Telefonní číslo</string>
@@ -565,7 +571,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Zatím žádná aktivita</string>
-    <string name="activities_no_results_message">Datový proud bude zobrazovat události jako přidání, změny a sdílení</string>
     <string name="prefs_category_about">O aplikaci</string>
 
     <string name="actionbar_contacts">Zálohování kontaktů</string>
@@ -618,7 +623,6 @@
     <string name="activity_icon">Ikona Aktivita</string>
     <string name="file_icon">Ikona Soubor</string>
     <string name="user_icon">Ikona Uživatel</string>
-    <string name="fingerprint_icon">Ikona Otisk prstu</string>
     <string name="favorite_icon">Ikona Oblíbené</string>
     <string name="shared_via_link_icon">Ikona Sdíleno odkazem</string>
     <string name="synced_icon">Ikona Synchronizováno</string>
@@ -679,4 +683,4 @@
     <string name="create_new_folder">Vytvořit novou složku</string>
     <string name="uploads_view_upload_status_virus_detected">Zjištěn virus. Nahrávání není možné dokončit!</string>
     <string name="tags">Štítky</string>
-</resources>
+    </resources>

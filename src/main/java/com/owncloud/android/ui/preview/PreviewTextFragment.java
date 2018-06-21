@@ -23,7 +23,6 @@ import android.accounts.Account;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +43,7 @@ import com.owncloud.android.ui.activity.FileDisplayActivity;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment;
 import com.owncloud.android.ui.dialog.RemoveFilesDialogFragment;
 import com.owncloud.android.ui.fragment.FileFragment;
+import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.MimeTypeUtil;
 
 import org.mozilla.universalchardet.ReaderFactory;
@@ -78,10 +78,10 @@ public class PreviewTextFragment extends FileFragment {
 
     /**
      * Creates an empty fragment for previews.
-     * <p/>
+     *
      * MUST BE KEPT: the system uses it when tries to re-instantiate a fragment automatically
      * (for instance, when the device is turned a aside).
-     * <p/>
+     *
      * DO NOT CALL IT: an {@link OCFile} and {@link Account} must be provided for a successful
      * construction
      */
@@ -169,7 +169,7 @@ public class PreviewTextFragment extends FileFragment {
      * {@inheritDoc}
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(PreviewTextFragment.EXTRA_FILE, getFile());
         outState.putParcelable(PreviewTextFragment.EXTRA_ACCOUNT, mAccount);
@@ -296,82 +296,28 @@ public class PreviewTextFragment extends FileFragment {
         }
 
         // additional restriction for this fragment
-        MenuItem item = menu.findItem(R.id.action_rename_file);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        // additional restriction for this fragment
-        item = menu.findItem(R.id.action_select_all);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        // additional restriction for this fragment
-        item = menu.findItem(R.id.action_move);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        // this one doesn't make sense since the file has to be down in order to be previewed
-        item = menu.findItem(R.id.action_download_file);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        item = menu.findItem(R.id.action_sync_file);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        item = menu.findItem(R.id.action_sync_account);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
+        FileMenuFilter.hideMenuItems(
+                menu.findItem(R.id.action_rename_file),
+                menu.findItem(R.id.action_select_all),
+                menu.findItem(R.id.action_move),
+                menu.findItem(R.id.action_download_file),
+                menu.findItem(R.id.action_sync_file),
+                menu.findItem(R.id.action_sync_account),
+                menu.findItem(R.id.action_favorite),
+                menu.findItem(R.id.action_unset_favorite)
+        );
 
         Boolean dualPane = getResources().getBoolean(R.bool.large_land_layout);
 
-        item = menu.findItem(R.id.action_switch_view);
-        if (item != null && !dualPane){
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        item = menu.findItem(R.id.action_sort);
-        if (item != null && !dualPane) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        // additional restriction for this fragment
-        item = menu.findItem(R.id.action_favorite);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
-        }
-
-        // additional restriction for this fragment
-        item = menu.findItem(R.id.action_unset_favorite);
-        if (item != null) {
-            item.setVisible(false);
-            item.setEnabled(false);
+        if (!dualPane) {
+            FileMenuFilter.hideMenuItems(menu.findItem(R.id.action_switch_view),
+                    menu.findItem(R.id.action_sort)
+            );
         }
 
         if(getFile().isSharedWithMe() && !getFile().canReshare()){
-            // additional restriction for this fragment
-            item = menu.findItem(R.id.action_send_share_file);
-            if(item != null){
-                item.setVisible(false);
-                item.setEnabled(false);
-            }
+            FileMenuFilter.hideMenuItem(menu.findItem(R.id.action_send_share_file));
         }
-
     }
 
     /**
@@ -382,11 +328,7 @@ public class PreviewTextFragment extends FileFragment {
         switch (item.getItemId()) {
             case R.id.action_send_share_file: {
                 if(getFile().isSharedWithMe() && !getFile().canReshare()){
-                    Snackbar.make(getView(),
-                            R.string.resharing_is_not_allowed,
-                            Snackbar.LENGTH_LONG
-                    )
-                            .show();
+                    DisplayUtils.showSnackMessage(getView(), R.string.resharing_is_not_allowed);
                 } else {
                     mContainerActivity.getFileOperationsHelper().sendShareFile(getFile());
                 }

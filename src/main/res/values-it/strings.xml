@@ -39,9 +39,13 @@
     <string name="prefs_category_general">Generale</string>
     <string name="prefs_category_more">Altro</string>
     <string name="prefs_manage_accounts">Gestisci account</string>
-    <string name="prefs_passcode">Blocco con codice di sicurezza</string>
-    <string name="prefs_fingerprint">Blocco con impronta digitale</string>
-    <string name="prefs_fingerprint_notsetup">Non è stata impostata alcuna impronta digitale</string>
+    <string name="prefs_lock">Blocca</string>
+    <string name="prefs_lock_title">Blocca utilizzando</string>
+    <string name="prefs_lock_none">Nessuno</string>
+    <string name="prefs_lock_using_passcode">Codice di sicurezza</string>
+    <string name="prefs_lock_using_device_credentials">Credenziali di dispositivo</string>
+    <string name="prefs_lock_device_credentials_enabled">Credenziali di dispositivo abilitate</string>
+    <string name="prefs_lock_device_credentials_not_setup">Non son state configurate credenziali di dispositivo</string>
     <string name="prefs_expert_mode">Modalità esperta</string>
     <string name="prefs_show_hidden_files">Mostra i file nascosti</string>
     <string name="prefs_log_delete_history_button">Elimina cronologia</string>
@@ -113,7 +117,6 @@
     <string name="upload_list_empty_headline">Nessun caricamento disponibile</string>
     <string name="upload_list_empty_text_auto_upload">Carica alcuni contenuti o attiva il caricamento automatico.</string>
     <string name="file_list_folder">cartella</string>
-    <string name="filedetails_select_file">Tocca un file per visualizzare informazioni aggiuntive.</string>
     <string name="filedetails_download">Scarica</string>
     <string name="filedetails_sync_file">Sincronizzazione</string>
     <string name="filedetails_renamed_in_upload_msg">File rinominato %1$s durante il caricamento</string>
@@ -132,6 +135,7 @@
     <string name="common_error_unknown">Errore sconosciuto</string>
     <string name="common_pending">In corso</string>
     <string name="common_delete">Elimina</string>
+    <string name="common_send">Invia</string>
     <string name="about_title">Informazioni</string>
     <string name="delete_account">Rimuovi account</string>
     <string name="delete_account_warning">Rimuovere l\'account %s e tutti i file salvati localmente?\n\nIl processo non può essere annullato.</string>
@@ -199,6 +203,8 @@
     <string name="foreign_files_remote_text">Remoto %1$s</string>
     <string name="upload_query_move_foreign_files">La mancanza di spazio impedisce di copiare i file selezionati nella cartella %1$s. Vuoi spostarli in quella cartella?</string>
     <string name="pass_code_enter_pass_code">Digita il tuo codice segreto</string>
+    <string name="default_credentials_wrong">Credenziali non corrette</string>
+    <string name="credentials_disabled">Credenziali disabilitate</string>
     
     <string name="pass_code_configure_your_pass_code">Digita il tuo codice segreto</string>
     <string name="pass_code_configure_your_pass_code_explanation">Il codice segreto sarà richiesto ogni volta che l\'applicazione è avviata</string>
@@ -262,10 +268,13 @@
 	<string name="auth_fail_get_user_name">Il server non restituisce un ID utente corretto, contatta un amministratore</string>
 	<string name="auth_can_not_auth_against_server">Impossibile autenticarsi a questo server</string>
     <string name="auth_account_does_not_exist">L\'account non è ancora aggiunto su questo dispositivo</string>
-    <string name="auth_access_failed">Accesso non riuscito</string>
+    <string name="auth_access_failed">Accesso non riuscito: %1$s</string>
+    <string name="auth_illegal_login_used">Utilizzato URL di dati di accesso non consentito</string>
 
     <string name="favorite">Imposta come disponibile non in linea</string>
     <string name="unfavorite">Rimuovi come disponibile non in linea</string>
+    <string name="favorite_real">Aggiungi ai preferiti</string>
+    <string name="unset_favorite_real">Rimuovi dai preferiti</string>
     <string name="encrypted">Imposta come cifrato</string>
     <string name="unset_encrypted">Rimuovi cifratura</string>
     <string name="common_rename">Rinomina</string>
@@ -362,7 +371,6 @@
     <string name="copy_link">Copia collegamento</string>
     <string name="clipboard_text_copied">Copiato negli appunti</string>
     <string name="clipboard_no_text_to_copy">Nessun testo ricevuto da copiare negli appunti</string>
-    <string name="clipboard_uxexpected_error">Errore inatteso durante la copia negli appunti</string>
     <string name="clipboard_label">Testo copiato da %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Errore grave: impossibile eseguire operazioni</string>
@@ -475,17 +483,24 @@
     <string name="share_with_user_section_title">Condividi con utenti e gruppi</string>
     <string name="share_no_users">Ancora nessun dato condiviso con gli utenti </string>
     <string name="share_add_user_or_group">Aggiungi utente o gruppo</string>
-    <string name="share_via_link_section_title">Condividi collegamento</string>
-    <string name="share_via_link_expiration_date_label">Imposta data di scadenza</string>
-    <string name="share_via_link_password_label">Proteggi con password</string>
+    <string name="share_via_link_edit_permission_label">Consenti la modifica</string>
+    <string name="share_via_link_password_label">Protetto con password</string>
     <string name="share_via_link_password_title">Protetto</string>
-    <string name="share_via_link_edit_permission_label">Consenti modifiche</string>
+    <string name="share_via_link_expiration_date_label">Imposta data di scadenza</string>
+    <string name="share_via_link_menu_password_label">Proteggi con password (%1$s)</string>
+    <string name="share_expiration_date_label">Scade il %1$s</string>
+    <string name="share_no_expiration_date_label">Imposta data di scadenza</string>
+    <string name="share_via_link_section_title">Condividi collegamento</string>
+    <string name="share_password_title">Protetta da password</string>
+    <string name="share_no_password_title">Imposta password</string>
+    <string name="edit_permission_label">modifica</string>
     <string name="share_via_link_hide_file_listing_permission_label">Nascondi elenco dei file</string>
     <string name="share_get_public_link_button">Ottieni collegamento</string>
     <string name="share_with_title">Condividi con…</string>
     <string name="share_with_edit_title">Condividi con %1$s</string>
+    <string name="share_via_link_unset_password">Rimuovi</string>
 
-    <string name="share_search">Cerca</string>
+    <string name="share_search">Nome, ID di cloud federata o indirizzo email…</string>
 
     <string name="search_users_and_groups_hint">Cerca utenti e gruppi</string>
     <string name="share_group_clarification">%1$s (gruppo)</string>
@@ -494,14 +509,12 @@
     <string name="share_known_remote_clarification">%1$s ( su %2$s )</string>
 
     <string name="share_sharee_unavailable">Aggiorna la versione del server per consentire la condivisione tra utenti dai loro client.\nContatta il tuo amministratore</string>
-    <string name="filedetails_share_link_enable">Condivisi tramite collegamento abilitata</string>
-    <string name="filedetails_share_link_disable">Non condivisi tramite collegamento</string>
-    <string name="filedetails_share_users_with_access">Utenti e gruppi con accesso</string>
+    <string name="share_privilege_unshare">Rimuovi condivisione</string>
     <string name="share_privilege_can_share">può condividere</string>
     <string name="share_privilege_can_edit">può modificare</string>
-    <string name="share_privilege_can_edit_create">crea</string>
-    <string name="share_privilege_can_edit_change">cambia</string>
-    <string name="share_privilege_can_edit_delete">elimina</string>
+    <string name="share_privilege_can_edit_create">può creare</string>
+    <string name="share_privilege_can_edit_change">può cambiare</string>
+    <string name="share_privilege_can_edit_delete">può eliminare</string>
 
     <string name="action_retry_uploads">Riprova caricamenti non riusciti</string>
     <string name="action_clear_failed_uploads">Cancella caricamenti non riusciti</string>
@@ -595,9 +608,6 @@
 
     <string name="whats_new_skip">Salta</string>
 
-    <string name="fingerprint_scan_finger">Esegui la scansione del tuo dito</string>
-    <string name="fingerprint_unknown">Dito non riconosciuto</string>
-
     <!-- User information -->
     <string name="user_info_email">Email</string>
     <string name="user_info_phone">Numero di telefono</string>
@@ -609,7 +619,7 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Ancora nessuna attività</string>
-    <string name="activities_no_results_message">Questo flusso mostrerà eventi come\naggiunte, modifiche e condivisioni</string>
+    <string name="activities_no_results_message">Ancora nessun evento come aggiunte, modifiche e condivisioni</string>
     <string name="prefs_category_about">Informazioni</string>
 
     <string name="actionbar_contacts">Esegui backup dei contatti</string>
@@ -672,7 +682,6 @@
     <string name="activity_icon">Icona attività</string>
     <string name="file_icon">Icona file</string>
     <string name="user_icon">Icona utente</string>
-    <string name="fingerprint_icon">Icona impronta digitale</string>
     <string name="favorite_icon">Icona preferiti</string>
     <string name="shared_via_link_icon">Icona condivisi tramite collegamento</string>
     <string name="synced_icon">Icona sincronizzati</string>
@@ -766,4 +775,15 @@
     <string name="create_new_folder">Crea una nuova cartella</string>
     <string name="uploads_view_upload_status_virus_detected">Virus rilevato! Impossibile caricare il file!</string>
     <string name="tags">Etichette</string>
+    <string name="sharee_add_failed">Aggiunta condivisione non riuscita</string>
+    <string name="unsharing_failed">Rimozione condivisione non riuscita</string>
+    <string name="updating_share_failed">Aggiornamento condivisione non riuscito</string>
+    <string name="whats_new_device_credentials_title">Usa protezione del dispositivo Android</string>
+    <string name="whats_new_device_credentials_content">Utilizza qualcosa come un modello, password, PIN o la tua impronta digitale per tenere al sicuro i tuoi dati.</string>
+    <string name="restore">Ripristina file</string>
+    <string name="new_version_was_created">Una nuova versione è stata creata</string>
+    <string name="file_version_restored_successfully">Versione del file ripristinata correttamente.</string>
+    <string name="file_version_restored_error">Errore durante il ripristino della versione del file!</string>
+    <string name="outdated_server">Il server ha raggiunto la fine della sua vita, aggiornalo!</string>
+    <string name="dismiss">Annulla</string>
 </resources>

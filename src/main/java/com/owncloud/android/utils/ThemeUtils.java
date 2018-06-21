@@ -1,11 +1,11 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Tobias Kaminsky
  * @author Andy Scherzinger
  * Copyright (C) 2017 Tobias Kaminsky
- * Copyright (C) 2017 Andy Scherzinger
- * Copyright (C) 2017 spryCloud GmbH.
+ * Copyright (C) 2017 Nextcloud GmbH
+ * Copyright (C) 2018 Andy Scherzinger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 package com.owncloud.android.utils;
 
 import android.accounts.Account;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -44,6 +46,7 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -91,14 +94,23 @@ public class ThemeUtils {
     }
 
     public static int primaryColor(Context context) {
-        return primaryColor(null, context);
+        return primaryColor(context, false);
     }
 
-    public static int primaryColor(Account account, Context context) {
+    public static int primaryColor(Context context, boolean replaceWhite) {
+        return primaryColor(null, replaceWhite, context);
+    }
+
+    public static int primaryColor(Account account, boolean replaceWhite, Context context) {
         OCCapability capability = getCapability(account, context);
 
         try {
-            return Color.parseColor(capability.getServerColor());
+            int color = Color.parseColor(capability.getServerColor());
+            if (replaceWhite && Color.WHITE == color) {
+                return Color.GRAY;
+            } else {
+                return color;
+            }
         } catch (Exception e) {
             return context.getResources().getColor(R.color.primary);
         }
@@ -108,7 +120,7 @@ public class ThemeUtils {
         return elementColor(null, context);
     }
 
-    @spryCloudServer(max = 12)
+    @NextcloudServer(max = 12)
     public static int elementColor(Account account, Context context) {
         OCCapability capability = getCapability(account, context);
 
@@ -170,7 +182,7 @@ public class ThemeUtils {
      * @param actionBar actionBar to be used
      * @param title     title to be shown
      */
-    public static void setColoredTitle(ActionBar actionBar, String title, Context context) {
+    public static void setColoredTitle(@Nullable ActionBar actionBar, String title, Context context) {
         if (actionBar != null) {
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
                 actionBar.setTitle(title);
@@ -192,13 +204,15 @@ public class ThemeUtils {
      * @param actionBar actionBar to be used
      * @param titleId   title to be shown
      */
-    public static void setColoredTitle(ActionBar actionBar, int titleId, Context context) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-            actionBar.setTitle(titleId);
-        } else {
-            String colorHex = colorToHexString(fontColor(context));
-            String title = context.getString(titleId);
-            actionBar.setTitle(Html.fromHtml("<font color='" + colorHex + "'>" + title + "</font>"));
+    public static void setColoredTitle(@Nullable ActionBar actionBar, int titleId, Context context) {
+        if (actionBar != null) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
+                actionBar.setTitle(titleId);
+            } else {
+                String colorHex = colorToHexString(fontColor(context));
+                String title = context.getString(titleId);
+                actionBar.setTitle(Html.fromHtml("<font color='" + colorHex + "'>" + title + "</font>"));
+            }
         }
     }
 
@@ -212,11 +226,17 @@ public class ThemeUtils {
         }
     }
 
+    public static void setStatusBarColor(Activity activity, @ColorInt int color) {
+        if (activity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setStatusBarColor(color);
+        }
+    }
+
     /**
      * Adjust lightness of given color
      *
      * @param lightnessDelta values -1..+1
-     * @param color
+     * @param color original color
      * @param threshold      0..1 as maximum value, -1 to disable
      * @return color adjusted by lightness
      */
@@ -278,7 +298,7 @@ public class ThemeUtils {
     }
 
     /**
-     * set the spryCloud standard colors for the snackbar.
+     * set the Nextcloud standard colors for the snackbar.
      *
      * @param context  the context relevant for setting the color according to the context's theme
      * @param snackbar the snackbar to be colored
@@ -295,8 +315,9 @@ public class ThemeUtils {
      * @param color            the color
      */
     public static void colorStatusBar(FragmentActivity fragmentActivity, @ColorInt int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fragmentActivity.getWindow().setStatusBarColor(color);
+        Window window = fragmentActivity.getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && window != null) {
+            window.setStatusBarColor(color);
         }
     }
 
@@ -353,15 +374,16 @@ public class ThemeUtils {
         return tintDrawable(drawable, color);
     }
 
+    @Nullable
     public static Drawable tintDrawable(Drawable drawable, int color) {
         if (drawable != null) {
             Drawable wrap = DrawableCompat.wrap(drawable);
             wrap.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
             return wrap;
-        } else {
-            return drawable;
         }
+
+        return null;
     }
 
     public static String colorToHexString(int color) {

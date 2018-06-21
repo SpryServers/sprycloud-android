@@ -39,9 +39,13 @@
     <string name="prefs_category_general">Опште</string>
     <string name="prefs_category_more">Остало</string>
     <string name="prefs_manage_accounts">Управљање налозима</string>
-    <string name="prefs_passcode">Закључавање кодом</string>
-    <string name="prefs_fingerprint">Закључавање отиском прста</string>
-    <string name="prefs_fingerprint_notsetup">Отисак прста није подешен.</string>
+    <string name="prefs_lock">Закључавање</string>
+    <string name="prefs_lock_title">Закључај користећи</string>
+    <string name="prefs_lock_none">Ништа</string>
+    <string name="prefs_lock_using_passcode">Код</string>
+    <string name="prefs_lock_using_device_credentials">Акредитиве уређаја</string>
+    <string name="prefs_lock_device_credentials_enabled">Укључени акредитиви уређаја</string>
+    <string name="prefs_lock_device_credentials_not_setup">Нема подешених акредитива уређаја.</string>
     <string name="prefs_expert_mode">Експертски режим</string>
     <string name="prefs_show_hidden_files">Прикажи скривене фајлове</string>
     <string name="prefs_log_delete_history_button">Обриши историјат</string>
@@ -113,7 +117,6 @@
     <string name="upload_list_empty_headline">Нема доступних отпремања</string>
     <string name="upload_list_empty_text_auto_upload">Отпремите неки садржај или укључите аутоматско отпремање.</string>
     <string name="file_list_folder">фасцикла</string>
-    <string name="filedetails_select_file">Кликните на фајл ради приказа додатних информација.</string>
     <string name="filedetails_download">Преузми</string>
     <string name="filedetails_sync_file">Синхронизуј</string>
     <string name="filedetails_renamed_in_upload_msg">Фајл преименован у %1$sза време отпремања</string>
@@ -132,6 +135,7 @@
     <string name="common_error_unknown">Непозната грешка</string>
     <string name="common_pending">На чекању</string>
     <string name="common_delete">Обриши</string>
+    <string name="common_send">Пошаљи</string>
     <string name="about_title">О програму</string>
     <string name="delete_account">Уклони налог</string>
     <string name="delete_account_warning">Уклоните налог %s и избришите све локалне фајлове?\n\nБрисање не може да се поврати.</string>
@@ -201,6 +205,8 @@
     <string name="foreign_files_remote_text">Удаљени: %1$s</string>
     <string name="upload_query_move_foreign_files">Недовољно места да се копирају означени фајлови у фасциклу %1$s. Да ли желите можда да их уместо копирања преместите тамо?</string>
     <string name="pass_code_enter_pass_code">Молимо унесите кôд за закључавање</string>
+    <string name="default_credentials_wrong">Неисправни акредитиви</string>
+    <string name="credentials_disabled">Акредитиви искључени</string>
     
     <string name="pass_code_configure_your_pass_code">Унесите код за закључавање</string>
     <string name="pass_code_configure_your_pass_code_explanation">Код ће бити затражен сваки пут кад се апликација покрене</string>
@@ -264,10 +270,13 @@
 	<string name="auth_fail_get_user_name">Сервер не враћа исправну идентификацију корисника, контактирајте администратора</string>
 	<string name="auth_can_not_auth_against_server">Не могу да аутентификујем са овим сервером</string>
     <string name="auth_account_does_not_exist">Налог још није додат на овај уређај</string>
-    <string name="auth_access_failed">Неуспео приступ</string>
+    <string name="auth_access_failed">Неуспео приступ: %1$s</string>
+    <string name="auth_illegal_login_used">Искоришћена неисправна адреса за податке пријаве</string>
 
     <string name="favorite">Постави као доступно и ван мреже</string>
     <string name="unfavorite">Склони да буде доступно и ван мреже</string>
+    <string name="favorite_real">Додај у омиљене</string>
+    <string name="unset_favorite_real">Уклони из омиљених</string>
     <string name="encrypted">Постави као шифровано</string>
     <string name="unset_encrypted">Искључи шифровање</string>
     <string name="common_rename">Преименуј</string>
@@ -364,7 +373,6 @@
     <string name="copy_link">Копирај везу</string>
     <string name="clipboard_text_copied">Копирано у оставу</string>
     <string name="clipboard_no_text_to_copy">Нема текста за копирање у оставу</string>
-    <string name="clipboard_uxexpected_error">Неочекивана грешка приликом копирања у оставу</string>
     <string name="clipboard_label">Текст прекопиран са %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Критична грешка: не могу да обавим операцију</string>
@@ -479,17 +487,24 @@
     <string name="share_with_user_section_title">Дељење са корисницима и групама</string>
     <string name="share_no_users">Још нема података подељених са корисницима</string>
     <string name="share_add_user_or_group">Додај корисника или групу</string>
-    <string name="share_via_link_section_title">Веза дељења</string>
-    <string name="share_via_link_expiration_date_label">Постави датум истека</string>
+    <string name="share_via_link_edit_permission_label">Дозволи уређивање</string>
     <string name="share_via_link_password_label">Заштити лозинком</string>
     <string name="share_via_link_password_title">Обезбеђен</string>
-    <string name="share_via_link_edit_permission_label">Дозволи измене</string>
+    <string name="share_via_link_expiration_date_label">Постави датум истека</string>
+    <string name="share_via_link_menu_password_label">Заштићено лозинком (%1$s)</string>
+    <string name="share_expiration_date_label">Истиче на %1$s</string>
+    <string name="share_no_expiration_date_label">Постави датум истека</string>
+    <string name="share_via_link_section_title">Веза дељења</string>
+    <string name="share_password_title">Заштићено лозинком</string>
+    <string name="share_no_password_title">Постави лозинку</string>
+    <string name="edit_permission_label">измени</string>
     <string name="share_via_link_hide_file_listing_permission_label">Сакриј списак фајлова</string>
     <string name="share_get_public_link_button">Добави везу</string>
     <string name="share_with_title">Подели са…</string>
     <string name="share_with_edit_title">Подели са %1$s</string>
+    <string name="share_via_link_unset_password">Уклони</string>
 
-    <string name="share_search">Тражи</string>
+    <string name="share_search">Име, ID здруженог облака или адреса е-поште…</string>
 
     <string name="search_users_and_groups_hint">Претражи кориснике и групе</string>
     <string name="share_group_clarification">%1$s (група)</string>
@@ -498,14 +513,12 @@
     <string name="share_known_remote_clarification">%1$s (на %2$s)</string>
 
     <string name="share_sharee_unavailable">Ажурирајте верзију сервера да дозвољава дељење између корисника из њихових клијената.\nКонтактирајте администратора</string>
-    <string name="filedetails_share_link_enable">Дељење преко везе омогућено</string>
-    <string name="filedetails_share_link_disable">Није дељено</string>
-    <string name="filedetails_share_users_with_access">Корисници и групе са приступом</string>
+    <string name="share_privilege_unshare">Укини дељење</string>
     <string name="share_privilege_can_share">може да дели</string>
     <string name="share_privilege_can_edit">може да мења</string>
-    <string name="share_privilege_can_edit_create">направи</string>
-    <string name="share_privilege_can_edit_change">измени</string>
-    <string name="share_privilege_can_edit_delete">обрише</string>
+    <string name="share_privilege_can_edit_create">може да направи</string>
+    <string name="share_privilege_can_edit_change">може да мења</string>
+    <string name="share_privilege_can_edit_delete">може да брише</string>
 
     <string name="action_retry_uploads">Понови неуспела отпремања</string>
     <string name="action_clear_failed_uploads">Избриши неуспела отпремања</string>
@@ -600,9 +613,6 @@
 
     <string name="whats_new_skip">Прескочи</string>
 
-    <string name="fingerprint_scan_finger">Молимо скенирајте Ваш прст</string>
-    <string name="fingerprint_unknown">Прст није препознат</string>
-
     <!-- User information -->
     <string name="user_info_email">Адреса е-поште</string>
     <string name="user_info_phone">Број телефона</string>
@@ -614,7 +624,7 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Још нема активности</string>
-    <string name="activities_no_results_message">Овде ће се приказати догађаји попут\nдодавања, измена или дељења</string>
+    <string name="activities_no_results_message">Још нема догађаја као што су додавања, измене или дељења</string>
     <string name="prefs_category_about">О програму</string>
 
     <string name="actionbar_contacts">Направите резервну копију контаката</string>
@@ -677,7 +687,6 @@
     <string name="activity_icon">Икона активности</string>
     <string name="file_icon">Икона фајла</string>
     <string name="user_icon">Икона корисника</string>
-    <string name="fingerprint_icon">Икона отиска прста</string>
     <string name="favorite_icon">Икона омиљених</string>
     <string name="shared_via_link_icon">Икона дељења преко везе</string>
     <string name="synced_icon">Икона синхронизоване ставке</string>
@@ -771,4 +780,9 @@
     <string name="create_new_folder">Направи нову фасциклу</string>
     <string name="uploads_view_upload_status_virus_detected">Вирус примећен. Отпремање не може да се заврши!</string>
     <string name="tags">Ознаке</string>
-</resources>
+    <string name="sharee_add_failed">Додавање особе за дељење није успело</string>
+    <string name="unsharing_failed">Уклањање дељења није успело</string>
+    <string name="updating_share_failed">Ажурирање дељења није успело</string>
+    <string name="whats_new_device_credentials_title">Користи Андроид заштиту уређаја</string>
+    <string name="whats_new_device_credentials_content">Користите било шта попут шаблона, лозинке, пина или отиска Вашег прста да заштитите Ваше податке.</string>
+    </resources>

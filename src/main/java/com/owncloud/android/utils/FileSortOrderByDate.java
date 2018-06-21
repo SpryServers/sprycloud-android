@@ -24,18 +24,14 @@ import com.owncloud.android.datamodel.OCFile;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Created by srkunze on 28.08.17.
  */
-
 public class FileSortOrderByDate extends FileSortOrder {
 
-    public FileSortOrderByDate(String name, boolean ascending) {
+    FileSortOrderByDate(String name, boolean ascending) {
         super(name, ascending);
     }
 
@@ -47,13 +43,8 @@ public class FileSortOrderByDate extends FileSortOrder {
     public List<OCFile> sortCloudFiles(List<OCFile> files) {
         final int multiplier = mAscending ? 1 : -1;
 
-        Collections.sort(files, new Comparator<OCFile>() {
-            @SuppressFBWarnings(value = "Bx", justification = "Would require stepping up API level")
-            public int compare(OCFile o1, OCFile o2) {
-                Long obj1 = o1.getModificationTimestamp();
-                return multiplier * obj1.compareTo(o2.getModificationTimestamp());
-            }
-        });
+        Collections.sort(files, (o1, o2) ->
+                multiplier * Long.compare(o1.getModificationTimestamp(), o2.getModificationTimestamp()));
 
         return super.sortCloudFiles(files);
     }
@@ -63,13 +54,11 @@ public class FileSortOrderByDate extends FileSortOrder {
      *
      * @param files list of files to sort
      */
+    @Override
     public List<File> sortLocalFiles(List<File> files) {
         final int multiplier = mAscending ? 1 : -1;
 
-        Collections.sort(files, (o1, o2) -> {
-            Long obj1 = o1.lastModified();
-            return multiplier * obj1.compareTo(o2.lastModified());
-        });
+        Collections.sort(files, (o1, o2) -> multiplier * Long.compare(o1.lastModified(),o2.lastModified()));
 
         return files;
     }

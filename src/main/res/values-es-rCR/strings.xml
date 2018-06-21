@@ -39,9 +39,6 @@
     <string name="prefs_category_general">General</string>
     <string name="prefs_category_more">Más</string>
     <string name="prefs_manage_accounts">Administrar cuentas</string>
-    <string name="prefs_passcode">Bloqueo con código de seguridad</string>
-    <string name="prefs_fingerprint">Bloqueo cor huella digital</string>
-    <string name="prefs_fingerprint_notsetup">No se ha establecido alguna huella digital. </string>
     <string name="prefs_expert_mode">Modo experto</string>
     <string name="prefs_show_hidden_files">Mostrar archivos ocultos</string>
     <string name="prefs_log_delete_history_button">Borrar historial</string>
@@ -113,7 +110,6 @@
     <string name="upload_list_empty_headline">No hay cargas disponibles</string>
     <string name="upload_list_empty_text_auto_upload">Carga algún contenido o activa la carga automática</string>
     <string name="file_list_folder">carpeta</string>
-    <string name="filedetails_select_file">Pulsa un archivo para mostrar información adicional.</string>
     <string name="filedetails_download">Descargar</string>
     <string name="filedetails_sync_file">Syncronizar</string>
     <string name="filedetails_renamed_in_upload_msg">El archivo se renombró com %1$s durante la carga</string>
@@ -199,7 +195,6 @@
     <string name="foreign_files_remote_text">Remoto: %1$s</string>
     <string name="upload_query_move_foreign_files">El espacio insuficiente evita que se copien los archivos seleccionados dentro de la carpeta %1$s. ¿Te gustaría moverlos ahí en su lugar?</string>
     <string name="pass_code_enter_pass_code">Por favor ingresa tu código de seguridad</string>
-    
     <string name="pass_code_configure_your_pass_code">Ingresa tu código de seguridad</string>
     <string name="pass_code_configure_your_pass_code_explanation">El código de seguridad será solicitado cada vez que inicie la aplicación</string>
     <string name="pass_code_reenter_your_pass_code">Por favor reingresa el código de seguridad</string>
@@ -262,8 +257,6 @@
 	<string name="auth_fail_get_user_name">Tu servidor no esta regresando un user ID correcto, por favor contacta a tu adminsitrador</string>
 	<string name="auth_can_not_auth_against_server">No es posible autenticarse en este servidor</string>
     <string name="auth_account_does_not_exist">La cuenta aún no ha sido agregada a este dispositivo </string>
-    <string name="auth_access_failed">Falla en el acceso</string>
-
     <string name="favorite">Establer como disponible sin conexión</string>
     <string name="unfavorite">Establecer como disponible con conexión</string>
     <string name="encrypted">Establecer como encriptado</string>
@@ -362,7 +355,6 @@
     <string name="copy_link">Copiar liga</string>
     <string name="clipboard_text_copied">Copiado al portapapeles</string>
     <string name="clipboard_no_text_to_copy">No se ha recibido texto para copiar al portapapeles</string>
-    <string name="clipboard_uxexpected_error">Se presentó un error inesperado al copiar al portapapeles</string>
     <string name="clipboard_label">Texto copiado desde %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Error crítico: No se pueden realizar operaciones</string>
@@ -476,17 +468,10 @@
     <string name="share_no_users">Aún no se ha compartido información con los usuarios</string>
     <string name="share_add_user_or_group">Agregar usuario o grupo</string>
     <string name="share_via_link_section_title">Compartir liga</string>
-    <string name="share_via_link_expiration_date_label">Establecer fecha de expiración</string>
-    <string name="share_via_link_password_label">Proteger con contraseña</string>
-    <string name="share_via_link_password_title">Asegurado</string>
-    <string name="share_via_link_edit_permission_label">Permitir edición</string>
     <string name="share_via_link_hide_file_listing_permission_label">Ocultar listado de archivos</string>
     <string name="share_get_public_link_button">Obtener liga</string>
     <string name="share_with_title">Compartir con...</string>
     <string name="share_with_edit_title">Compartir con %1$s</string>
-
-    <string name="share_search">Buscar</string>
-
     <string name="search_users_and_groups_hint">Buscar usuarios y grupos</string>
     <string name="share_group_clarification">%1$s (grupo)</string>
     <string name="share_remote_clarification">%1$s (remoto)</string>
@@ -494,15 +479,8 @@
     <string name="share_known_remote_clarification">%1$s ( a las %2$s )</string>
 
     <string name="share_sharee_unavailable">Actualiza la versión del servidor para permitir compartir entre usuarios desde sus clientes.\nPor favor contacta a tu administrador</string>
-    <string name="filedetails_share_link_enable">Compartir por liga habilitado</string>
-    <string name="filedetails_share_link_disable">No compartido por liga</string>
-    <string name="filedetails_share_users_with_access">Usuarios y grupos con accesos</string>
     <string name="share_privilege_can_share">puede compartir</string>
     <string name="share_privilege_can_edit">puede editar</string>
-    <string name="share_privilege_can_edit_create">crear</string>
-    <string name="share_privilege_can_edit_change">cambiar</string>
-    <string name="share_privilege_can_edit_delete">borrar</string>
-
     <string name="action_retry_uploads">Reintentar cargas fallidas</string>
     <string name="action_clear_failed_uploads">Borrar cargas fallidas</string>
     <string name="action_clear_successful_uploads">Borrar cargas exitosas</string>
@@ -595,9 +573,6 @@
 
     <string name="whats_new_skip">Omitir</string>
 
-    <string name="fingerprint_scan_finger">Por favor escanea tu dedo</string>
-    <string name="fingerprint_unknown">El dedo no ha sido reconocido</string>
-
     <!-- User information -->
     <string name="user_info_email">Correo electrónico</string>
     <string name="user_info_phone">Número telefónico</string>
@@ -609,7 +584,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Aún no hay actividades</string>
-    <string name="activities_no_results_message">Este flujo le mostrará eventos tales como \nagregados, cambios &amp; elementos compartidos</string>
     <string name="prefs_category_about">Acerca de</string>
 
     <string name="actionbar_contacts">Respaldar contactos</string>
@@ -672,7 +646,6 @@
     <string name="activity_icon">Ícono de actividad</string>
     <string name="file_icon">Ícono de archivo</string>
     <string name="user_icon">Ícono de usuario</string>
-    <string name="fingerprint_icon">Ícono de huella digital</string>
     <string name="favorite_icon">Ícono de Favorito</string>
     <string name="shared_via_link_icon">Ícono de compartido por liga</string>
     <string name="synced_icon">Ícono de sincronizado</string>
@@ -766,4 +739,4 @@
     <string name="create_new_folder">Crear nueva carpeta</string>
     <string name="uploads_view_upload_status_virus_detected">Virus detectado. ¡La carga no puede ser completada!</string>
     <string name="tags">Etiquetas</string>
-</resources>
+    </resources>

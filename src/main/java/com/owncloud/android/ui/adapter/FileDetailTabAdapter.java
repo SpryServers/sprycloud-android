@@ -36,6 +36,9 @@ public class FileDetailTabAdapter extends FragmentStatePagerAdapter {
     private OCFile file;
     private Account account;
 
+    private FileDetailSharingFragment fileDetailSharingFragment;
+    private FileDetailActivitiesFragment fileDetailActivitiesFragment;
+
     public FileDetailTabAdapter(FragmentManager fm, OCFile file, Account account) {
         super(fm);
 
@@ -47,12 +50,22 @@ public class FileDetailTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FileDetailActivitiesFragment.newInstance(file, account);
+                fileDetailActivitiesFragment = FileDetailActivitiesFragment.newInstance(file, account);
+                return fileDetailActivitiesFragment; 
             case 1:
-                return FileDetailSharingFragment.newInstance(file, account);
+                fileDetailSharingFragment = FileDetailSharingFragment.newInstance(file, account);
+                return fileDetailSharingFragment;
             default:
                 return null;
         }
+    }
+
+    public FileDetailSharingFragment getFileDetailSharingFragment() {
+        return fileDetailSharingFragment;
+    }
+
+    public FileDetailActivitiesFragment getFileDetailActivitiesFragment() {
+        return fileDetailActivitiesFragment;
     }
 
     @Override

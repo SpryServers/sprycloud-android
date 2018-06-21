@@ -23,8 +23,6 @@
 package com.owncloud.android.ui.activity;
 
 import android.accounts.Account;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,8 +50,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.URLUtil;
 
 import com.owncloud.android.BuildConfig;
@@ -69,11 +69,12 @@ import com.owncloud.android.lib.common.ExternalLinkType;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.utils.Log_OC;
+import com.owncloud.android.utils.DeviceCredentialUtils;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.MimeTypeUtil;
 import com.owncloud.android.utils.ThemeUtils;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * An Activity that allows the user to change the application's settings.
@@ -85,11 +86,18 @@ public class Preferences extends PreferenceActivity
 
     private static final String TAG = Preferences.class.getSimpleName();
 
+    public static final String PREFERENCE_LOCK= "lock";
+
+    public static final String LOCK_NONE = "none";
+    public static final String LOCK_PASSCODE = "passcode";
+    public static final String LOCK_DEVICE_CREDENTIALS = "device_credentials";
+
     public final static String PREFERENCE_USE_FINGERPRINT = "use_fingerprint";
     public static final String PREFERENCE_EXPERT_MODE = "expert_mode";
 
     private static final int ACTION_REQUEST_PASSCODE = 5;
     private static final int ACTION_CONFIRM_PASSCODE = 6;
+    private static final int ACTION_CONFIRM_DEVICE_CREDENTIALS = 7;
 
     private static final int ACTION_REQUEST_CODE_DAVDROID_SETUP = 10;
 
@@ -102,14 +110,14 @@ public class Preferences extends PreferenceActivity
      */
     private Uri mUri;
 
-    private SwitchPreference pCode;
-    private SwitchPreference fPrint;
+    private ListPreference mLock;
     private SwitchPreference mShowHiddenFiles;
     private SwitchPreference mExpertMode;
     private AppCompatDelegate mDelegate;
 
     private ListPreference mPrefStoragePath;
     private String mStoragePath;
+    private String pendingLock;
 
     public static class PreferenceKeys {
         public static final String STORAGE_PATH = "storage_path";
@@ -501,26 +509,26 @@ public class Preferences extends PreferenceActivity
                 accentColor));
 
         boolean fPassCodeEnabled = getResources().getBoolean(R.bool.passcode_enabled);
-        boolean fPrintEnabled = getResources().getBoolean(R.bool.fingerprint_enabled);
+        boolean fDeviceCredentialsEnabled = getResources().getBoolean(R.bool.device_credentials_enabled);
         boolean fShowHiddenFilesEnabled = getResources().getBoolean(R.bool.show_hidden_files_enabled);
+        boolean fSyncedFolderLightEnabled = getResources().getBoolean(R.bool.syncedFolder_light);
 
-        setupPasscodePreference(preferenceCategoryDetails, fPassCodeEnabled);
-
-        setupFingerprintPreference(preferenceCategoryDetails, fPrintEnabled);
+        setupLockPreference(preferenceCategoryDetails, fPassCodeEnabled, fDeviceCredentialsEnabled);
 
         setupHiddenFilesPreference(preferenceCategoryDetails, fShowHiddenFilesEnabled);
 
-        setupExpertModePreference(preferenceCategoryDetails);
+        setupExpertModePreference(preferenceCategoryDetails, fSyncedFolderLightEnabled);
 
-        if (!fShowHiddenFilesEnabled && !fPrintEnabled && !fPassCodeEnabled) {
+        if (!fPassCodeEnabled && !fDeviceCredentialsEnabled && !fShowHiddenFilesEnabled && fSyncedFolderLightEnabled) {
             preferenceScreen.removePreference(preferenceCategoryDetails);
         }
     }
 
-    private void setupExpertModePreference(PreferenceCategory preferenceCategoryDetails) {
+    private void setupExpertModePreference(PreferenceCategory preferenceCategoryDetails,
+                                           boolean fSyncedFolderLightEnabled) {
         mExpertMode = (SwitchPreference) findPreference(PREFERENCE_EXPERT_MODE);
 
-        if (getResources().getBoolean(R.bool.syncedFolder_light)) {
+        if (fSyncedFolderLightEnabled) {
             preferenceCategoryDetails.removePreference(mExpertMode);
         } else {
             mExpertMode = (SwitchPreference) findPreference(PREFERENCE_EXPERT_MODE);
@@ -568,78 +576,56 @@ public class Preferences extends PreferenceActivity
         }
     }
 
-    private void setupFingerprintPreference(PreferenceCategory preferenceCategoryDetails, boolean fPrintEnabled) {
-        fPrint = (SwitchPreference) findPreference(PREFERENCE_USE_FINGERPRINT);
-        if (fPrint != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (FingerprintActivity.isFingerprintCapable(MainApp.getAppContext()) && fPrintEnabled) {
-                    final Activity activity = this;
-                    fPrint.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(Preference preference, Object newValue) {
-                            Boolean incoming = (Boolean) newValue;
+    private void setupLockPreference(PreferenceCategory preferenceCategoryDetails,
+                                     boolean passCodeEnabled,
+                                     boolean deviceCredentialsEnabled) {
+        mLock = (ListPreference) findPreference(PREFERENCE_LOCK);
+        if (mLock != null && (passCodeEnabled || deviceCredentialsEnabled)) {
+            ArrayList<String> lockEntries = new ArrayList<>(3);
+            lockEntries.add(getString(R.string.prefs_lock_none));
+            lockEntries.add(getString(R.string.prefs_lock_using_passcode));
+            lockEntries.add(getString(R.string.prefs_lock_using_device_credentials));
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (FingerprintActivity.isFingerprintReady(MainApp.getAppContext())) {
-                                    SharedPreferences appPrefs =
-                                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                    SharedPreferences.Editor editor = appPrefs.edit();
-                                    editor.putBoolean(PREFERENCE_USE_FINGERPRINT, incoming);
-                                    editor.apply();
-                                    return true;
-                                } else {
-                                    if (incoming) {
-                                        DisplayUtils.showSnackMessage(activity, R.string.prefs_fingerprint_notsetup);
-                                        fPrint.setChecked(false);
-                                    }
-                                    SharedPreferences appPrefs =
-                                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                    SharedPreferences.Editor editor = appPrefs.edit();
-                                    editor.putBoolean(PREFERENCE_USE_FINGERPRINT, false);
-                                    editor.apply();
-                                    return false;
-                                }
-                            } else {
-                                return false;
-                            }
-                        }
-                    });
-                    if (!FingerprintActivity.isFingerprintReady(MainApp.getAppContext())) {
-                        fPrint.setChecked(false);
-                    }
+            ArrayList<String> lockValues = new ArrayList<>(3);
+            lockValues.add(LOCK_NONE);
+            lockValues.add(LOCK_PASSCODE);
+            lockValues.add(LOCK_DEVICE_CREDENTIALS);
 
-                } else {
-                    preferenceCategoryDetails.removePreference(fPrint);
-                }
-            } else {
-                preferenceCategoryDetails.removePreference(fPrint);
+            if (!passCodeEnabled) {
+                lockEntries.remove(1);
+                lockValues.remove(1);
+            } else if (!deviceCredentialsEnabled || Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                    !DeviceCredentialUtils.areCredentialsAvailable(getApplicationContext())) {
+                lockEntries.remove(2);
+                lockValues.remove(2);
             }
-        }
-    }
+            String[] lockEntriesArr = new String[lockEntries.size()];
+            lockEntriesArr = lockEntries.toArray(lockEntriesArr);
+            String[] lockValuesArr = new String[lockValues.size()];
+            lockValuesArr = lockValues.toArray(lockValuesArr);
 
-    private void setupPasscodePreference(PreferenceCategory preferenceCategoryDetails, boolean fPassCodeEnabled) {
-        pCode = (SwitchPreference) findPreference(PassCodeActivity.PREFERENCE_SET_PASSCODE);
-        if (pCode != null && fPassCodeEnabled) {
-            pCode.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            mLock.setEntries(lockEntriesArr);
+            mLock.setEntryValues(lockValuesArr);
+            mLock.setSummary(mLock.getEntry());
+            mLock.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Intent i = new Intent(getApplicationContext(), PassCodeActivity.class);
-                    Boolean incoming = (Boolean) newValue;
-
-                    i.setAction(
-                            incoming ? PassCodeActivity.ACTION_REQUEST_WITH_RESULT :
-                                    PassCodeActivity.ACTION_CHECK_WITH_RESULT
-                    );
-
-                    startActivityForResult(i, incoming ? ACTION_REQUEST_PASSCODE :
-                            ACTION_CONFIRM_PASSCODE);
-
-                    // Don't update just yet, we will decide on it in onActivityResult
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    pendingLock = LOCK_NONE;
+                    String oldValue = ((ListPreference) preference).getValue();
+                    String newValue = (String) o;
+                    if (!oldValue.equals(newValue)) {
+                        if (oldValue.equals(LOCK_NONE)) {
+                            enableLock(newValue);
+                        } else {
+                            pendingLock = newValue;
+                            disableLock(oldValue);
+                        }
+                    }
                     return false;
                 }
             });
         } else {
-            preferenceCategoryDetails.removePreference(pCode);
+            preferenceCategoryDetails.removePreference(mLock);
         }
     }
 
@@ -688,6 +674,35 @@ public class Preferences extends PreferenceActivity
                     preferenceCategorySyncedFolders.removePreference(pSyncedFolder);
                 }
             }
+        }
+    }
+
+    private void enableLock(String lock) {
+        pendingLock = LOCK_NONE;
+        if (lock.equals(LOCK_PASSCODE)) {
+            Intent i = new Intent(getApplicationContext(), PassCodeActivity.class);
+            i.setAction(PassCodeActivity.ACTION_REQUEST_WITH_RESULT);
+            startActivityForResult(i, ACTION_REQUEST_PASSCODE);
+        } else if (lock.equals(LOCK_DEVICE_CREDENTIALS)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    !DeviceCredentialUtils.areCredentialsAvailable(getApplicationContext())) {
+                DisplayUtils.showSnackMessage(this, R.string.prefs_lock_device_credentials_not_setup);
+            } else {
+                DisplayUtils.showSnackMessage(this, R.string.prefs_lock_device_credentials_enabled);
+                mLock.setValue(LOCK_DEVICE_CREDENTIALS);
+                mLock.setSummary(mLock.getEntry());
+            }
+        }
+    }
+
+    private void disableLock(String lock) {
+        if (lock.equals(LOCK_PASSCODE)) {
+            Intent i = new Intent(getApplicationContext(), PassCodeActivity.class);
+            i.setAction(PassCodeActivity.ACTION_CHECK_WITH_RESULT);
+            startActivityForResult(i, ACTION_CONFIRM_PASSCODE);
+        } else if (lock.equals(LOCK_DEVICE_CREDENTIALS)) {
+            Intent i = new Intent(getApplicationContext(), RequestCredentialsActivity.class);
+            startActivityForResult(i, ACTION_CONFIRM_DEVICE_CREDENTIALS);
         }
     }
 
@@ -742,35 +757,44 @@ public class Preferences extends PreferenceActivity
         return temp;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupActionBar() {
         ActionBar actionBar = getDelegate().getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        ThemeUtils.setColoredTitle(actionBar, getString(R.string.actionbar_settings), this);
-        actionBar.setBackgroundDrawable(new ColorDrawable(ThemeUtils.primaryColor(this)));
-        getWindow().getDecorView().setBackgroundDrawable(new ColorDrawable(ResourcesCompat
-                .getColor(getResources(), R.color.background_color, null)));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ThemeUtils.primaryDarkColor(this));
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            ThemeUtils.setColoredTitle(actionBar, getString(R.string.actionbar_settings), this);
+            actionBar.setBackgroundDrawable(new ColorDrawable(ThemeUtils.primaryColor(this)));
+
+            Drawable backArrow = getResources().getDrawable(R.drawable.ic_arrow_back);
+            actionBar.setHomeAsUpIndicator(ThemeUtils.tintDrawable(backArrow, ThemeUtils.fontColor(this)));
         }
 
-        Drawable backArrow = getResources().getDrawable(R.drawable.ic_arrow_back);
-        actionBar.setHomeAsUpIndicator(ThemeUtils.tintDrawable(backArrow, ThemeUtils.fontColor(this)));
+        Window window = getWindow();
+        if (window != null) {
+            window.getDecorView().setBackgroundDrawable(new ColorDrawable(ResourcesCompat
+                    .getColor(getResources(), R.color.background_color, null)));
 
-        // For adding content description tag to a title field in the action bar
-        int actionBarTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        View actionBarTitleView = getWindow().getDecorView().findViewById(actionBarTitleId);
-        if (actionBarTitleView != null) {    // it's null in Android 2.x
-            getWindow().getDecorView().findViewById(actionBarTitleId).
-                    setContentDescription(getString(R.string.actionbar_settings));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.setStatusBarColor(ThemeUtils.primaryDarkColor(this));
+            }
+
+            // For adding content description tag to a title field in the action bar
+            int actionBarTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
+            View actionBarTitle = window.getDecorView().findViewById(actionBarTitleId);
+
+            if (actionBarTitle != null) {
+                actionBarTitle.setContentDescription(getString(R.string.actionbar_settings));
+            }
         }
     }
 
-    private void launchDavDroidLogin()
-            throws com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException,
-            OperationCanceledException,
-            AuthenticatorException,
-            IOException {
+    private void launchDavDroidLogin() {
         Account account = AccountUtils.getCurrentOwnCloudAccount(getApplicationContext());
 
         Intent davDroidLoginIntent = new Intent();
@@ -818,14 +842,7 @@ public class Preferences extends PreferenceActivity
         t.start();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean state = appPrefs.getBoolean(PassCodeActivity.PREFERENCE_SET_PASSCODE, false);
-        pCode.setChecked(state);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -846,27 +863,39 @@ public class Preferences extends PreferenceActivity
                 for (int i = 1; i <= 4; ++i) {
                     appPrefs.putString(PassCodeActivity.PREFERENCE_PASSCODE_D + i, passcode.substring(i - 1, i));
                 }
-                appPrefs.putBoolean(PassCodeActivity.PREFERENCE_SET_PASSCODE, true);
                 appPrefs.apply();
+                mLock.setValue(LOCK_PASSCODE);
+                mLock.setSummary(mLock.getEntry());
                 DisplayUtils.showSnackMessage(this, R.string.pass_code_stored);
             }
         } else if (requestCode == ACTION_CONFIRM_PASSCODE && resultCode == RESULT_OK) {
             if (data.getBooleanExtra(PassCodeActivity.KEY_CHECK_RESULT, false)) {
-
-                SharedPreferences.Editor appPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getApplicationContext()).edit();
-                appPrefs.putBoolean(PassCodeActivity.PREFERENCE_SET_PASSCODE, false);
-                appPrefs.apply();
+                mLock.setValue(LOCK_NONE);
+                mLock.setSummary(mLock.getEntry());
 
                 DisplayUtils.showSnackMessage(this, R.string.pass_code_removed);
+                if (!pendingLock.equals(LOCK_NONE)) {
+                    enableLock(pendingLock);
+                }
             }
         } else if (requestCode == ACTION_REQUEST_CODE_DAVDROID_SETUP && resultCode == RESULT_OK) {
             DisplayUtils.showSnackMessage(this, R.string.prefs_calendar_contacts_sync_setup_successful);
+        } else if (requestCode == ACTION_CONFIRM_DEVICE_CREDENTIALS && resultCode == RESULT_OK &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                data.getIntExtra(RequestCredentialsActivity.KEY_CHECK_RESULT,
+                        RequestCredentialsActivity.KEY_CHECK_RESULT_FALSE) == 
+                        RequestCredentialsActivity.KEY_CHECK_RESULT_TRUE) {
+            mLock.setValue(LOCK_NONE);
+            mLock.setSummary(mLock.getEntry());
+            DisplayUtils.showSnackMessage(this, R.string.credentials_disabled);
+            if (!pendingLock.equals(LOCK_NONE)) {
+                enableLock(pendingLock);
+            }
         }
     }
-
-    @NonNull
+    
     @Override
+    @NonNull
     public MenuInflater getMenuInflater() {
         return getDelegate().getMenuInflater();
     }

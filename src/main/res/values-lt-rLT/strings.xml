@@ -39,9 +39,6 @@
     <string name="prefs_category_general">Bendras</string>
     <string name="prefs_category_more">Daugiau</string>
     <string name="prefs_manage_accounts">Tvarkyti paskyras</string>
-    <string name="prefs_passcode">Užrakinimas kodų</string>
-    <string name="prefs_fingerprint">Piršto užraktas</string>
-    <string name="prefs_fingerprint_notsetup">Nėra pirštų antspaudo užrakto</string>
     <string name="prefs_expert_mode">Eksperto režimas</string>
     <string name="prefs_show_hidden_files">Rodyti paslėptus failus</string>
     <string name="prefs_log_delete_history_button">Ištrinti istoriją</string>
@@ -103,7 +100,6 @@
     <string name="upload_list_empty_headline">Atnaujinimų nerasta</string>
     <string name="upload_list_empty_text_auto_upload">Įkelkite failus arba sinchronizuokite su savo įrenginiais</string>
     <string name="file_list_folder">aplankas</string>
-    <string name="filedetails_select_file">Palieskite failą, kad parodyti papildomą informaciją.</string>
     <string name="filedetails_download">Atsisiųsti</string>
     <string name="list_layout">Išdėstymas sąraše</string>
     <string name="common_yes">Taip</string>
@@ -162,7 +158,6 @@
     <string name="foreign_files_fail">Kai kurių failų nepavyko perkelti</string>
     <string name="upload_query_move_foreign_files">Nepakankamas vietos kiekis neleidžia kopijuoti pasirinktų failų į %1$s aplanką. Ar norėtumėte vietoje to juos perkelti?</string>
     <string name="pass_code_enter_pass_code">Prašome įvesti slaptažodį</string>
-    
     <string name="pass_code_configure_your_pass_code">Įveskite užraktą</string>
     <string name="pass_code_configure_your_pass_code_explanation">Užrakto kodas bus reikalaujamas kiekvieną kartą paleidžiant programėlę</string>
     <string name="pass_code_reenter_your_pass_code">Įveskite užraktą</string>
@@ -213,8 +208,6 @@
 	<string name="auth_expired_saml_sso_token_toast">Jūsų seanso laikas baigėsi. Prašome prisijungti iš naujo</string>
     <string name="auth_unsupported_multiaccount">%1$s nepalaiko kelių paskyrų iš karto</string>
 	<string name="auth_can_not_auth_against_server">Nepavyko autentifikuotis šiame serveryje</string>
-    <string name="auth_access_failed">Prieiga suteikta</string>
-
     <string name="favorite">Nustatykite prieinamumą (statusą)</string>
     <string name="unfavorite">Išjungti kaip neprieinamą (statusą)</string>
     <string name="common_rename">Pervadinti</string>
@@ -299,7 +292,6 @@
     <string name="copy_link">Kopijuoti nuorodą</string>
     <string name="clipboard_text_copied">Nukopijuota į iškarpinę</string>
     <string name="clipboard_no_text_to_copy">Tekstas nukopijuotas į iškarpinę</string>
-    <string name="clipboard_uxexpected_error">netikėta klaida kopijuojant į iškarpinę</string>
     <string name="clipboard_label">Tekstas nukopijuotas iš %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kritinė klaida: negalima įvykdyti operacijos</string>
@@ -379,30 +371,17 @@
     <string name="share_no_users">Su vartotojais niekuo nesidalinama</string>
     <string name="share_add_user_or_group">Pridėti vartotoją ar grupę</string>
     <string name="share_via_link_section_title">Dalintis nuoroda</string>
-    <string name="share_via_link_expiration_date_label">Nustatykite galiojimo laiką</string>
-    <string name="share_via_link_password_label">Apsaugotas slaptažodžiu</string>
-    <string name="share_via_link_password_title">Apsaugota</string>
     <string name="share_via_link_hide_file_listing_permission_label">Paslėpti failų sąrašą</string>
     <string name="share_get_public_link_button">Gauti nuorodą</string>
     <string name="share_with_edit_title">Dalintis su %1$s</string>
-
-    <string name="share_search">Ieškoti</string>
-
     <string name="search_users_and_groups_hint">Ieškoti naudotojų ar grupių</string>
     <string name="share_group_clarification">%1$s (grupė)</string>
     <string name="share_remote_clarification">%1$s (nuotolinis)</string>
     <string name="share_email_clarification">%1$s (el. paštas)</string>
     <string name="share_known_remote_clarification">%1$s (šiame %2$s)</string>
 
-    <string name="filedetails_share_link_enable">Bendrinama per nuorodą</string>
-    <string name="filedetails_share_link_disable">Nėra bendrinamų nuorodų</string>
-    <string name="filedetails_share_users_with_access">Vartotojų grupės su prieiga</string>
     <string name="share_privilege_can_share">gali dalintis</string>
     <string name="share_privilege_can_edit">gali redaguoti</string>
-    <string name="share_privilege_can_edit_create">sukurti</string>
-    <string name="share_privilege_can_edit_change">keisti</string>
-    <string name="share_privilege_can_edit_delete">ištrinti</string>
-
     <string name="action_retry_uploads">Pabandyti iš naujo nepavykusius įkėlimus</string>
     <string name="action_clear_failed_uploads">Išvalyti baigtus įkėlimus</string>
     <string name="action_clear_successful_uploads">Išvalyti sėkmingus įkėlimus</string>
@@ -472,9 +451,6 @@
 
     <string name="whats_new_skip">Praleisti</string>
 
-    <string name="fingerprint_scan_finger">Prašome nuskenuoti piršto atspaudą</string>
-    <string name="fingerprint_unknown">Atspaudas neatpažintas</string>
-
     <!-- User information -->
     <string name="user_info_email">El. paštas</string>
     <string name="user_info_phone">Telefono numeris</string>
@@ -486,7 +462,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Kol kas jokių veiksmų</string>
-    <string name="activities_no_results_message">Srautas rodo papildymus, pakeitimus ir bendrinimus</string>
     <string name="prefs_category_about">Apie</string>
 
     <string name="actionbar_contacts">Išsaugoti atsarginę kontaktų kopiją</string>

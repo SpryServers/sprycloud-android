@@ -39,9 +39,6 @@
     <string name="prefs_category_general">ზოგადი</string>
     <string name="prefs_category_more">მეტი</string>
     <string name="prefs_manage_accounts">ანგარიშების მართვა</string>
-    <string name="prefs_passcode">ჩაკეტვა პასკოდით</string>
-    <string name="prefs_fingerprint">ჩაკეტვა თითის ანაბეჭდით</string>
-    <string name="prefs_fingerprint_notsetup">თითის ანაბეჭდები არ დაყენებულა.</string>
     <string name="prefs_expert_mode">ექპერტ-რეჟიმი</string>
     <string name="prefs_show_hidden_files">დამალული ფაილების ჩვენება</string>
     <string name="prefs_log_delete_history_button">ისტორიის წაშლა</string>
@@ -110,7 +107,6 @@
     <string name="upload_list_empty_headline">არც ერთი ატვირთვა არაა ხელმისაწვდომი.</string>
     <string name="upload_list_empty_text_auto_upload">ატვირთეთ რაიმე ან გაააქტიურეთ ავტო-ატვირთვა.</string>
     <string name="file_list_folder">დირექტორია</string>
-    <string name="filedetails_select_file">დააჭირეთ ფაილს დამატებითი ინფორმაციის გამოსაჩენად.</string>
     <string name="filedetails_download">ჩამოტვირთვა</string>
     <string name="filedetails_sync_file">სინქ</string>
     <string name="filedetails_renamed_in_upload_msg">ატვირთვისას ფაილს სახელი შეეცვალა %1$s-ზე</string>
@@ -192,7 +188,6 @@
     <string name="foreign_files_remote_text">დისტანციური: %1$s</string>
     <string name="upload_query_move_foreign_files">არასაკმარისი ადგილი აფერხებს არჩეული ფაილების კოპირებას %1$s დირექტორიაში. გსურთ სანაცვლოდ მათი გადატანა?</string>
     <string name="pass_code_enter_pass_code">გთხოვთ შეიყვანოთ თქვენი პასკოდი</string>
-    
     <string name="pass_code_configure_your_pass_code">შეიყვანეთ თქვენი პასკოდი</string>
     <string name="pass_code_configure_your_pass_code_explanation">პასკოდი მოთხოვნილ იქნება აპლიკაციის ყოველი გაშვებისას</string>
     <string name="pass_code_reenter_your_pass_code">გთხოვთ თქვენი პასკოდი შეიყვანოთ ახლიდან</string>
@@ -250,8 +245,6 @@
 	<string name="auth_fail_get_user_name">თქვენი სერვერი არ აბრუნებს სწორ მომხმარებლის ID-ს, გთხოვთ დაუკავშირდეთ ადმინისტრატორს</string>
 	<string name="auth_can_not_auth_against_server">ამ სერვერთან აუტენტიფიკაცია ვერ ხერხდება</string>
     <string name="auth_account_does_not_exist">ანგარიში ამ მოწყობილობაზე ჯერ არაა დამატებული</string>
-    <string name="auth_access_failed">წვდომა ვერ მოხერხდა</string>
-
     <string name="favorite">გახადეთ კავშირს გარეთ ხელმისაწვდომი</string>
     <string name="unfavorite">გახადეთ კავშირს გარეთ ხელმიუწვდომელი</string>
     <string name="encrypted">დააყენეთ როგორც დაშიფრული</string>
@@ -346,7 +339,6 @@
     <string name="copy_link">ბმულის კოპირება</string>
     <string name="clipboard_text_copied">კოპირებულია ბუფერში</string>
     <string name="clipboard_no_text_to_copy">ბუფერში გადასატანად ტექსტი მიღებული არაა</string>
-    <string name="clipboard_uxexpected_error">ბუფერში გადატანისას  წარმოშვა მოულოდნელი შეცდომა</string>
     <string name="clipboard_label">ტექსტი %1$s-იდან დაკოპირდა</string>
 
     <string name="error_cant_bind_to_operations_service">კრიტიკული შეცდომა: ოპერაციების განხორციელება შეუძლებელია</string>
@@ -448,16 +440,9 @@
     <string name="share_no_users">მომხმარებლებთან მონაცემები ჯერ არ გაზიარებულა</string>
     <string name="share_add_user_or_group">მომხმარებლის ან ჯგუფის დამატება</string>
     <string name="share_via_link_section_title">ბმულის გაზიარება</string>
-    <string name="share_via_link_expiration_date_label">მიუთითე ვადის გასვლის დრო</string>
-    <string name="share_via_link_password_label">დაცვა პაროლით</string>
-    <string name="share_via_link_password_title">დაცულია</string>
-    <string name="share_via_link_edit_permission_label">ცვლილების ნების დართვა</string>
     <string name="share_via_link_hide_file_listing_permission_label">ფაილის ჩამონათვლის დამალვა</string>
     <string name="share_get_public_link_button">ბმულის მიღება</string>
     <string name="share_with_edit_title">%1$s-სთან გაზიარება</string>
-
-    <string name="share_search">ძებნა</string>
-
     <string name="search_users_and_groups_hint">მომხმარებლების და ჯგუფების ძიება</string>
     <string name="share_group_clarification">%1$s (ჯგუფი)</string>
     <string name="share_remote_clarification">%1$s (დისტანციური)</string>
@@ -465,15 +450,8 @@
     <string name="share_known_remote_clarification">%1$s ( %2$s-ზე )</string>
 
     <string name="share_sharee_unavailable">მომხმარებლებს შორის, საკუთარი კლიენტების გამოყენებით, გაზიარების დასაშვებად განაახლეთ სერვერის ვერსია.\nგთხოვთ დაუკავშირდეთ თქვენს ადმინისტრატორს</string>
-    <string name="filedetails_share_link_enable">ბმულით გაზიარება ნებადართულია</string>
-    <string name="filedetails_share_link_disable">ბმულით გაზიარებული არაა </string>
-    <string name="filedetails_share_users_with_access">მომხმარებლები და ჯგუფები წვდომის უფლებით</string>
     <string name="share_privilege_can_share">შეუძლიათ გაზიარება</string>
     <string name="share_privilege_can_edit">შეგიძლია შეცვლა</string>
-    <string name="share_privilege_can_edit_create">შექმნა</string>
-    <string name="share_privilege_can_edit_change">შეცვლა</string>
-    <string name="share_privilege_can_edit_delete">წაშლა</string>
-
     <string name="action_retry_uploads">წარუმატებლად დასრულებული ატვირთების ხელახლა გაშვება</string>
     <string name="action_clear_failed_uploads">წარუმატებლად დასრულებული ატვირთების გასუფთავება</string>
     <string name="action_clear_successful_uploads">წარმატებით დასრულებული ატვირთების გასუფთავება</string>
@@ -559,9 +537,6 @@
 
     <string name="whats_new_skip">გამოტოვება</string>
 
-    <string name="fingerprint_scan_finger">გთხოვთ დაასკანიროთ თქვენი თითი</string>
-    <string name="fingerprint_unknown">თითი ვერ იქნა ამოცნობილი</string>
-
     <!-- User information -->
     <string name="user_info_email">ელ-ფოსტა</string>
     <string name="user_info_phone">ტელეფონის ნომერი</string>
@@ -573,7 +548,6 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">აქტოვობა ჯერ არაა</string>
-    <string name="activities_no_results_message">ეს ნაკადი გამოიტანს ისეთ მოვლენებს როგორებიცაა\nდამატებები, ცვლილებები და გაზიარებები</string>
     <string name="prefs_category_about">ჩვენს შესახებ</string>
 
     <string name="actionbar_contacts">კონტაქტების ბექაფი</string>
@@ -633,7 +607,6 @@
     <string name="activity_icon">აქტივობის პიქტოგრამა</string>
     <string name="file_icon">ფაილის პიქტოგრამა</string>
     <string name="user_icon">მომხმარებლის პიქტოგრამა</string>
-    <string name="fingerprint_icon">თითის ანაბეჭდის პიქტოგრამა</string>
     <string name="favorite_icon">რჩეულის პიქტოგრამა</string>
     <string name="shared_via_link_icon">გაზიარებულია ბმულის პიქტოგრამით</string>
     <string name="synced_icon">სინქრონიზირებული პიქტოგრამა</string>

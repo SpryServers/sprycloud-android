@@ -4,7 +4,9 @@
  * @author masensio
  * @author David A. Velasco
  * @author Juan Carlos González Cabrero
+ * @author Andy Scherzinger
  * Copyright (C) 2015 ownCloud Inc.
+ * Copyright (C) 2018 Andy Scherzinger
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -30,8 +32,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
@@ -51,6 +53,7 @@ import com.owncloud.android.files.services.FileUploader.FileUploaderBinder;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.files.CheckEtagOperation;
+import com.owncloud.android.lib.resources.files.FileVersion;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
@@ -83,14 +86,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Helper implementation for file operations locally and remote.
  */
 public class FileOperationsHelper {
 
     private static final String TAG = FileOperationsHelper.class.getSimpleName();
     private static final Pattern mPatternUrl = Pattern.compile("^URL=(.+)$");
     private static final Pattern mPatternString = Pattern.compile("<string>(.+)</string>");
-    private FileActivity mFileActivity = null;
+    private FileActivity mFileActivity;
     /// Identifier of operation in progress which result shouldn't be lost
     private long mWaitingForOpId = Long.MAX_VALUE;
 
@@ -237,56 +240,12 @@ public class FileOperationsHelper {
 
     public void openFile(OCFile file) {
         if (file != null) {
-            String storagePath = file.getStoragePath();
-
-            String[] officeExtensions = MainApp.getAppContext().getResources().getStringArray(R.array
-                    .ms_office_extensions);
-
-            Uri fileUri;
-
-            if (file.getFileName().contains(".") &&
-                    Arrays.asList(officeExtensions).contains(file.getFileName().substring(file.getFileName().
-                            lastIndexOf(".") + 1, file.getFileName().length())) &&
-                    !file.getStoragePath().startsWith(MainApp.getAppContext().getFilesDir().getAbsolutePath())) {
-                fileUri = file.getLegacyExposedFileUri(mFileActivity);
-            } else {
-                fileUri = file.getExposedFileUri(mFileActivity);
-            }
-
-            Intent openFileWithIntent = null;
-            int lastIndexOfDot = storagePath.lastIndexOf('.');
-            if (lastIndexOfDot >= 0) {
-                String fileExt = storagePath.substring(lastIndexOfDot + 1);
-                String guessedMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
-                if (guessedMimeType != null) {
-                    openFileWithIntent = new Intent(Intent.ACTION_VIEW);
-                    openFileWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    openFileWithIntent.setDataAndType(
-                            fileUri,
-                            guessedMimeType
-                    );
-                }
-            }
-
-            if (openFileWithIntent == null) {
-                openFileWithIntent = createIntentFromFile(storagePath);
-            }
-
-            if (openFileWithIntent == null) {
-                openFileWithIntent = new Intent(Intent.ACTION_VIEW);
-                openFileWithIntent.setDataAndType(
-                        fileUri,
-                        file.getMimetype()
-                );
-            }
-
-            openFileWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            final Intent openFileWithIntent = createOpenFileIntent(file);
 
             List<ResolveInfo> launchables = mFileActivity.getPackageManager().
                     queryIntentActivities(openFileWithIntent, PackageManager.GET_RESOLVED_FILTER);
 
             mFileActivity.showLoadingDialog(mFileActivity.getResources().getString(R.string.sync_in_progress));
-            Intent finalOpenFileWithIntent = openFileWithIntent;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -322,7 +281,7 @@ public class FileOperationsHelper {
 
                                 mFileActivity.startActivity(
                                         Intent.createChooser(
-                                                finalOpenFileWithIntent,
+                                                openFileWithIntent,
                                                 mFileActivity.getString(R.string.actionbar_open_with)
                                         )
                                 );
@@ -339,6 +298,53 @@ public class FileOperationsHelper {
 
         } else {
             Log_OC.e(TAG, "Trying to open a NULL OCFile");
+        }
+    }
+
+    @NonNull
+    private Intent createOpenFileIntent(OCFile file) {
+        String storagePath = file.getStoragePath();
+        Uri fileUri = getFileUri(file, MainApp.getAppContext().getResources().getStringArray(R.array
+                .ms_office_extensions));
+        Intent openFileWithIntent = null;
+        int lastIndexOfDot = storagePath.lastIndexOf('.');
+        if (lastIndexOfDot >= 0) {
+            String fileExt = storagePath.substring(lastIndexOfDot + 1);
+            String guessedMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
+            if (guessedMimeType != null) {
+                openFileWithIntent = new Intent(Intent.ACTION_VIEW);
+                openFileWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                openFileWithIntent.setDataAndType(
+                        fileUri,
+                        guessedMimeType
+                );
+            }
+        }
+
+        if (openFileWithIntent == null) {
+            openFileWithIntent = createIntentFromFile(storagePath);
+        }
+
+        if (openFileWithIntent == null) {
+            openFileWithIntent = new Intent(Intent.ACTION_VIEW);
+            openFileWithIntent.setDataAndType(
+                    fileUri,
+                    file.getMimetype()
+            );
+        }
+
+        openFileWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        return openFileWithIntent;
+    }
+
+    private Uri getFileUri(OCFile file, String[] officeExtensions) {
+        if (file.getFileName().contains(".") &&
+                Arrays.asList(officeExtensions).contains(file.getFileName().substring(file.getFileName().
+                        lastIndexOf(".") + 1, file.getFileName().length())) &&
+                !file.getStoragePath().startsWith(MainApp.getAppContext().getFilesDir().getAbsolutePath())) {
+            return file.getLegacyExposedFileUri(mFileActivity);
+        } else {
+            return file.getExposedFileUri(mFileActivity);
         }
     }
 
@@ -421,15 +427,35 @@ public class FileOperationsHelper {
         }
     }
 
+    /**
+     * Helper method to revert to a file version. Starts a request to do it in {@link OperationsService}
+     *
+     * @param fileVersion The file version to restore
+     * @param userId      userId of current account
+     */
+    public void restoreFileVersion(FileVersion fileVersion, String userId) {
+        if (fileVersion != null) {
+            mFileActivity.showLoadingDialog(mFileActivity.getApplicationContext().
+                    getString(R.string.wait_a_moment));
+
+            Intent service = new Intent(mFileActivity, OperationsService.class);
+            service.setAction(OperationsService.ACTION_RESTORE_VERSION);
+            service.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
+            service.putExtra(OperationsService.EXTRA_FILE_VERSION, fileVersion);
+            service.putExtra(OperationsService.EXTRA_USER_ID, userId);
+            mWaitingForOpId = mFileActivity.getOperationsServiceBinder().queueNewOperation(service);
+        } else {
+            Log_OC.e(TAG, "Trying to restore a NULL FileVersion");
+        }
+    }
+
 
     /**
      * @return 'True' if the server supports the Share API
      */
     public boolean isSharedSupported() {
-        if (mFileActivity.getAccount() != null) {
-            return AccountUtils.getServerVersion(mFileActivity.getAccount()).isSharedSupported();
-        }
-        return false;
+        return mFileActivity.getAccount() != null &&
+                AccountUtils.getServerVersion(mFileActivity.getAccount()).isSharedSupported();
     }
 
 
@@ -469,8 +495,7 @@ public class FileOperationsHelper {
     private void queueShareIntent(Intent shareIntent) {
         if (isSharedSupported()) {
             // Unshare the file
-            mWaitingForOpId = mFileActivity.getOperationsServiceBinder().
-                    queueNewOperation(shareIntent);
+            mWaitingForOpId = mFileActivity.getOperationsServiceBinder().queueNewOperation(shareIntent);
 
             mFileActivity.showLoadingDialog(mFileActivity.getApplicationContext().
                     getString(R.string.wait_a_moment));
@@ -516,6 +541,26 @@ public class FileOperationsHelper {
         queueShareIntent(updateShareIntent);
     }
 
+    /**
+     * Updates a share on a file to set its password.
+     * Starts a request to do it in {@link OperationsService}
+     *
+     * @param share    File which share will be protected with a password.
+     * @param password Password to set for the public link; null or empty string to clear
+     *                 the current password
+     */
+    public void setPasswordToShare(OCShare share, String password) {
+        Intent updateShareIntent = new Intent(mFileActivity, OperationsService.class);
+        updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
+        updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_ID, share.getId());
+        updateShareIntent.putExtra(
+                OperationsService.EXTRA_SHARE_PASSWORD,
+                (password == null) ? "" : password
+        );
+        queueShareIntent(updateShareIntent);
+    }
+
 
     /**
      * Updates a public share on a file to set its expiration date.
@@ -537,6 +582,29 @@ public class FileOperationsHelper {
         queueShareIntent(updateShareIntent);
     }
 
+    /**
+     * Updates a public share on a file to set its expiration date.
+     * Starts a request to do it in {@link OperationsService}
+     *
+     * @param share                  {@link OCShare} instance which permissions will be updated.
+     * @param expirationTimeInMillis Expiration date to set. A negative value clears the current expiration
+     *                               date, leaving the link unrestricted. Zero makes no change.
+     */
+    public void setExpirationDateToShare(OCShare share, long expirationTimeInMillis) {
+        Intent updateShareIntent = new Intent(mFileActivity, OperationsService.class);
+        updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
+        updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_ID, share.getId());
+        updateShareIntent.putExtra(
+                OperationsService.EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS,
+                expirationTimeInMillis
+        );
+        updateShareIntent.putExtra(
+                OperationsService.EXTRA_SHARE_PERMISSIONS,
+                0
+        );
+        queueShareIntent(updateShareIntent);
+    }
 
     /**
      * Updates a share on a file to set its access permissions.
@@ -615,15 +683,19 @@ public class FileOperationsHelper {
         return false;
     }
 
-    public void sendShareFile(OCFile file) {
+    public void sendShareFile(OCFile file, boolean hideNcSharingOptions) {
         // Show dialog
         FragmentManager fm = mFileActivity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(null);
 
-        SendShareDialog mSendShareDialog = SendShareDialog.newInstance(file);
+        SendShareDialog mSendShareDialog = SendShareDialog.newInstance(file, hideNcSharingOptions);
         mSendShareDialog.setFileOperationsHelper(this);
         mSendShareDialog.show(ft, "TAG_SEND_SHARE_DIALOG");
+    }
+
+    public void sendShareFile(OCFile file) {
+        sendShareFile(file, false);
     }
 
     public void syncFiles(Collection<OCFile> files) {
@@ -680,7 +752,7 @@ public class FileOperationsHelper {
 
                 intent.setDataAndType(uri, file.getMimetype());
             } catch (ActivityNotFoundException exception) {
-                Snackbar.make(view, R.string.picture_set_as_no_app, Snackbar.LENGTH_LONG).show();
+                DisplayUtils.showSnackMessage(view, R.string.picture_set_as_no_app);
             }
         } else {
             Log_OC.wtf(TAG, "Trying to send a NULL OCFile");
@@ -709,7 +781,6 @@ public class FileOperationsHelper {
             intent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
             intent.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
             mFileActivity.startService(intent);
-
         }
     }
 
@@ -788,8 +859,9 @@ public class FileOperationsHelper {
      * @param files         Files to delete
      * @param onlyLocalCopy When 'true' only local copy of the files is removed; otherwise files are also deleted
      *                      in the server.
+     * @param inBackground  When 'true', do not show any loading dialog
      */
-    public void removeFiles(Collection<OCFile> files, boolean onlyLocalCopy) {
+    public void removeFiles(Collection<OCFile> files, boolean onlyLocalCopy, boolean inBackground) {
         for (OCFile file : files) {
             // RemoveFile
             Intent service = new Intent(mFileActivity, OperationsService.class);
@@ -797,10 +869,13 @@ public class FileOperationsHelper {
             service.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
             service.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
             service.putExtra(OperationsService.EXTRA_REMOVE_ONLY_LOCAL, onlyLocalCopy);
+            service.putExtra(OperationsService.EXTRA_IN_BACKGROUND, inBackground);
             mWaitingForOpId = mFileActivity.getOperationsServiceBinder().queueNewOperation(service);
         }
 
-        mFileActivity.showLoadingDialog(mFileActivity.getString(R.string.wait_a_moment));
+        if (!inBackground) {
+            mFileActivity.showLoadingDialog(mFileActivity.getString(R.string.wait_a_moment));
+        }
     }
 
 
@@ -891,10 +966,8 @@ public class FileOperationsHelper {
      * @return 'True' if the server doesn't need to check forbidden characters
      */
     public boolean isVersionWithForbiddenCharacters() {
-        if (mFileActivity.getAccount() != null) {
-            return AccountUtils.getServerVersion(mFileActivity.getAccount()).isVersionWithForbiddenCharacters();
-        }
-        return false;
+        return mFileActivity.getAccount() != null &&
+                AccountUtils.getServerVersion(mFileActivity.getAccount()).isVersionWithForbiddenCharacters();
     }
 
     /**

@@ -39,9 +39,6 @@
     <string name="prefs_category_general">Splošno</string>
     <string name="prefs_category_more">Več</string>
     <string name="prefs_manage_accounts">Upravljanje z računi</string>
-    <string name="prefs_passcode">Zakleni dostop s kodo PIN</string>
-    <string name="prefs_fingerprint">Ključavnica na prstni odtis</string>
-    <string name="prefs_fingerprint_notsetup">Prstni odtis ni nasavljen.</string>
     <string name="prefs_expert_mode">Napredni način</string>
     <string name="prefs_show_hidden_files">Prikaži skrite datoteke</string>
     <string name="prefs_log_delete_history_button">Izbriši zgodovino</string>
@@ -98,7 +95,6 @@
     <string name="upload_list_empty_headline">Nič ni pripravljeno za nalaganje</string>
     <string name="upload_list_empty_text_auto_upload">Naloži kakšno vsebino ali vključi samodejno nalaganje.</string>
     <string name="file_list_folder">mapa</string>
-    <string name="filedetails_select_file">Pritisnite na datoteko za prikaz dodatnih podrobnosti.</string>
     <string name="filedetails_download">Prejmi</string>
     <string name="common_yes">Da</string>
     <string name="common_no">Ne</string>
@@ -151,7 +147,6 @@
     <string name="sync_current_folder_was_removed">Mapa %1$s ne obstaja več</string>
     <string name="upload_query_move_foreign_files">Ni dovolj prostora za kopiranje izbranih datotek v mapo %1$s. Ali želiš datoteke premakniti na novo mesto?</string>
     <string name="pass_code_enter_pass_code">Vnesite kodo PIN</string>
-    
     <string name="pass_code_configure_your_pass_code">Vnesite kodo PIN programa</string>
     <string name="pass_code_configure_your_pass_code_explanation">Koda bo zahtevana vsakič pred zagonom programa.</string>
     <string name="pass_code_reenter_your_pass_code">Ponovno vnesite kodo PIN</string>
@@ -200,8 +195,6 @@
 	<string name="auth_expired_saml_sso_token_toast">Seja je potekla. Ponovno je treba vzpostaviti povezavo.</string>
     <string name="auth_unsupported_multiaccount">%1$s ne omogoča podpore več računom</string>
 	<string name="auth_can_not_auth_against_server">Povezave s strežnikom ni mogoče overiti</string>
-    <string name="auth_access_failed">Dostop neuspel</string>
-
     <string name="favorite">Nastavi dosegljivost brez povezave</string>
     <string name="unfavorite">Odstrani dosegljivost brez povezave</string>
     <string name="common_rename">Preimenuj</string>
@@ -279,7 +272,6 @@
     <string name="copy_link">Kopiraj povezavo</string>
     <string name="clipboard_text_copied">Kopirano v odložišče</string>
     <string name="clipboard_no_text_to_copy">Ni prejetega besedila za kopiranje v odložišče</string>
-    <string name="clipboard_uxexpected_error">Prišlo je do napake med kopiranjem v odložišče</string>
     <string name="clipboard_label">Besedilo je kopirano iz %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Kritična napaka: Opravil ni možno izvesti</string>
@@ -356,30 +348,17 @@
     <string name="share_no_users">Ni datotek, ki bi jih omogočili za souporabo z drugimi</string>
     <string name="share_add_user_or_group">Dodaj uporabnika ali skupino</string>
     <string name="share_via_link_section_title">Omogoči souporabo prek povezave</string>
-    <string name="share_via_link_expiration_date_label">Nastavi datum preteka</string>
-    <string name="share_via_link_password_label">Zaščiti z geslom</string>
-    <string name="share_via_link_password_title">Varovano</string>
     <string name="share_via_link_hide_file_listing_permission_label">Skrij spisek datotek</string>
     <string name="share_get_public_link_button">Pridobi povezavo</string>
     <string name="share_with_edit_title">Omogoči souporabo z %1$s</string>
-
-    <string name="share_search">Poišči</string>
-
     <string name="search_users_and_groups_hint">Iskanje uporabnikov in skupin</string>
     <string name="share_group_clarification">%1$s (skupina)</string>
     <string name="share_remote_clarification">%1$s (oddaljeno)</string>
     <string name="share_email_clarification">%1$s (e-pošta)</string>
     <string name="share_known_remote_clarification">%1$s ( pri %2$s )</string>
 
-    <string name="filedetails_share_link_enable">Deljenje s povezavo omogočeno</string>
-    <string name="filedetails_share_link_disable">Ni deljeno s povezavo</string>
-    <string name="filedetails_share_users_with_access">Uporabniki in skupine z dostopom</string>
     <string name="share_privilege_can_share">lahko omogoči souporabo</string>
     <string name="share_privilege_can_edit">lahko ureja</string>
-    <string name="share_privilege_can_edit_create">ustvari</string>
-    <string name="share_privilege_can_edit_change">spremeni</string>
-    <string name="share_privilege_can_edit_delete">izbriši</string>
-
     <string name="action_retry_uploads">Ponovi neuspela nalaganja</string>
     <string name="action_clear_failed_uploads">Pobriši neuspela nalaganja</string>
     <string name="action_clear_successful_uploads">Pobriši uspela nalaganja</string>

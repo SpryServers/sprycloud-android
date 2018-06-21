@@ -765,7 +765,8 @@ public class FileContentProvider extends ContentProvider {
                 + ProviderTableMeta.OCSHARES_IS_DIRECTORY + INTEGER  // boolean
                 + ProviderTableMeta.OCSHARES_USER_ID + INTEGER
                 + ProviderTableMeta.OCSHARES_ID_REMOTE_SHARED + INTEGER
-                + ProviderTableMeta.OCSHARES_ACCOUNT_OWNER + " TEXT );");
+                + ProviderTableMeta.OCSHARES_ACCOUNT_OWNER + TEXT
+                + ProviderTableMeta.OCSHARES_IS_PASSWORD_PROTECTED + " INTEGER );");
     }
 
     private void createCapabilitiesTable(SQLiteDatabase db) {
@@ -908,8 +909,7 @@ public class FileContentProvider extends ContentProvider {
             // get accounts from AccountManager ;  we can't be sure if accounts in it are updated or not although
             // we know the update was previously done in {link @FileActivity#onCreate} because the changes through
             // AccountManager are not synchronous
-            Account[] accounts = AccountManager.get(getContext()).getAccountsByType(
-                    MainApp.getAccountType());
+            Account[] accounts = AccountManager.get(getContext()).getAccountsByType(MainApp.getAccountType(mContext));
             String serverUrl;
             String username;
             String oldAccountName;
@@ -1687,6 +1687,23 @@ public class FileContentProvider extends ContentProvider {
                 Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
             }
 
+            if (oldVersion < 32 && newVersion >= 32) {
+                Log_OC.i(SQL, "Entering in the #32 add ocshares.is_password_protected");
+                db.beginTransaction();
+                try {
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.OCSHARES_TABLE_NAME +
+                            ADD_COLUMN + ProviderTableMeta.OCSHARES_IS_PASSWORD_PROTECTED + " INTEGER "); // boolean
+
+                    upgraded = true;
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+
+            if (!upgraded) {
+                Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
+            }
         }
 
         @Override

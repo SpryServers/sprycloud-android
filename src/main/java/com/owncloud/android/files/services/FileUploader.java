@@ -66,7 +66,6 @@ import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult.ResultCode;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.files.FileUtils;
-import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.operations.UploadFileOperation;
 import com.owncloud.android.ui.activity.FileActivity;
 import com.owncloud.android.ui.activity.UploadListActivity;
@@ -468,7 +467,7 @@ public class FileUploader extends Service
                 .setContentText(getApplicationContext().getResources().getString(R.string.foreground_service_upload))
                 .setSmallIcon(R.drawable.notification_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_icon))
-                .setColor(ThemeUtils.primaryColor(getApplicationContext()));
+                .setColor(ThemeUtils.primaryColor(getApplicationContext(), true));
 
         if ((android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)) {
             builder.setChannelId(NotificationUtils.NOTIFICATION_CHANNEL_UPLOAD);
@@ -533,9 +532,6 @@ public class FileUploader extends Service
             return Service.START_NOT_STICKY;
         }
 
-        boolean retry = intent.getBooleanExtra(KEY_RETRY, false);
-        AbstractList<String> requestedUploads = new Vector<String>();
-
         if (!intent.hasExtra(KEY_ACCOUNT)) {
             Log_OC.e(TAG, "Not enough information provided in intent");
             return Service.START_NOT_STICKY;
@@ -545,10 +541,11 @@ public class FileUploader extends Service
         if (!AccountUtils.exists(account, getApplicationContext())) {
             return Service.START_NOT_STICKY;
         }
-        OwnCloudVersion ocv = AccountUtils.getServerVersion(account);
 
-        boolean chunked = ocv.isChunkedUploadSupported();
+        boolean retry = intent.getBooleanExtra(KEY_RETRY, false);
+        AbstractList<String> requestedUploads = new Vector<>();
 
+        boolean chunked = AccountUtils.getServerVersion(account).isChunkedUploadSupported();
         boolean onWifiOnly = intent.getBooleanExtra(KEY_WHILE_ON_WIFI_ONLY, false);
         boolean whileChargingOnly = intent.getBooleanExtra(KEY_WHILE_CHARGING_ONLY, false);
 
@@ -629,7 +626,6 @@ public class FileUploader extends Service
                     ocUpload.setLocalAction(localAction);
                     ocUpload.setUseWifiOnly(onWifiOnly);
                     ocUpload.setWhileChargingOnly(whileChargingOnly);
-
                     ocUpload.setUploadStatus(UploadStatus.UPLOAD_IN_PROGRESS);
 
 
