@@ -115,7 +115,7 @@ public class TextDrawable extends Drawable {
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    @NextcloudServer(max = 12)
+    @spryCloudServer(max = 12)
     public static TextDrawable createAvatarByUserId(String userId, float radiusInDp) throws
             NoSuchAlgorithmException {
         return createNamedAvatar(userId, radiusInDp);
