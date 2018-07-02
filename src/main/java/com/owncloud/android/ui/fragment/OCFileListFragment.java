@@ -198,7 +198,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             mFile = savedInstanceState.getParcelable(KEY_FILE);
         }
 
-        searchFragment = currentSearchType != null;
+        searchFragment = currentSearchType != null && searchEvent != null;
     }
 
     /**
@@ -228,15 +228,17 @@ public class OCFileListFragment extends ExtendedListFragment implements
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log_OC.i(TAG, "onCreateView() start");
         View v = super.onCreateView(inflater, container, savedInstanceState);
         bottomNavigationView = v.findViewById(R.id.bottom_navigation_view);
 
         if (savedInstanceState != null
-                && Parcels.unwrap(savedInstanceState.getParcelable(KEY_CURRENT_SEARCH_TYPE)) != null) {
-            currentSearchType = Parcels.unwrap(savedInstanceState.getParcelable(KEY_CURRENT_SEARCH_TYPE));
+                && Parcels.unwrap(savedInstanceState.getParcelable(KEY_CURRENT_SEARCH_TYPE)) != null &&
+                Parcels.unwrap(savedInstanceState.getParcelable(OCFileListFragment.SEARCH_EVENT)) != null) {
             searchFragment = true;
+            currentSearchType = Parcels.unwrap(savedInstanceState.getParcelable(KEY_CURRENT_SEARCH_TYPE));
+            searchEvent = Parcels.unwrap(savedInstanceState.getParcelable(OCFileListFragment.SEARCH_EVENT));
         } else {
             currentSearchType = SearchType.NO_SEARCH;
         }
@@ -604,7 +606,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
      * Saves the current listed folder.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(KEY_FILE, mFile);
         if (searchFragment) {
             outState.putParcelable(KEY_CURRENT_SEARCH_TYPE, Parcels.wrap(currentSearchType));
@@ -1547,6 +1549,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
             mRefreshListLayout.setRefreshing(false);
         } else {
+            searchFragment = false;
             super.onRefresh();
         }
     }
@@ -1555,7 +1558,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
         this.searchFragment = searchFragment;
     }
 
-    public boolean getIsSearchFragment() {
+    public boolean isSearchFragment() {
         return searchFragment;
     }
 

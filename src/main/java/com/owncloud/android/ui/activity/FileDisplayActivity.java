@@ -357,20 +357,24 @@ public class FileDisplayActivity extends HookActivity
     }
 
     private void checkOutdatedServer() {
-        ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(getContentResolver());
         Account account = getAccount();
 
-        int lastSeenVersion = arbitraryDataProvider.getIntegerValue(account, WhatsNewActivity.KEY_LAST_SEEN_VERSION_CODE);
+        if (getResources().getBoolean(R.bool.show_outdated_server_warning) && account != null) {
+            ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(getContentResolver());
 
-        if (MainApp.getVersionCode() > lastSeenVersion) {
-            OwnCloudVersion serverVersion = AccountUtils.getServerVersionForAccount(account, this);
+            int lastSeenVersion = arbitraryDataProvider.getIntegerValue(account,
+                    WhatsNewActivity.KEY_LAST_SEEN_VERSION_CODE);
 
-            if (serverVersion.compareTo(MainApp.OUTDATED_SERVER_VERSION) < 0) {
-                DisplayUtils.showServerOutdatedSnackbar(this);
+            if (MainApp.getVersionCode() > lastSeenVersion) {
+                OwnCloudVersion serverVersion = AccountUtils.getServerVersionForAccount(account, this);
+
+                if (serverVersion.compareTo(MainApp.OUTDATED_SERVER_VERSION) < 0) {
+                    DisplayUtils.showServerOutdatedSnackbar(this);
+                }
+
+                arbitraryDataProvider.storeOrUpdateKeyValue(account.name, WhatsNewActivity.KEY_LAST_SEEN_VERSION_CODE,
+                        String.valueOf(MainApp.getVersionCode()));
             }
-
-            arbitraryDataProvider.storeOrUpdateKeyValue(account.name, WhatsNewActivity.KEY_LAST_SEEN_VERSION_CODE,
-                    String.valueOf(MainApp.getVersionCode()));
         }
     }
 
@@ -504,7 +508,7 @@ public class FileDisplayActivity extends HookActivity
                 updateActionBarTitleAndHomeButton(file);
             } else {
                 cleanSecondFragment();
-                if (file.isDown() && MimeTypeUtil.isVCard(file.getMimetype())) {
+                if (file.isDown() && MimeTypeUtil.isVCard(file.getMimeType())) {
                     startContactListFragment(file);
                 } else if (file.isDown() && PreviewTextFragment.canBePreviewed(file)) {
                     startTextPreview(file, false);
@@ -734,7 +738,7 @@ public class FileDisplayActivity extends HookActivity
                         if (PreviewMediaFragment.canBePreviewed(mWaitingToPreview)) {
                             startMediaPreview(mWaitingToPreview, 0, true, true);
                             detailsFragmentChanged = true;
-                        } else if (MimeTypeUtil.isVCard(mWaitingToPreview.getMimetype())) {
+                        } else if (MimeTypeUtil.isVCard(mWaitingToPreview.getMimeType())) {
                             startContactListFragment(mWaitingToPreview);
                             detailsFragmentChanged = true;
                         } else if (PreviewTextFragment.canBePreviewed(mWaitingToPreview)) {
@@ -812,6 +816,11 @@ public class FileDisplayActivity extends HookActivity
                     setDrawerIndicatorEnabled(isDrawerIndicatorAvailable()); // order matters
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDrawerToggle.syncState();
+
+                    if (getListOfFilesFragment() != null) {
+                        getListOfFilesFragment().setSearchFragment(false);
+                        getListOfFilesFragment().refreshDirectory();
+                    }
                 } else {
                     searchView.post(new Runnable() {
                         @Override
@@ -1193,7 +1202,7 @@ public class FileDisplayActivity extends HookActivity
 
         if (searchView != null && !TextUtils.isEmpty(searchQuery)) {
             searchView.setQuery(searchQuery, true);
-        } else if (getListOfFilesFragment() != null && !getListOfFilesFragment().getIsSearchFragment()
+        } else if (getListOfFilesFragment() != null && !getListOfFilesFragment().isSearchFragment()
                 && startFile == null) {
             refreshListOfFilesFragment(false);
         } else {
@@ -1202,7 +1211,7 @@ public class FileDisplayActivity extends HookActivity
         }
 
         // Listen for sync messages
-        if (getListOfFilesFragment() != null && !getListOfFilesFragment().getIsSearchFragment()) {
+        if (getListOfFilesFragment() != null && !getListOfFilesFragment().isSearchFragment()) {
             IntentFilter syncIntentFilter = new IntentFilter(FileSyncAdapter.EVENT_FULL_SYNC_START);
             syncIntentFilter.addAction(FileSyncAdapter.EVENT_FULL_SYNC_END);
             syncIntentFilter.addAction(FileSyncAdapter.EVENT_FULL_SYNC_FOLDER_CONTENTS_SYNCED);
@@ -1936,8 +1945,10 @@ public class FileDisplayActivity extends HookActivity
             DialogFragment chooserDialog = ShareLinkToDialog.newInstance(intentToShareLink, packagesToExclude);
             chooserDialog.show(getSupportFragmentManager(), FTAG_CHOOSER_DIALOG);
 
-            fileDetailFragment.getFileDetailSharingFragment().refreshPublicShareFromDB();
-            fileDetailFragment.getFileDetailSharingFragment().onUpdateShareInformation(result, getFile());
+            if (fileDetailFragment != null && fileDetailFragment.getFileDetailSharingFragment() != null) {
+                fileDetailFragment.getFileDetailSharingFragment().refreshPublicShareFromDB();
+                fileDetailFragment.getFileDetailSharingFragment().onUpdateShareInformation(result, getFile());
+            }
             refreshListOfFilesFragment(false);
         } else {
             // Detect Failure (403) --> maybe needs password
@@ -1955,7 +1966,9 @@ public class FileDisplayActivity extends HookActivity
                 }
 
             } else {
-                fileDetailFragment.getFileDetailSharingFragment().refreshPublicShareFromDB();
+                if (fileDetailFragment != null && fileDetailFragment.getFileDetailSharingFragment() != null) {
+                    fileDetailFragment.getFileDetailSharingFragment().refreshPublicShareFromDB();
+                }
                 Snackbar.make(
                         findViewById(android.R.id.content),
                         ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources()),
@@ -2231,7 +2244,7 @@ public class FileDisplayActivity extends HookActivity
     private void sendDownloadedFile(String packageName, String activityName) {
         if (mWaitingToSend != null) {
             Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.setType(mWaitingToSend.getMimetype());
+            sendIntent.setType(mWaitingToSend.getMimeType());
             sendIntent.putExtra(Intent.EXTRA_STREAM, mWaitingToSend.getExposedFileUri(this));
             sendIntent.putExtra(Intent.ACTION_SEND, true);
 
@@ -2417,11 +2430,9 @@ public class FileDisplayActivity extends HookActivity
 
     private void refreshList(boolean ignoreETag) {
         OCFileListFragment listOfFiles = getListOfFilesFragment();
-        if (listOfFiles != null && !listOfFiles.getIsSearchFragment()) {
+        if (listOfFiles != null && !listOfFiles.isSearchFragment()) {
             OCFile folder = listOfFiles.getCurrentFile();
             if (folder != null) {
-                /*mFile = mContainerActivity.getStorageManager().getFileById(mFile.getFileId());
-                listDirectory(mFile);*/
                 startSyncFolderOperation(folder, ignoreETag);
             }
         }

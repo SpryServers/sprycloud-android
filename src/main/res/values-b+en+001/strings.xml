@@ -114,6 +114,8 @@
     <string name="file_list_empty_text_photos_filter">No photos.</string>
     <string name="file_list_empty_text_videos">Upload some videos or activate auto upload.</string>
     <string name="file_list_empty_text_videos_filter">No videos.</string>
+    <string name="trashbin_empty_headline">No deleted files</string>
+    <string name="trashbin_empty_message">You will be able to recover deleted files from here</string>
     <string name="upload_list_empty_headline">No uploads available</string>
     <string name="upload_list_empty_text_auto_upload">Upload some content or activate auto upload.</string>
     <string name="file_list_folder">folder</string>
@@ -371,6 +373,7 @@
     <string name="copy_link">Copy link</string>
     <string name="clipboard_text_copied">Copied to clipboard</string>
     <string name="clipboard_no_text_to_copy">Received no text to copy to clipboard</string>
+    <string name="clipboard_unexpected_error">Unexpected error while copying to clipboard</string>
     <string name="clipboard_label">Text copied from %1$s</string>
 
     <string name="error_cant_bind_to_operations_service">Critical error: Unable to perform operations</string>
@@ -491,6 +494,7 @@
     <string name="share_expiration_date_label">Expires %1$s</string>
     <string name="share_no_expiration_date_label">Set expiration date</string>
     <string name="share_via_link_section_title">Share link</string>
+    <string name="share_via_link_send_link_label">Send link</string>
     <string name="share_password_title">Password-protected</string>
     <string name="share_no_password_title">Set password</string>
     <string name="edit_permission_label">edit</string>
@@ -780,10 +784,21 @@
     <string name="updating_share_failed">Updating share failed</string>
     <string name="whats_new_device_credentials_title">Use Android device protection</string>
     <string name="whats_new_device_credentials_content">Use anything like a pattern, password, pin or your fingerprint to keep your data safe.</string>
-    <string name="restore">Restore file</string>
+    <string name="restore_button_description">Restore deleted file</string>
+	<string name="restore">Restore file</string>
     <string name="new_version_was_created">New version was created</string>
+    <string name="new_comment">New comment…</string>
+    <string name="error_comment_file">Error commenting file</string>
     <string name="file_version_restored_successfully">Successfully restored file version.</string>
     <string name="file_version_restored_error">Error restoring file version!</string>
     <string name="outdated_server">The server has reached end of life, please upgrade!</string>
     <string name="dismiss">Dismiss</string>
+    <string name="feedback_no_mail_app">No app available to send mails!</string>
+    <string name="drawer_item_trashbin">Deleted files</string>
+    <string name="trashbin_activity_title">Deleted files</string>
+    <string name="action_empty_trashbin">Empty trashbin</string>
+    <string name="trashbin_loading_failed">Loading trashbin failed!</string>
+    <string name="trashbin_file_not_deleted">File %1$s could not be deleted!</string>
+    <string name="trashbin_file_not_restored">File %1$s could not be restored!</string>
+    <string name="trashbin_not_emptied">Files could not be deleted permanently!</string>
 </resources>
