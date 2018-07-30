@@ -813,48 +813,51 @@ public class OCFileListFragment extends ExtendedListFragment implements
                     saveIndexAndTopPosition(position);
                 }
 
-            } else if (!mOnlyFoldersClickable){ // Click on a file
-                if (PreviewImageFragment.canBePreviewed(file)) {
-                    // preview image - it handles the download, if needed
-                    if (searchFragment) {
-                        VirtualFolderType type;
-                        switch (currentSearchType) {
-                            case FAVORITE_SEARCH:
-                                type = VirtualFolderType.FAVORITE;
-                                break;
-                            case PHOTO_SEARCH:
-                                type = VirtualFolderType.PHOTOS;
-                                break;
-                            default:
-                                type = VirtualFolderType.NONE;
-                                break;
+                } else if (!mOnlyFoldersClickable) { // Click on a file
+                    if (PreviewImageFragment.canBePreviewed(file)) {
+                        // preview image - it handles the download, if needed
+                        if (searchFragment) {
+                            VirtualFolderType type;
+                            switch (currentSearchType) {
+                                case FAVORITE_SEARCH:
+                                    type = VirtualFolderType.FAVORITE;
+                                    break;
+                                case PHOTO_SEARCH:
+                                    type = VirtualFolderType.PHOTOS;
+                                    break;
+                                default:
+                                    type = VirtualFolderType.NONE;
+                                    break;
+                            }
+                            ((FileDisplayActivity) mContainerActivity).startImagePreview(file, type, !file.isDown());
+                        } else {
+                            ((FileDisplayActivity) mContainerActivity).startImagePreview(file, !file.isDown());
                         }
-                        ((FileDisplayActivity) mContainerActivity).startImagePreview(file, type, !file.isDown());
+                    } else if (file.isDown() && MimeTypeUtil.isVCard(file)) {
+                        ((FileDisplayActivity) mContainerActivity).startContactListFragment(file);
+                    } else if (PreviewTextFragment.canBePreviewed(file)) {
+                        ((FileDisplayActivity) mContainerActivity).startTextPreview(file, false);
+                    } else if (file.isDown()) {
+                        if (PreviewMediaFragment.canBePreviewed(file)) {
+                            // media preview
+                            ((FileDisplayActivity) mContainerActivity).startMediaPreview(file, 0, true, true, false);
+                        } else {
+                            mContainerActivity.getFileOperationsHelper().openFile(file);
+                        }
                     } else {
-                        ((FileDisplayActivity) mContainerActivity).startImagePreview(file, !file.isDown());
+                        if (PreviewMediaFragment.canBePreviewed(file) && AccountUtils.getServerVersion(
+                                AccountUtils.getCurrentOwnCloudAccount(getContext())).isMediaStreamingSupported()) {
+                            // stream media preview on >= NC14
+                            ((FileDisplayActivity) mContainerActivity).startMediaPreview(file, 0, true, true, true);
+                        } else {
+                            // automatic download, preview on finish
+                            ((FileDisplayActivity) mContainerActivity).startDownloadForPreview(file);
+                        }
                     }
-                } else if (file.isDown() && MimeTypeUtil.isVCard(file)) {
-                    ((FileDisplayActivity) mContainerActivity).startContactListFragment(file);
-                } else if (PreviewTextFragment.canBePreviewed(file)) {
-                    ((FileDisplayActivity) mContainerActivity).startTextPreview(file, false);
-                } else if (file.isDown()) {
-                    if (PreviewMediaFragment.canBePreviewed(file)) {
-                        // media preview
-                        ((FileDisplayActivity) mContainerActivity).startMediaPreview(file, 0,
-                                true, false);
-                    } else {
-                        mContainerActivity.getFileOperationsHelper().openFile(file);
-                    }
-
-                } else {
-                    // automatic download, preview on finish
-                    ((FileDisplayActivity) mContainerActivity).startDownloadForPreview(file);
-                
-
-            }
-}
+                }
         } else {
-            Log_OC.d(TAG, "Null object in ListAdapter!!");}
+                Log_OC.d(TAG, "Null object in ListAdapter!");
+            }
         }
     }
 
@@ -901,6 +904,10 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 }
                 case R.id.action_open_file_with: {
                     mContainerActivity.getFileOperationsHelper().openFile(singleFile);
+                    return true;
+                }
+                case R.id.action_stream_media: {
+                    mContainerActivity.getFileOperationsHelper().streamMediaFile(singleFile);
                     return true;
                 }
                 case R.id.action_rename_file: {
@@ -1080,12 +1087,10 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
     private void updateLayout() {
         // decide grid vs list view
-        if (AccountUtils.getServerVersion(((FileActivity) mContainerActivity).getAccount())
-                .supportsRemoteThumbnails() && isGridViewPreferred(mFile)) {
+        if (isGridViewPreferred(mFile)) {
             switchToGridView();
         } else {
             switchToListView();
-
         }
 
         invalidateActionMode();
@@ -1334,14 +1339,9 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 mAdapter.setFavoriteAttributeForItemID(event.remoteId, event.shouldFavorite);
             }
 
-        } catch (com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException e) {
-            Log_OC.e(TAG, "Account not found", e);
-        } catch (AuthenticatorException e) {
-            Log_OC.e(TAG, "Authentication failed", e);
-        } catch (IOException e) {
-            Log_OC.e(TAG, "IO error", e);
-        } catch (OperationCanceledException e) {
-            Log_OC.e(TAG, "Operation has been canceled", e);
+        } catch (com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException | AuthenticatorException
+                | IOException | OperationCanceledException e) {
+            Log_OC.e(TAG, "Error processing event", e);
         }
     }
 

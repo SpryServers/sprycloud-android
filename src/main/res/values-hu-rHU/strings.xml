@@ -222,7 +222,6 @@
     <string name="media_state_loading">%1$s (betöltése)</string>
     <string name="media_event_done">%1$s lejátszása kész</string>
     <string name="media_err_nothing_to_play">Nincs média fájl találat</string>
-    <string name="media_err_no_account">Nincs felhasználói fiók</string>
     <string name="media_err_not_in_owncloud">A fájl nem érvényes fiókban található</string>
     <string name="media_err_unsupported">Nem támogatott média kodek</string>
     <string name="media_err_io">Média fájl olvashatatlan</string>
@@ -230,9 +229,6 @@
     <string name="media_err_timeout">Lejátszási kísérlet időtúllépés</string>
     <string name="media_err_invalid_progressive_playback">A média fájl nem streamelhető</string>
     <string name="media_err_unknown">A beépített médialejátszó nem tudja lejátszani a fájlt</string>
-    <string name="media_err_security_ex">Biztonsági hiba a %1$s lejátszásakor</string>
-    <string name="media_err_io_ex">Bemeneti hiba %1$s lejátszásakor</string>
-    <string name="media_err_unexpected">Váratlan hiba %1$s lejátszásakor</string>
     <string name="media_rewind_description">Vissza gomb</string>
     <string name="media_play_pause_description">Lejátszás vagy pillanat állj gomb</string>
     <string name="media_forward_description">Előre gomb</string>
@@ -271,6 +267,8 @@
 	<string name="auth_can_not_auth_against_server">Nem lehet hitelesíteni a szerverhez</string>
     <string name="auth_account_does_not_exist">Az eszközön még nem létezik fiók</string>
     <string name="auth_access_failed">Hozzáférési hiba: %1$s</string>
+    <string name="auth_illegal_login_used">Érvénytelen bejelentkezési URL</string>
+
     <string name="favorite">Állítsa be kapcsolat nélkül is elérhetőnek</string>
     <string name="unfavorite">Törölje a kapcsolat nélküli elérhetőséget</string>
     <string name="favorite_real">Hozzáadás a kedvencekhez</string>
@@ -357,7 +355,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_title">Almappák használata</string>
     <string name="prefs_instant_upload_path_use_subfolders_summary">Tárolás év és hónap szerinti almappákban</string>
 
-	<string name="share_link_no_support_share_api">A megosztás nem engedélyezett a szerveren, lépj kapcsolatban a rendszergazdával</string>
 	<string name="share_link_file_no_exist">Nem lehet megosztani. Kérem ellenőrizze, hogy a fájl létezik-e?</string>
 	<string name="share_link_file_error">Hiba lépett fel a mappa megosztásakor</string>
 	<string name="unshare_link_file_no_exist">Nem lehet a megosztást kikapcsolni. Kérem ellenőrizze, hogy a fájl létezik-e?</string>
@@ -501,6 +498,8 @@
     <string name="share_get_public_link_button">Hivatkozás beszerzése</string>
     <string name="share_with_title">Megosztás vele…</string>
     <string name="share_with_edit_title">Megosztás vele: %1$s</string>
+    <string name="share_via_link_unset_password">Kikapcsol</string>
+
     <string name="share_search">Név, egyesített felhőazonosító vagy e-mail cím...</string>
 
     <string name="search_users_and_groups_hint">Felhasználók és csoportok keresése</string>
@@ -535,7 +534,6 @@ Lépj kapcsolatba a rendszergazdával</string>
     <string name="confirmation_remove_files_alert">Valóban törölni akarod a kijelölt elemeket?</string>
     <string name="confirmation_remove_folders_alert">Valóban törölni akarod a kijelölt elemeket és tartalmukat?</string>
     <string name="maintenance_mode">Szerver karbantartási üzemmódban</string>
-
     <string name="uploads_view_upload_status_waiting_for_charging">Töltésre vár</string>
     <string name="actionbar_search">Keresés</string>
     <string name="files_drop_not_supported">Ez egy Nextcloud funkció, kérlek frissíts.</string>
@@ -621,6 +619,7 @@ Lépj kapcsolatba a rendszergazdával</string>
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Nincs még tevékenység</string>
+    <string name="activities_no_results_message">Jelenleg nincsenek kiegészítések, módosítások és megosztások.</string>
     <string name="prefs_category_about">Névjegy</string>
 
     <string name="actionbar_contacts">Névjegyek biztonsági mentése</string>
@@ -639,7 +638,6 @@ Lépj kapcsolatba a rendszergazdával</string>
     <string name="contacts_preferences_backup_scheduled">Mentés ütemezve és hamarosan indul</string>
     <string name="contacts_preferences_import_scheduled">Importálás ütemezve és hamarosan indul</string>
 
-    <!-- Notifications -->
     <string name="drawer_logout">Kijelentkezés</string>
     <string name="picture_set_as_no_app">Nincs alkalmazás a képbeállításhoz</string>
     <string name="privacy">Titoktartás</string>
@@ -784,6 +782,7 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="notification_channel_push_name">Azonnali értesítések</string>
     <string name="notification_channel_push_description">A kiszolgáló által küldött üzenetek megjelenítése: Említések a megjegyzésekben, új távoli megosztások érkezése, adminisztrátori bejelentések, stb.</string>
     <string name="sendbutton_description">Küldés gomb ikon</string>
+
     <string name="oauth_2_0_auth_end_point_address_hint">Autentikációs végpont címe</string>
     <string name="oauth_2_0_access_end_point_address_hint">Hozzáférési végpont címe</string>
     <string name="hint_name">Név</string>
@@ -797,13 +796,14 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="sharee_add_failed">Hiba a megosztás hozzáadásakor.</string>
     <string name="unsharing_failed">Megosztás visszavonási hiba</string>
     <string name="updating_share_failed">Megosztás frissítési hiba</string>
-    <string name="whats_new_device_credentials_title">Használjon Android készülék védelmet</string>
+    <string name="whats_new_device_credentials_content">Használj mintát, jelszót, pin kódot, vagy az ujjlenyomatodat annak érdekében, hogy az adataidat biztonságban tartsd.</string>
     <string name="restore_button_description">Törölt fájl visszaállítása</string>
 	<string name="restore">Fájl visszaállítása</string>
     <string name="new_version_was_created">Új verzió létrehozva</string>
     <string name="new_comment">Új hozzászólás...</string>
     <string name="error_comment_file">Fájl hozzászólási hiba</string>
     <string name="file_version_restored_successfully">Sikeresen visszaállított fájl verzió.</string>
+    <string name="file_version_restored_error">Hiba a fájl verziójának visszaállítása során.</string>
     <string name="outdated_server">A szerver elérte életciklusa végét, kérem frissítsen!</string>
     <string name="dismiss">Elutasít</string>
     <string name="feedback_no_mail_app">Nincs elérhető alkalmazás email küldéséhez!</string>
@@ -814,4 +814,4 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="trashbin_file_not_deleted">%1$s fájl nem törölhető!</string>
     <string name="trashbin_file_not_restored">%1$s nem állítható vissza!</string>
     <string name="trashbin_not_emptied">A fájlok nem törölhetők véglegesen!</string>
-</resources>
+    </resources>

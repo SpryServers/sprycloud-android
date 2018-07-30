@@ -171,6 +171,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
             
             mFile = savedInstanceState.getParcelable(KEY_FILE);
         }
+        mAccountManager = (AccountManager) getSystemService(Context.ACCOUNT_SERVICE);
 
         super.onCreate(savedInstanceState);
 
@@ -194,8 +195,6 @@ public class ReceiveExternalFilesActivity extends FileActivity
 
     @Override
     protected void setAccount(Account account, boolean savedAccount) {
-        mAccountManager = (AccountManager) getSystemService(Context.ACCOUNT_SERVICE);
-
         Account[] accounts = mAccountManager.getAccountsByType(MainApp.getAccountType(this));
         if (accounts.length == 0) {
             Log_OC.i(TAG, "No ownCloud account is available");
@@ -355,14 +354,22 @@ public class ReceiveExternalFilesActivity extends FileActivity
             mFilenameSuffix = new ArrayList<>();
             mText = new ArrayList<>();
 
-            String subjectText = getArguments().getString(KEY_SUBJECT_TEXT);
-            String extraText = getArguments().getString(KEY_EXTRA_TEXT);
+            String subjectText = "";
+            String extraText = "";
+            if (getArguments() != null) {
+                if (getArguments().getString(KEY_SUBJECT_TEXT) != null) {
+                    subjectText = getArguments().getString(KEY_SUBJECT_TEXT);
+                }
+                if (getArguments().getString(KEY_EXTRA_TEXT) != null) {
+                    extraText = getArguments().getString(KEY_EXTRA_TEXT);
+                }
+            }
 
-            LayoutInflater layout = LayoutInflater.from(getActivity().getBaseContext());
+            LayoutInflater layout = LayoutInflater.from(requireContext());
             View view = layout.inflate(R.layout.upload_file_dialog, null);
 
             ArrayAdapter<String> adapter
-                    = new ArrayAdapter<>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item);
+                    = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             int selectPos = 0;
@@ -393,7 +400,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
 
                 selectPos = PreferenceManager.getUploadUrlFileExtensionUrlSelectedPos(getActivity());
                 mFileCategory = CATEGORY_URL;
-            } else if (extraText != null && isIntentFromGoogleMap(subjectText, extraText)) {
+            } else if (isIntentFromGoogleMap(subjectText, extraText)) {
                 String str = getString(R.string.upload_file_dialog_filetype_googlemap_shortcut);
                 String texts[] = extraText.split("\n");
                 mText.add(internetShortcutUrlText(texts[2]));
@@ -456,7 +463,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
 
         @NonNull
         private Dialog createFilenameDialog(View view, final EditText userInput, final Spinner spinner) {
-            Builder builder = new Builder(getActivity());
+            Builder builder = new Builder(requireActivity());
             builder.setView(view);
             builder.setTitle(R.string.upload_file_dialog_title);
             builder.setPositiveButton(R.string.common_ok, (dialog, id) -> {
@@ -833,7 +840,6 @@ public class ReceiveExternalFilesActivity extends FileActivity
         // perform folder synchronization
         RemoteOperation syncFolderOp = new RefreshFolderOperation(folder,
                                                                         currentSyncTime,
-                                                                        false,
                                                                         false,
                                                                         false,
                                                                         getStorageManager(),

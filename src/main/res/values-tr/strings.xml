@@ -222,7 +222,6 @@
     <string name="media_state_loading">%1$s (yükleniyor)</string>
     <string name="media_event_done">%1$s oynatıldı</string>
     <string name="media_err_nothing_to_play">Herhangi bir ortam dosyası bulunamadı</string>
-    <string name="media_err_no_account">Herhangi bir hesap belirtilmemiş</string>
     <string name="media_err_not_in_owncloud">Dosya geçerli bir hesapta değil</string>
     <string name="media_err_unsupported">Ortam kod çözücüsü desteklenmiyor</string>
     <string name="media_err_io">Ortam dosyası okunamadı</string>
@@ -230,9 +229,7 @@
     <string name="media_err_timeout">Oynatmaya çalışılırken zaman aşımına uğradı</string>
     <string name="media_err_invalid_progressive_playback">Ortam dosyası akışı sağlanamadı</string>
     <string name="media_err_unknown">Ortam dosyası iç ortam oynatıcı ile oynatılamıyor</string>
-    <string name="media_err_security_ex">%1$s oynatılmaya çalışılırken bir güvenlik sorunu çıktı</string>
-    <string name="media_err_io_ex">%1$s oynatılmaya çalışılırken bir giriş sorunu çıktı</string>
-    <string name="media_err_unexpected">%1$s oynatılmaya çalışılırken beklenmeyen bir sorun çıktı</string>
+    <string name="media_err_playing">%1$s oynatılmaya çalışılırken beklenmeyen bir sorun çıktı</string>
     <string name="media_rewind_description">Geri Alma Düğmesi</string>
     <string name="media_play_pause_description">Oynatma ya da Duraklatma Düğmesi</string>
     <string name="media_forward_description">İleri Alma Düğmesi</string>
@@ -358,7 +355,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_title">Alt klasörler kullanılsın</string>
     <string name="prefs_instant_upload_path_use_subfolders_summary">Yıla ve aya göre alt klasörlere kaydedilsin</string>
 
-	<string name="share_link_no_support_share_api">Sunucunuzda paylaşım etkin değil. Lütfen yöneticinizle görüşün.</string>
 	<string name="share_link_file_no_exist">Paylaşılamadı. Lütfen dosyanın var olup olmadığını denetleyin</string>
 	<string name="share_link_file_error">Bu dosya ya da klasör paylaşılmaya çalışılırken bir sorun çıktı</string>
 	<string name="unshare_link_file_no_exist">Paylaşımı kaldırılamadı. Lütfen dosyanın var olup olmadığını denetleyin</string>
@@ -537,6 +533,7 @@
     <string name="confirmation_remove_files_alert">Seçilmiş ögeleri gerçekten silmek istiyor musunuz?</string>
     <string name="confirmation_remove_folders_alert">Seçilmiş ögeleri ve içindekileri gerçekten silmek istiyor musunuz?</string>
     <string name="maintenance_mode">Sunucu bakım kipinde</string>
+    <string name="offline_mode">İnternet bağlantısı yok</string>
 
     <string name="uploads_view_upload_status_waiting_for_charging">Aygıtın şarj olması bekleniyor</string>
     <string name="actionbar_search">Arama</string>
@@ -642,7 +639,6 @@
     <string name="contacts_preferences_backup_scheduled">Yedekleme zamanlandı ve kısa süre sonra başlatılacak</string>
     <string name="contacts_preferences_import_scheduled">İçe aktarma işlemi zamanlandı ve kısa süre sonra başlatılacak</string>
 
-    <!-- Notifications -->
     <string name="drawer_logout">Oturumu Kapat</string>
     <string name="picture_set_as_no_app">Görselin ayarlanabileceği bir uygulama bulunamadı</string>
     <string name="privacy">Gizlilik</string>
@@ -651,7 +647,7 @@
 
     <!-- Auto upload -->
     <string name="autoupload_custom_folder">Bir özel klasör kurun</string>
-    <string name="autoupload_create_new_custom_folder">Yeni özel klasör kurulumu ekleyin</string>
+    <string name="autoupload_create_new_custom_folder">Özel klasör kurulumu ekle</string>
     <string name="synced_folders_configure_folders">Klasör ayarları</string>
 
     <string name="test_server_button">Sunucu bağlantısını sına</string>
@@ -769,6 +765,7 @@
     <string name="notification_channel_push_name">Anında bildirimler</string>
     <string name="notification_channel_push_description">Yorumlarda anılmanız, yeni bir uzak paylaşım almanız ya da bir yönetici tarafından bir duyuru yapıması gibi durumlarda sunucu tarafından gönderilen anında bildirimler görüntülenir.</string>
     <string name="sendbutton_description">Gönderme düğmesi simgesi</string>
+
     <string name="oauth_2_0_auth_end_point_address_hint">Kimlik doğrulama noktası adresi</string>
     <string name="oauth_2_0_access_end_point_address_hint">Erişim noktası adresi</string>
     <string name="hint_name">Ad</string>
@@ -776,13 +773,15 @@
     <string name="add_to_cloud">%1$s üzerine ekle</string>
     <string name="upload_files">Dosyaları yükle</string>
     <string name="upload_content_from_other_apps">Diğer uygulamalardan içerik yükle</string>
-    <string name="create_new_folder">Yeni klasör ekle</string>
+    <string name="create_new_folder">Klasör ekle</string>
     <string name="uploads_view_upload_status_virus_detected">Virus bulundu. Yükleme tamamlanamadı!</string>
     <string name="tags">Etiketler</string>
     <string name="sharee_add_failed">Paylaşım eklenemedi</string>
     <string name="unsharing_failed">Paylaşımdan kaldırılamadı</string>
     <string name="updating_share_failed">Paylaşım güncellenemedi</string>
-    <string name="whats_new_device_credentials_title">Android aygıt koruması kullanılsın</string>
+    <string name="prefs_e2e_mnemonic">E2E belleği</string>
+    <string name="prefs_e2e_no_device_credentials">Belleğin görüntülenmesi için aygıt kimlik doğrulama bilgilerini etkinleştirin.</string>
+    <string name="whats_new_device_credentials_title">Android iç aygıt koruması kullanılsın</string>
     <string name="whats_new_device_credentials_content">Verilerinizin güvenliğini sağlamak için bir şekil, parola, pin ya da parmak izi kullanabilirsiniz.</string>
     <string name="restore_button_description">Silinmiş dosyayı geri yükle</string>
 	<string name="restore">Dosyayı geri yükle</string>
@@ -791,6 +790,12 @@
     <string name="error_comment_file">Dosyaya yorum yapılırken sorun çıktı</string>
     <string name="file_version_restored_successfully">Dosya sürümü geri yüklendi.</string>
     <string name="file_version_restored_error">Geri yüklenecek dosya sürümünü seçin!</string>
+    <string name="notification_channel_general_name">Genel bildirimler</string>
+    <string name="notification_channel_general_description">Yeni ortam klasörleri ve benzerleri için bildirimler görüntülensin</string>
+    <string name="new_media_folder_detected">Yeni %1$s ortam klasörü bulundu.</string>
+    <string name="new_media_folder_photos">fotoğraf</string>
+    <string name="new_media_folder_videos">görüntü</string>
+
     <string name="outdated_server">Sunucu ömrünün sonuna geldi, lütfen sürümünü yükseltin!</string>
     <string name="dismiss">Yoksay</string>
     <string name="feedback_no_mail_app">E-posta göndermek için kullanılabilecek bir uygulama yok!</string>
@@ -801,4 +806,9 @@
     <string name="trashbin_file_not_deleted">%1$s dosyası silinemedi!</string>
     <string name="trashbin_file_not_restored">%1$s dosyası geri yüklenemedi!</string>
     <string name="trashbin_not_emptied">Dosyalar kalıcı olarak silinemedi!</string>
+    <string name="stream">Şununla akıt…</string>
+    <string name="stream_not_possible_headline">İç akış yapılamaz</string>
+    <string name="stream_not_possible_message">Onun yerine ortamı indirin ya da dış bir uygulama kullanın.</string>
+    <string name="folder_already_exists">Klasör zaten var</string>
+    <string name="notification_icon">Bildirim simgesi</string>
 </resources>

@@ -109,6 +109,8 @@
     <string name="file_list_empty_text_photos_filter">Nuk ka foto.</string>
     <string name="file_list_empty_text_videos">Ngarkoni disa video ose aktivizoni ngarkimin direkt.</string>
     <string name="file_list_empty_text_videos_filter">Nuk ka video.</string>
+    <string name="trashbin_empty_headline">Pa kartela të fshira</string>
+    <string name="trashbin_empty_message">Që këtu do të jeni në gjendje të rimerrni kartela të fshira</string>
     <string name="upload_list_empty_headline">Nuk ka asnjë ngarkim në gjëndje</string>
     <string name="upload_list_empty_text_auto_upload">Ngarko disa përmbajtje ose aktivizo ngarkimin direkt. </string>
     <string name="file_list_folder">dosje</string>
@@ -212,7 +214,6 @@
     <string name="media_state_loading">%1$s (po ngarkohet)</string>
     <string name="media_event_done">Luajtja e %1$s përfundoi</string>
     <string name="media_err_nothing_to_play">S’u gjetën skedar media</string>
-    <string name="media_err_no_account">S\’u dha llogari</string>
     <string name="media_err_not_in_owncloud">Skedar jo në llogari të vlefshme</string>
     <string name="media_err_unsupported">Kodek mediash i pambuluar</string>
     <string name="media_err_io">S\'u lexua dot skedari media</string>
@@ -220,9 +221,6 @@
     <string name="media_err_timeout">Mbaroi koha, teksa përpiqej të luhej</string>
     <string name="media_err_invalid_progressive_playback">Skedari media s’mund të transmetohet</string>
     <string name="media_err_unknown">Ndërtuesi i integruar i medias nuk mund të luajë skedarin medial</string>
-    <string name="media_err_security_ex">Gabim sigurie gjatë përpjekjes për luajtje të %1$s</string>
-    <string name="media_err_io_ex">Gabim input-i gjatë përpjekjes për luajtje të %1$s</string>
-    <string name="media_err_unexpected">Gabim i papritur gjatë përpjekjes për luajtje të %1$s</string>
     <string name="media_rewind_description">Butoni Mbrapsht</string>
     <string name="media_play_pause_description">Butoni Luaje ose Pushoje</string>
     <string name="media_forward_description">Butoni Përpara</string>
@@ -346,7 +344,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_title">Përdorni nëndosjet</string>
     <string name="prefs_instant_upload_path_use_subfolders_summary">Ruani në nëndosjet në bazë të vitit dhe muajit</string>
 
-	<string name="share_link_no_support_share_api">Ndarja nuk është e aktivizuar në serverin tuaj. Ju lutemi kontaktoni administratorin tuaj</string>
 	<string name="share_link_file_no_exist">S’arrin të ndajë me të tjerët. Ju lutemi, kontrolloni nëse skedari ekziston apo jo</string>
 	<string name="share_link_file_error">Ndodhi një gabim teksa përpiqej të ndahej me të tjerët ky skedar apo dosje</string>
 	<string name="unshare_link_file_no_exist">S\’arrin të zhbëjë ndarjen me të tjerët. Ju lutemi, kontrolloni nëse skedari ekziston</string>
@@ -524,7 +521,6 @@
     <string name="confirmation_remove_files_alert">Doni vërtetë të hiqni artikujt e zgjedhur?</string>
     <string name="confirmation_remove_folders_alert">Doni vërtet të hiqni artikujt e zgjedhur dhe përmbajtjen e tyre?</string>
     <string name="maintenance_mode">Shërbyesi në gjëndje mirëmbajtjeje</string>
-
     <string name="uploads_view_upload_status_waiting_for_charging">Duke pritur që pajisja të karikohet</string>
     <string name="actionbar_search">Kërkoni</string>
     <string name="files_drop_not_supported">Ky është një tipar i Nextcloud-it, ju lutemi përditësojeni.</string>
@@ -628,7 +624,6 @@
     <string name="contacts_preferences_backup_scheduled">Backup-i u skedulua dhe do të filloj së shpejti</string>
     <string name="contacts_preferences_import_scheduled">Importimi u skedulua dhe do të filloj së shpejti</string>
 
-    <!-- Notifications -->
     <string name="drawer_logout">Dilni</string>
     <string name="picture_set_as_no_app">Nuk u gjet asnjë aplikacion për të vendosur foton</string>
     <string name="privacy">Privatësi</string>
@@ -755,6 +750,7 @@
     <string name="notification_channel_push_name">Shty njoftimet</string>
     <string name="notification_channel_push_description">Trego njoftimet e shtyra të dërguara nga serveri: Përmendjet në komentet, marrja e aksioneve të reja të largëta, shpalljet e postuara nga një administrator etj.</string>
     <string name="sendbutton_description">Ikona e butonit dërgo</string>
+
     <string name="oauth_2_0_auth_end_point_address_hint">Adresa e autentifikimit të pikës fundore</string>
     <string name="oauth_2_0_access_end_point_address_hint">Adresa e qasjes së pikës fundore</string>
     <string name="hint_name">Emër</string>
@@ -769,4 +765,7 @@
     <string name="unsharing_failed">Mos ndarja dështoi</string>
     <string name="updating_share_failed">Duke përditësuar ndarjet e dështuara</string>
     <string name="new_comment">Koment i ri…</string>
+    <string name="dismiss">Hiq</string>
+    <string name="drawer_item_trashbin">Kartela të fshira</string>
+    <string name="trashbin_activity_title">Kartela të fshira</string>
     </resources>

@@ -198,13 +198,11 @@
     <string name="media_state_loading">%1$s (ielādēt)</string>
     <string name="media_event_done">%1$s atskaņošana pabeigta</string>
     <string name="media_err_nothing_to_play">Nav atrasts neviens multivides fails</string>
-    <string name="media_err_no_account">Nav norādīts konts</string>
     <string name="media_err_not_in_owncloud">Šis fails nav pieejamā kontā</string>
     <string name="media_err_unsupported">Neatbalstīts mediju kodekss</string>
     <string name="media_err_io">Nevarēja nolasīt medija datni</string>
     <string name="media_err_malformed">Multivides failam nav pareiza iekodēšana</string>
     <string name="media_err_invalid_progressive_playback">Nevar straumēt multivides failu</string>
-    <string name="media_err_io_ex">Ievades kļūda, mēģinot atskaņot %1$s</string>
     <string name="media_rewind_description">Attīšanas poga</string>
     <string name="media_play_pause_description">Atskaņot vai pauzēt</string>
     <string name="media_forward_description">Patīšanas poga</string>
@@ -309,7 +307,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_title">Lietot apakšmapi</string>
     <string name="prefs_instant_upload_path_use_subfolders_summary">Saglabāt apakšmapēs pēc gada un mēneša</string>
 
-	<string name="share_link_no_support_share_api">Koplietošana nav iespējota jūsu serverī. Lūdzu sazinieties ar savu administrātoru.</string>
 	<string name="share_link_file_no_exist">Nevar koplietot. Lūdzu, pārbaudiet, vai fails pastāv</string>
 	<string name="share_link_file_error">Radās kļūda, mēģinot koplietot šo failu vai mapi</string>
 	<string name="unshare_link_file_no_exist">Neizdevās beigt koplietošanu. Lūdzu pārbaudiet vai datne eksistē</string>
@@ -486,7 +483,6 @@
     <string name="confirmation_remove_files_alert">Vai tiešām vēlies dzēst izvēlētos objektus?</string>
     <string name="confirmation_remove_folders_alert">Vai tiešām vēlies dzēst izvēlētos objektus un to saturu?</string>
     <string name="maintenance_mode">Serveris ir uzturēšanas režīmā</string>
-
     <string name="uploads_view_upload_status_waiting_for_charging">Gaida uzlādi</string>
     <string name="actionbar_search">Meklēt</string>
     <string name="files_drop_not_supported">Šī ir Nextcloud funkcija, lūdzu atjauniniet.</string>
@@ -564,7 +560,6 @@
     <string name="contacts_preference_backup_never">nekad</string>
     <string name="contacts_preferences_no_file_found">Datne nav atrasta</string>
     <string name="contacts_preferences_something_strange_happened">Nevarēja atrast pēdējo dublējumu!</string>
-    <!-- Notifications -->
     <string name="drawer_logout">Izrakstīties</string>
     <string name="picture_set_as_no_app">Nav lietotnes, ar kuru uzstādīt attēlu</string>
     <string name="privacy">Privātums</string>
@@ -617,7 +612,6 @@
     <string name="tags">Atzīmes</string>
     <string name="sharee_add_failed">Dalībnieka pievienošana neizdevās</string>
     <string name="updating_share_failed">Koplietojuma atjaunināšana neizdevās</string>
-    <string name="whats_new_device_credentials_title">Izmantot Android ierīčes aizslēgu</string>
     <string name="restore_button_description">Atjaunot dzēstu datni</string>
 	<string name="restore">Atjaunot datni</string>
     <string name="new_version_was_created">Jauna versija izveidota</string>

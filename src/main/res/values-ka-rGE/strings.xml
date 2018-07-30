@@ -202,7 +202,6 @@
     <string name="media_state_loading">%1$s (იტვირთება)</string>
     <string name="media_event_done">%1$s დაკვრა დასრულდა</string>
     <string name="media_err_nothing_to_play">მედია ფაილი ვერ იქნა ნაპოვნი</string>
-    <string name="media_err_no_account">ანგარიში არაა უზრუნველყოფილი</string>
     <string name="media_err_not_in_owncloud">ეს ფაილი არ ეკუთვნის დაშვებულ ანგარიშს</string>
     <string name="media_err_unsupported">მედია კოდეკი მხარდაუჭერელია</string>
     <string name="media_err_io">მედია ფაილის წაკითხვა ვერ მოხერხდა</string>
@@ -210,9 +209,6 @@
     <string name="media_err_timeout">ფაილის დაკვრის მცდელობის დრო ამოიწურა</string>
     <string name="media_err_invalid_progressive_playback">მედია ფაილის სტრიმი ვერ ხორციელდება</string>
     <string name="media_err_unknown">ჩაშენებული მედია დამკვრელი ვერ უკრავს მედია ფაილს</string>
-    <string name="media_err_security_ex">%1$s-ის დაკვრის მცდელობისას წარმოიშვა უსაფრთხებასთან დაკავშირებული შეცდომა</string>
-    <string name="media_err_io_ex">%1$s-ის დაკვრის მცდელობისას წარმოიშვა შენატანთან დაკავშირებული შეცდომა</string>
-    <string name="media_err_unexpected">%1$s-ის დაკვრის მცდელობისას წარმოიშვა მოულოდნელი შეცდომა</string>
     <string name="media_rewind_description">გადახვევის ღილაკი</string>
     <string name="media_play_pause_description">დაკვრის ან პაუზის ღილაკი</string>
     <string name="media_forward_description">სწრაფი გადახვევის ღილაკი</string>
@@ -324,7 +320,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_title">ქვე-დირექტორიების მოხმარება</string>
     <string name="prefs_instant_upload_path_use_subfolders_summary">ქვე-დირექტორიებში თვისა და წელიწადის მიხედვით შევნახვა</string>
 
-	<string name="share_link_no_support_share_api">გაზიარება თქვენს სერვერზე არაა ამოქმედებული. გთხოვთ დაუკავშირდეთ თქვენს ადმინისტრატორს</string>
 	<string name="share_link_file_no_exist">გაზიარება ვერ ხერხდება. გთხოვთ დაამოწმოთ ფაილის არსებობა</string>
 	<string name="share_link_file_error">ამ ფაილის თუ დირექტორიის გაზიარებისას წარმოიშვა შეცდომა</string>
 	<string name="unshare_link_file_no_exist">გაზიარების შეწყვეტა ვერ ხერხდება. დაამოწმეთ ფაილის არსებობა</string>
@@ -468,7 +463,6 @@
     <string name="confirmation_remove_files_alert">დარწმუნებული ხართ, რომ გსურთ არჩეული ჩანაწერების გაუქმება?</string>
     <string name="confirmation_remove_folders_alert">დარწმუნებული ხართ, რომ გსურთ არჩეული ჩანაწერებისა და მათი შემცველობის გაუქმება?</string>
     <string name="maintenance_mode">სერვერი სარემონტო რეჟიმშია</string>
-
     <string name="uploads_view_upload_status_waiting_for_charging">გადახდის მოლოდინშია</string>
     <string name="actionbar_search">ძიება</string>
     <string name="files_drop_not_supported">ეს Nextcloud ფუნქციაა, გთხოვთ განაახლოთ.</string>
@@ -566,7 +560,6 @@
     <string name="contacts_preferences_backup_scheduled">ბექაფი დაინიშნა და მალე დაიწყება</string>
     <string name="contacts_preferences_import_scheduled">იმპორტი დაინიშნა და მალე დაიწყება</string>
 
-    <!-- Notifications -->
     <string name="drawer_logout">გასვლა</string>
     <string name="picture_set_as_no_app">სურათის დასაყენებლად ვერც ერთი აპლიკაცია ვერ იქნა ნაპოვნი</string>
     <string name="privacy">კონფიდენციალურობა</string>

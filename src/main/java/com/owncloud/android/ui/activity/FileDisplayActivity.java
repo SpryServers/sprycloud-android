@@ -240,7 +240,6 @@ public class FileDisplayActivity extends HookActivity
             setupDrawer(R.id.nav_all_files);
         }
 
-
         mDualPane = getResources().getBoolean(R.bool.large_land_layout);
         mLeftFragmentContainer = findViewById(R.id.left_fragment_container);
         mRightFragmentContainer = findViewById(R.id.right_fragment_container);
@@ -581,14 +580,8 @@ public class FileDisplayActivity extends HookActivity
             return OCShare.READ_PERMISSION_FLAG;    // minimum permissions
 
         } else if (isFederated) {
-            if (com.owncloud.android.authentication.AccountUtils
-                    .getServerVersion(getAccount()).isNotReshareableFederatedSupported()) {
-                return (getFile().isFolder() ? OCShare.FEDERATED_PERMISSIONS_FOR_FOLDER_AFTER_OC9 :
-                        OCShare.FEDERATED_PERMISSIONS_FOR_FILE_AFTER_OC9);
-            } else {
-                return (getFile().isFolder() ? OCShare.FEDERATED_PERMISSIONS_FOR_FOLDER_UP_TO_OC9 :
-                        OCShare.FEDERATED_PERMISSIONS_FOR_FILE_UP_TO_OC9);
-            }
+            return (getFile().isFolder() ? OCShare.FEDERATED_PERMISSIONS_FOR_FOLDER_AFTER_OC9 :
+                    OCShare.FEDERATED_PERMISSIONS_FOR_FILE_AFTER_OC9);
         } else {
             return (getFile().isFolder() ? OCShare.MAXIMUM_PERMISSIONS_FOR_FOLDER :
                     OCShare.MAXIMUM_PERMISSIONS_FOR_FILE);
@@ -732,11 +725,13 @@ public class FileDisplayActivity extends HookActivity
                 boolean detailsFragmentChanged = false;
                 if (waitedPreview) {
                     if (success) {
-                        mWaitingToPreview = getStorageManager().getFileById(
-                                mWaitingToPreview.getFileId());   // update the file from database,
-                        // for the local storage path
+                        // update the file from database, for the local storage path
+                        mWaitingToPreview = getStorageManager().getFileById(mWaitingToPreview.getFileId());
+                        
                         if (PreviewMediaFragment.canBePreviewed(mWaitingToPreview)) {
-                            startMediaPreview(mWaitingToPreview, 0, true, true);
+                            boolean streaming = AccountUtils.getServerVersionForAccount(getAccount(), this)
+                                    .isMediaStreamingSupported();
+                            startMediaPreview(mWaitingToPreview, 0, true, true, streaming);
                             detailsFragmentChanged = true;
                         } else if (MimeTypeUtil.isVCard(mWaitingToPreview.getMimeType())) {
                             startContactListFragment(mWaitingToPreview);
@@ -1006,9 +1001,7 @@ public class FileDisplayActivity extends HookActivity
                 remotePaths[j] = remotePathBase + (new File(filePaths[j])).getName();
             }
 
-            // default, as fallback
-            int behaviour = FileUploader.LOCAL_BEHAVIOUR_FORGET;
-
+            int behaviour;
             switch (resultCode) {
                 case UploadFilesActivity.RESULT_OK_AND_MOVE:
                     behaviour = FileUploader.LOCAL_BEHAVIOUR_MOVE;
@@ -1019,6 +1012,10 @@ public class FileDisplayActivity extends HookActivity
                     break;
 
                 case UploadFilesActivity.RESULT_OK_AND_DO_NOTHING:
+                    behaviour = FileUploader.LOCAL_BEHAVIOUR_FORGET;
+                    break;
+
+                default:
                     behaviour = FileUploader.LOCAL_BEHAVIOUR_FORGET;
                     break;
             }
@@ -1198,8 +1195,8 @@ public class FileDisplayActivity extends HookActivity
         }
 
         revertBottomNavigationBarToAllFiles();
-        // refresh list of files
 
+        // refresh list of files
         if (searchView != null && !TextUtils.isEmpty(searchQuery)) {
             searchView.setQuery(searchQuery, true);
         } else if (getListOfFilesFragment() != null && !getListOfFilesFragment().isSearchFragment()
@@ -1235,8 +1232,14 @@ public class FileDisplayActivity extends HookActivity
         mDownloadFinishReceiver = new DownloadFinishReceiver();
         registerReceiver(mDownloadFinishReceiver, downloadIntentFilter);
 
+        // setup drawer
+        if (MainApp.isOnlyOnDevice()) {
+            setDrawerMenuItemChecked(R.id.nav_on_device);
+        } else {
+            setDrawerMenuItemChecked(R.id.nav_all_files);
+        }
+        
         Log_OC.v(TAG, "onResume() end");
-
     }
 
 
@@ -1328,25 +1331,28 @@ public class FileDisplayActivity extends HookActivity
                             setFile(currentFile);
                         }
 
-                        mSyncInProgress = (!FileSyncAdapter.EVENT_FULL_SYNC_END.equals(event) &&
-                                !RefreshFolderOperation.EVENT_SINGLE_FOLDER_SHARES_SYNCED.equals(event));
+                        mSyncInProgress = !FileSyncAdapter.EVENT_FULL_SYNC_END.equals(event) &&
+                                !RefreshFolderOperation.EVENT_SINGLE_FOLDER_SHARES_SYNCED.equals(event);
 
                         if (RefreshFolderOperation.EVENT_SINGLE_FOLDER_CONTENTS_SYNCED.equals(event) &&
-                                synchResult != null && !synchResult.isSuccess()) {
+                                synchResult != null) {
 
-                            /// TODO refactor and make common
-
-                            if (checkForRemoteOperationError(synchResult)) {
-
-                                requestCredentialsUpdate(context);
-
-                            } else if (RemoteOperationResult.ResultCode.SSL_RECOVERABLE_PEER_UNVERIFIED.equals(
-                                    synchResult.getCode())) {
-
-                                showUntrustedCertDialog(synchResult);
+                            if (synchResult.isSuccess()) {
+                                hideInfoBox();
+                            } else {
+                                // TODO refactor and make common
+                                if (checkForRemoteOperationError(synchResult)) {
+                                    requestCredentialsUpdate(context);
+                                } else if (RemoteOperationResult.ResultCode.SSL_RECOVERABLE_PEER_UNVERIFIED.equals(
+                                        synchResult.getCode())) {
+                                    showUntrustedCertDialog(synchResult);
+                                } else if (ResultCode.MAINTENANCE_MODE.equals(synchResult.getCode())) {
+                                    showInfoBox(R.string.maintenance_mode);
+                                } else if (ResultCode.NO_NETWORK_CONNECTION.equals(synchResult.getCode()) ||
+                                        ResultCode.HOST_NOT_AVAILABLE.equals(synchResult.getCode())) {
+                                    showInfoBox(R.string.offline_mode);
+                                }
                             }
-
-
                         }
                         removeStickyBroadcast(intent);
                         DataHolderUtil.getInstance().delete(intent.getStringExtra(FileSyncAdapter.EXTRA_RESULT));
@@ -1416,8 +1422,8 @@ public class FileDisplayActivity extends HookActivity
                 String accountName = intent.getStringExtra(FileUploader.ACCOUNT_NAME);
                 boolean sameAccount = getAccount() != null && accountName.equals(getAccount().name);
                 OCFile currentDir = getCurrentDir();
-                boolean isDescendant = (currentDir != null) && (uploadedRemotePath != null) &&
-                        (uploadedRemotePath.startsWith(currentDir.getRemotePath()));
+                boolean isDescendant = currentDir != null && uploadedRemotePath != null &&
+                        uploadedRemotePath.startsWith(currentDir.getRemotePath());
 
                 if (sameAccount && isDescendant) {
                     String linkedToRemotePath =
@@ -1521,8 +1527,9 @@ public class FileDisplayActivity extends HookActivity
                 }
 
                 if (mWaitingToSend != null) {
-                    mWaitingToSend = getStorageManager().getFileByPath(mWaitingToSend.getRemotePath());
-                    if (mWaitingToSend.isDown() && downloadBehaviour != null) {
+                    // update file after downloading
+                    mWaitingToSend = getStorageManager().getFileByRemoteId(mWaitingToSend.getRemoteId());
+                    if (mWaitingToSend != null && mWaitingToSend.isDown() && downloadBehaviour != null) {
                         switch (downloadBehaviour) {
                             case OCFileListFragment.DOWNLOAD_SEND:
                                 String packageName = intent.getStringExtra(SendShareDialog.PACKAGE_NAME);
@@ -2048,7 +2055,9 @@ public class FileDisplayActivity extends HookActivity
                     ((PreviewMediaFragment) details).updateFile(renamedFile);
                     if (PreviewMediaFragment.canBePreviewed(renamedFile)) {
                         int position = ((PreviewMediaFragment) details).getPosition();
-                        startMediaPreview(renamedFile, position, true, true);
+                        boolean streaming = AccountUtils.getServerVersionForAccount(getAccount(), this)
+                                .isMediaStreamingSupported();
+                        startMediaPreview(renamedFile, position, true, true, streaming);
                     } else {
                         getFileOperationsHelper().openFile(renamedFile);
                     }
@@ -2100,13 +2109,15 @@ public class FileDisplayActivity extends HookActivity
     private void onCreateFolderOperationFinish(CreateFolderOperation operation,
                                                RemoteOperationResult result) {
         if (result.isSuccess()) {
-            refreshListOfFilesFragment(false);
+            getListOfFilesFragment().onItemClicked(getStorageManager().getFileByPath(operation.getRemotePath()));
         } else {
             try {
-                DisplayUtils.showSnackMessage(
-                        this, ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources())
-                );
-
+                if (ResultCode.FOLDER_ALREADY_EXISTS == result.getCode()) {
+                    DisplayUtils.showSnackMessage(this, R.string.folder_already_exists);
+                } else {
+                    DisplayUtils.showSnackMessage(this, ErrorMessageAdapter.getErrorCauseMessage(result, operation,
+                            getResources()));
+                }
             } catch (NotFoundException e) {
                 Log_OC.e(TAG, "Error while trying to show fail message ", e);
             }
@@ -2201,7 +2212,6 @@ public class FileDisplayActivity extends HookActivity
                                 RemoteOperation synchFolderOp = new RefreshFolderOperation(folder,
                                         currentSyncTime,
                                         false,
-                                        getFileOperationsHelper().isSharedSupported(),
                                         ignoreETag,
                                         getStorageManager(),
                                         getAccount(),
@@ -2273,7 +2283,7 @@ public class FileDisplayActivity extends HookActivity
                                         String activityName) {
         mWaitingToSend = file;
         requestForDownload(mWaitingToSend, downloadBehaviour, packageName, activityName);
-        boolean hasSecondFragment = (getSecondFragment() != null);
+        boolean hasSecondFragment = getSecondFragment() != null;
         updateFragmentsVisibility(hasSecondFragment);
     }
 
@@ -2322,8 +2332,9 @@ public class FileDisplayActivity extends HookActivity
      * @param autoplay              When 'true', the playback will start without user
      *                              interactions.
      */
-    public void startMediaPreview(OCFile file, int startPlaybackPosition, boolean autoplay, boolean showPreview) {
-        if (showPreview && file.isDown() && !file.isDownloading()) {
+    public void startMediaPreview(OCFile file, int startPlaybackPosition, boolean autoplay, boolean showPreview,
+                                  boolean streamMedia) {
+        if (showPreview && file.isDown() && !file.isDownloading() || streamMedia) {
             Fragment mediaFragment = PreviewMediaFragment.newInstance(file, getAccount(), startPlaybackPosition, autoplay);
             setSecondFragment(mediaFragment);
             updateFragmentsVisibility(true);
@@ -2458,9 +2469,11 @@ public class FileDisplayActivity extends HookActivity
         if (event.getIntent().getBooleanExtra(TEXT_PREVIEW, false)) {
             startTextPreview((OCFile) bundle.get(EXTRA_FILE), true);
         } else if (bundle.containsKey(PreviewVideoActivity.EXTRA_START_POSITION)) {
+            boolean streaming = AccountUtils.getServerVersionForAccount(getAccount(), this)
+                    .isMediaStreamingSupported();
             startMediaPreview((OCFile)bundle.get(EXTRA_FILE),
                     (int)bundle.get(PreviewVideoActivity.EXTRA_START_POSITION),
-                    (boolean)bundle.get(PreviewVideoActivity.EXTRA_AUTOPLAY), true);
+                    (boolean) bundle.get(PreviewVideoActivity.EXTRA_AUTOPLAY), true, streaming);
         } else if (bundle.containsKey(PreviewImageActivity.EXTRA_VIRTUAL_TYPE)) {
             startImagePreview((OCFile)bundle.get(EXTRA_FILE),
                     (VirtualFolderType)bundle.get(PreviewImageActivity.EXTRA_VIRTUAL_TYPE),

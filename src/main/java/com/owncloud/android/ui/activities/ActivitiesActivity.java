@@ -229,14 +229,15 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
     protected void onResume() {
         super.onResume();
 
+        setDrawerMenuItemChecked(R.id.nav_activity);
+        
         setupContent();
     }
 
     @Override
     public void onActivityClicked(RichObject richObject) {
         String path = FileUtils.PATH_SEPARATOR + richObject.getPath();
-        mActionListener.openActivity(path, this,
-                getFileOperationsHelper().isSharedSupported());
+        mActionListener.openActivity(path, this);
     }
 
     @Override
