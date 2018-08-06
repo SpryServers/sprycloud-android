@@ -402,7 +402,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
-                if (file.getMimeType().equalsIgnoreCase("image/png")) {
+                if ("image/png".equalsIgnoreCase(file.getMimeType())) {
                     thumbnailView.setBackgroundColor(mContext.getResources().getColor(R.color.background_color));
                 }
             } else {
@@ -472,10 +472,13 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         
         if (file.isSharedWithSharee() || file.isSharedWithMe()) {
             sharedIconView.setImageResource(R.drawable.shared_via_users);
+            sharedIconView.setContentDescription(mContext.getString(R.string.shared_icon_shared));
         } else if (file.isSharedViaLink()) {
             sharedIconView.setImageResource(R.drawable.shared_via_link);
+            sharedIconView.setContentDescription(mContext.getString(R.string.shared_icon_shared_via_link));
         } else {
             sharedIconView.setImageResource(R.drawable.ic_unshared);
+            sharedIconView.setContentDescription(mContext.getString(R.string.shared_icon_share));
         }
         sharedIconView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -568,10 +571,11 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void parseShares(ArrayList<Object> objects) {
         List<OCShare> shares = new ArrayList<>();
-        for (int i = 0; i < objects.size(); i++) {
+
+        for (Object shareObject : objects) {
             // check type before cast as of long running data fetch it is possible that old result is filled
-            if (objects.get(i) instanceof OCShare) {
-                OCShare ocShare = (OCShare) objects.get(i);
+            if (shareObject instanceof OCShare) {
+                OCShare ocShare = (OCShare) shareObject;
 
                 shares.add(ocShare);
 
@@ -624,8 +628,8 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         List<ContentValues> contentValues = new ArrayList<>();
 
-        for (int i = 0; i < objects.size(); i++) {
-            OCFile ocFile = FileStorageUtils.fillOCFile((RemoteFile) objects.get(i));
+        for (Object remoteFile : objects) {
+            OCFile ocFile = FileStorageUtils.fillOCFile((RemoteFile) remoteFile);
             searchForLocalFileInDefaultPath(ocFile);
 
             try {
