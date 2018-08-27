@@ -1656,7 +1656,7 @@ public class FileDataStorageManager {
 
     }
 
-    public ArrayList<OCShare> getSharesWithForAFile(String filePath, String accountName) {
+    public List<OCShare> getSharesWithForAFile(String filePath, String accountName) {
         // Condition
         String where = ProviderTableMeta.OCSHARES_PATH + AND
                 + ProviderTableMeta.OCSHARES_ACCOUNT_OWNER + AND
@@ -1949,6 +1949,7 @@ public class FileDataStorageManager {
                 .getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN, capability.getServerBackgroundPlain()
                 .getValue());
+        cv.put(ProviderTableMeta.CAPABILITIES_ACTIVITY, capability.isActivityEnabled().getValue());
 
         if (capabilityExists(mAccount.name)) {
             if (getContentResolver() != null) {
@@ -2102,6 +2103,8 @@ public class FileDataStorageManager {
                     c.getInt(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_DEFAULT))));
             capability.setServerBackgroundPlain(CapabilityBooleanType.fromValue(
                     c.getInt(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN))));
+            capability.setActivity(CapabilityBooleanType.fromValue(
+                    c.getInt(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_ACTIVITY))));
         }
         return capability;
     }

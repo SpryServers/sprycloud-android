@@ -3,9 +3,6 @@
     <string name="about_android">%1$s Aplikasi Android</string>
     <string name="about_version">versi %1$s</string>
     <string name="actionbar_sync">Segarkan akun</string>
-    <string name="actionbar_upload">Unggah</string>
-    <string name="actionbar_upload_from_apps">Konten dari aplikasi lain</string>
-    <string name="actionbar_upload_files">Berkas</string>
     <string name="actionbar_open_with">Buka dengan</string>
     <string name="actionbar_mkdir">Folder baru</string>
     <string name="actionbar_settings">Pengaturan</string>
@@ -34,9 +31,7 @@
     <string name="drawer_item_activities">Aktivitas</string>
     <string name="drawer_item_notifications">Pemberitahuan</string>
     <string name="drawer_quota">%1$s dari %2$s sudah digunakan</string>
-	<string name="drawer_close">Tutup</string>
-    <string name="drawer_open">Buka</string>
-    <string name="prefs_category_general">Umum</string>
+	<string name="prefs_category_general">Umum</string>
     <string name="prefs_category_more">Lainnya</string>
     <string name="prefs_manage_accounts">Kelola akun</string>
     <string name="prefs_expert_mode">Mode Ahli</string>

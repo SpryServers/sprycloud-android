@@ -3,9 +3,6 @@
     <string name="about_android">%1$s aplikácie pre Android</string>
     <string name="about_version">verzia %1$s</string>
     <string name="actionbar_sync">Obnoviť účet</string>
-    <string name="actionbar_upload">Nahrať</string>
-    <string name="actionbar_upload_from_apps">Obsah z iných aplikácií</string>
-    <string name="actionbar_upload_files">Súbory</string>
     <string name="actionbar_open_with">Otvoriť pomocou</string>
     <string name="actionbar_mkdir">Nový priečinok</string>
     <string name="actionbar_settings">Nastavenia</string>
@@ -34,9 +31,7 @@
     <string name="drawer_item_activities">Aktivity</string>
     <string name="drawer_item_notifications">Upozornenia</string>
     <string name="drawer_quota">Využité: %1$s z %2$s</string>
-	<string name="drawer_close">Zavrieť</string>
-    <string name="drawer_open">Otvoriť</string>
-    <string name="prefs_category_general">Všeobecné</string>
+	<string name="prefs_category_general">Všeobecné</string>
     <string name="prefs_category_more">Viac</string>
     <string name="prefs_manage_accounts">Spravovať účty</string>
     <string name="prefs_expert_mode">Expertný režim</string>

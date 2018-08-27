@@ -3,9 +3,6 @@
     <string name="about_android">%1$s za Android</string>
     <string name="about_version">različica %1$s</string>
     <string name="actionbar_sync">Osveži račun</string>
-    <string name="actionbar_upload">Pošiljanje</string>
-    <string name="actionbar_upload_from_apps">Vsebino, vezano na druge programe</string>
-    <string name="actionbar_upload_files">Datoteke</string>
     <string name="actionbar_open_with">Odpri s programom</string>
     <string name="actionbar_mkdir">Nova mapa</string>
     <string name="actionbar_settings">Nastavitve</string>
@@ -34,9 +31,7 @@
     <string name="drawer_item_activities">Dejavnosti</string>
     <string name="drawer_item_notifications">Obvestila</string>
     <string name="drawer_quota">%1$s od %2$s uporabljeno</string>
-	<string name="drawer_close">Zapri</string>
-    <string name="drawer_open">Odpri</string>
-    <string name="prefs_category_general">Splošno</string>
+	<string name="prefs_category_general">Splošno</string>
     <string name="prefs_category_more">Več</string>
     <string name="prefs_manage_accounts">Upravljanje z računi</string>
     <string name="prefs_lock">Zakleni</string>
