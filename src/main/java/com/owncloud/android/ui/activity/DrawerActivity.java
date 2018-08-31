@@ -34,6 +34,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -305,7 +306,7 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
         mQuotaProgressBar = (ProgressBar) findQuotaViewById(R.id.drawer_quota_ProgressBar);
         mQuotaTextPercentage = (TextView) findQuotaViewById(R.id.drawer_quota_percentage);
         mQuotaTextLink = (TextView) findQuotaViewById(R.id.drawer_quota_link);
-        ThemeUtils.colorHorizontalProgressBar(mQuotaProgressBar, ThemeUtils.primaryAccentColor(this));
+        ThemeUtils.colorProgressBar(mQuotaProgressBar, ThemeUtils.primaryColor(this));
     }
 
     /**
@@ -454,7 +455,16 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
                 UserInfoActivity.openAccountRemovalConfirmationDialog(getAccount(), getFragmentManager(), true);
                 break;
             case R.id.drawer_menu_account_add:
-                createAccount(false);
+                boolean isProviderOrOwnInstallationVisible = getResources()
+                        .getBoolean(R.bool.show_provider_or_own_installation);
+
+                if (isProviderOrOwnInstallationVisible) {
+                    Intent firstRunIntent = new Intent(getApplicationContext(), FirstRunActivity.class);
+                    firstRunIntent.putExtra(FirstRunActivity.EXTRA_ALLOW_CLOSE, true);
+                    startActivity(firstRunIntent);
+                } else {
+                    createAccount(false);
+                }
                 break;
             case R.id.drawer_menu_account_manage:
                 Intent manageAccountsIntent = new Intent(getApplicationContext(), ManageAccountsActivity.class);
@@ -519,13 +529,16 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
     private void externalLinkClicked(MenuItem menuItem){
         for (ExternalLink link : externalLinksProvider.getExternalLink(ExternalLinkType.LINK)) {
             if (menuItem.getTitle().toString().equalsIgnoreCase(link.name)) {
-                Intent externalWebViewIntent = new Intent(getApplicationContext(),
-                        ExternalSiteWebView.class);
-                externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_TITLE, link.name);
-                externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_URL, link.url);
-                externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_SHOW_SIDEBAR, true);
-                externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_MENU_ITEM_ID, menuItem.getItemId());
-                startActivity(externalWebViewIntent);
+                if (link.redirect) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link.url)));
+                } else {
+                    Intent externalWebViewIntent = new Intent(getApplicationContext(), ExternalSiteWebView.class);
+                    externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_TITLE, link.name);
+                    externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_URL, link.url);
+                    externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_SHOW_SIDEBAR, true);
+                    externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_MENU_ITEM_ID, menuItem.getItemId());
+                    startActivity(externalWebViewIntent);
+                }
             }
         }
     }
@@ -800,22 +813,28 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
 
     /**
      * configured the quota to be displayed.
-     *
-     * @param usedSpace  the used space
+     *  @param usedSpace  the used space
      * @param totalSpace the total space
      * @param relative   the percentage of space already used
+     * @param quotaValue {@link GetRemoteUserInfoOperation#SPACE_UNLIMITED} or other to determinate state
      */
-    private void setQuotaInformation(long usedSpace, long totalSpace, int relative) {
+    private void setQuotaInformation(long usedSpace, long totalSpace, int relative, long quotaValue) {
+        if (GetRemoteUserInfoOperation.SPACE_UNLIMITED == quotaValue) {
+            mQuotaTextPercentage.setText(String.format(
+                    getString(R.string.drawer_quota_unlimited),
+                    DisplayUtils.bytesToHumanReadable(usedSpace)));
+        } else {
+            mQuotaTextPercentage.setText(String.format(
+                    getString(R.string.drawer_quota),
+                    DisplayUtils.bytesToHumanReadable(usedSpace),
+                    DisplayUtils.bytesToHumanReadable(totalSpace)));
+        }
+
         mQuotaProgressBar.setProgress(relative);
-        ThemeUtils.colorHorizontalProgressBar(mQuotaProgressBar, DisplayUtils.getRelativeInfoColor(this, relative));
+
+        ThemeUtils.colorProgressBar(mQuotaProgressBar, DisplayUtils.getRelativeInfoColor(this, relative));
 
         updateQuotaLink();
-
-        mQuotaTextPercentage.setText(String.format(
-                getString(R.string.drawer_quota),
-                DisplayUtils.bytesToHumanReadable(usedSpace),
-                DisplayUtils.bytesToHumanReadable(totalSpace)));
-
         showQuota(true);
     }
 
@@ -966,16 +985,16 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (quotaValue > 0
+                                if (quotaValue > 0 || quotaValue == GetRemoteUserInfoOperation.SPACE_UNLIMITED
                                         || quotaValue == GetRemoteUserInfoOperation.QUOTA_LIMIT_INFO_NOT_AVAILABLE) {
-                                    /**
+                                    /*
                                      * show quota in case
                                      * it is available and calculated (> 0) or
                                      * in case of legacy servers (==QUOTA_LIMIT_INFO_NOT_AVAILABLE)
                                      */
-                                    setQuotaInformation(used, total, relative);
+                                    setQuotaInformation(used, total, relative, quotaValue);
                                 } else {
-                                    /**
+                                    /*
                                      * quotaValue < 0 means special cases like
                                      * {@link RemoteGetUserQuotaOperation.SPACE_NOT_COMPUTED},
                                      * {@link RemoteGetUserQuotaOperation.SPACE_UNKNOWN} or
