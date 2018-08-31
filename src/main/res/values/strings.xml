@@ -400,7 +400,7 @@
     <string name="file_migration_failed_not_enough_space">More space needed</string>
     <string name="file_migration_failed_not_writable">Could not write to destination file</string>
     <string name="file_migration_failed_not_readable">Could not read source file</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud folder already exists</string>
+    <string name="file_migration_failed_dir_already_exists">spryCloud folder already exists</string>
     <string name="file_migration_failed_while_coping">Failed during migration</string>
     <string name="file_migration_failed_while_updating_index">Failed to update index</string>
 
@@ -777,7 +777,7 @@
     <string name="prefs_e2e_no_device_credentials">To show mnemonic please enable device credentials.</string>
     <string name="whats_new_device_credentials_title">Use Android\'s device internal protection</string>
     <string name="login">Log in</string>
-    <string name="signup_with_provider">Sign up with provider</string>
+    <string name="signup_with_provider">Create an account</string>
     <string name="host_your_own_server">Host your own server</string>
     <string name="first_run_1_text">Keep your data secure and under your control</string>
     <string name="first_run_2_text">Secure collaboration &amp; file exchange</string>

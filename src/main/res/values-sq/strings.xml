@@ -400,7 +400,7 @@
     <string name="file_migration_failed_not_enough_space">Ka nevojë për më shumë hapësirë</string>
     <string name="file_migration_failed_not_writable">Nuk mund të shkruhet në skedarin e destinacionit</string>
     <string name="file_migration_failed_not_readable">Nuk mund të lexohet skedari i burimit</string>
-    <string name="file_migration_failed_dir_already_exists">Dosja Nextcloud ekziston tashmë</string>
+    <string name="file_migration_failed_dir_already_exists">Dosja spryCloud ekziston tashmë</string>
     <string name="file_migration_failed_while_coping">Dështoi gjatë migrimit</string>
     <string name="file_migration_failed_while_updating_index">Dështoi në përditësimin e indeksit</string>
 
