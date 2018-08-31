@@ -29,7 +29,7 @@
     <string name="server_input_type">regular</string>
 
     <bool name="show_provider_or_own_installation">true</bool>
-    <string name="provider_registration_server">https://www.nextcloud.com/register</string>
+    <string name="provider_registration_server">https://www.spryservers.net/clients/link.php?id=6</string>
 
     <!-- Flags to setup the authentication methods available in the app -->
     <string name="auth_method_oauth2">off</string>
