@@ -39,6 +39,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.ProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
@@ -53,13 +54,17 @@ import javax.crypto.SecretKey;
  * Utility class with methods for handling device credentials.
  */
 @RequiresApi(Build.VERSION_CODES.M)
-public class DeviceCredentialUtils {
+public final class DeviceCredentialUtils {
 
     private static final String TAG = DeviceCredentialUtils.class.getSimpleName();
 
     private static final int AUTHENTICATION_DURATION_SECONDS = 30;
 
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
+
+    private DeviceCredentialUtils() {
+        // utility class -> private constructor
+    }
 
     public static boolean areCredentialsAvailable(Context context) {
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -97,7 +102,7 @@ public class DeviceCredentialUtils {
             keyGenerator.generateKey();
         } catch (NoSuchAlgorithmException | NoSuchProviderException
                 | InvalidAlgorithmParameterException | KeyStoreException
-                | CertificateException | IOException e) {
+                | CertificateException | ProviderException | IOException e) {
             Log_OC.e(TAG, "Exception: " + e.getMessage());
         }
     }

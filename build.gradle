@@ -16,8 +16,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'org.codehaus.groovy:groovy-all:2.4.12'
-        classpath('com.dicedmelon.gradle:jacoco-android:0.1.2') {
+        classpath 'org.codehaus.groovy:groovy-all:2.4.12' 
+        classpath('com.dicedmelon.gradle:jacoco-android:0.1.3') { 
             exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         }
     }
@@ -31,6 +31,7 @@ apply plugin: 'jacoco-android'
 
 
 configurations.all {
+    exclude group: 'com.google.firebase', module: 'firebase-core'
     // check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
@@ -130,8 +131,8 @@ android {
             versionDev {
                 applicationId "net.spryservers.sprycloud.beta"
                 dimension "default"
-                versionCode 20180829
-                versionName "20180829"
+                versionCode 20180912
+                versionName "20180912"
             }
         }
     }
@@ -222,33 +223,33 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
     implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
     implementation "com.android.support:exifinterface:${supportLibraryVersion}"
-    implementation 'com.github.albfernandez:juniversalchardet:v2.0.0'
+    implementation 'com.github.albfernandez:juniversalchardet:2.2.0'
     implementation 'com.google.code.findbugs:annotations:2.0.1'
-    implementation 'commons-io:commons-io:2.5'
+    implementation 'commons-io:commons-io:2.6'
     implementation 'com.github.evernote:android-job:v1.2.5'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.10.4'
     implementation 'org.lukhnos:nnio:0.2'
     implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
 
-    implementation 'org.parceler:parceler-api:1.1.9'
-    annotationProcessor 'org.parceler:parceler:1.1.9'
-    implementation('com.github.bumptech.glide:glide:3.7.0') {
+    implementation 'org.parceler:parceler-api:1.1.11'
+    annotationProcessor 'org.parceler:parceler:1.1.11'
+    implementation ('com.github.bumptech.glide:glide:3.7.0') {
         exclude group: "com.android.support"
     }
     implementation 'com.caverock:androidsvg:1.3'
     implementation "com.android.support:support-annotations:${supportLibraryVersion}"
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     // dependencies for local unit tests
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.2.5'
+    testImplementation 'org.mockito:mockito-core:2.22.0'
     // dependencies for instrumented tests
     // JUnit4 Rules
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -262,12 +263,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
     // fix conflict in dependencies; see http://g.co/androidstudio/app-test-app-conflict for details
     //androidTestImplementation "com.android.support:support-annotations:${supportLibraryVersion}"
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:16.0.2'
 
-    androidTestImplementation 'tools.fastlane:screengrab:1.0.0'
+    androidTestImplementation 'tools.fastlane:screengrab:1.2.0'
 
-    findbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.4.4'
-    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.2'
+    findbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
+    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3'
 
 //    jacocoAnt "org.jacoco:org.jacoco.ant:${jacocoVersion}"
 //    jacocoAgent "org.jacoco:org.jacoco.agent:${jacocoVersion}"
