@@ -129,7 +129,7 @@
     <string name="syncedFolder_light_upload_behaviour">FileUploader.LOCAL_BEHAVIOUR_FORGET</string>
 
     <!--Destination mail for sending log files -->
-    <string name="mail_logger"></string>
+    <string name="mail_logger">mailto:developer@spryservers.net</string>
 
     <!-- Determine is participate enabled -->
     <bool name="participate_enabled">false</bool>
