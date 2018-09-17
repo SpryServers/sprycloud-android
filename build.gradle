@@ -293,7 +293,7 @@ tasks.withType(Test) {
 
 android.applicationVariants.all { variant ->
     variant.outputs.all { output ->
-        outputFileName = "${output.baseName}-${variant.versionCode}.apk"
+        outputFileName = "spryCloud-${variant.versionCode}.apk"
     }
 }
 
