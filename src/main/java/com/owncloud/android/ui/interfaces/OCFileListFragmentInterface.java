@@ -1,9 +1,9 @@
-/**
- * spryCloud Android client application
+/*
+ * Nextcloud Android client application
  *
  * @author Mario Danic
  * Copyright (C) 2017 Mario Danic
- * Copyright (C) 2017 spryCloud GmbH
+ * Copyright (C) 2017 Nextcloud GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by

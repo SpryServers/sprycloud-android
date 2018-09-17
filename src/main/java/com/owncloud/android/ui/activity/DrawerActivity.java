@@ -1,11 +1,11 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Andy Scherzinger
  * @author Tobias Kaminsky
  * Copyright (C) 2016 Andy Scherzinger
  * Copyright (C) 2017 Tobias Kaminsky
- * Copyright (C) 2016 spryCloud
+ * Copyright (C) 2016 Nextcloud
  * Copyright (C) 2016 ownCloud Inc.
  *
  * This program is free software; you can redistribute it and/or
@@ -663,7 +663,7 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
      *
      * @param accounts list of accounts
      */
-    private void repopulateAccountList(ArrayList<Account> accounts) {
+    private void repopulateAccountList(List<Account> accounts) {
         // remove all accounts from list
         mNavigationView.getMenu().removeGroup(R.id.drawer_menu_accounts);
 

@@ -96,9 +96,9 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
             }
         });
 
-//        TextView hostOwnServerTextView = findViewById(R.id.host_own_server);
-//       hostOwnServerTextView.setTextColor(getResources().getColor(R.color.login_text_color));
-//        hostOwnServerTextView.setVisibility(isProviderOrOwnInstallationVisible ? View.VISIBLE : View.GONE);
+        TextView hostOwnServerTextView = findViewById(R.id.host_own_server);
+        hostOwnServerTextView.setTextColor(getResources().getColor(R.color.login_text_color));
+        hostOwnServerTextView.setVisibility(isProviderOrOwnInstallationVisible ? View.VISIBLE : View.GONE);
 
         progressIndicator = findViewById(R.id.progressIndicator);
         ViewPager viewPager = findViewById(R.id.contentPanel);
@@ -216,10 +216,21 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (FIRST_RUN_RESULT_CODE == requestCode && RESULT_OK == resultCode) {
-            setAccount(AccountUtils.getCurrentOwnCloudAccount(this));
+
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            Account account = AccountUtils.getOwnCloudAccountByName(this, accountName);
+
+            if (account == null) {
+                DisplayUtils.showSnackMessage(this, R.string.account_creation_failed);
+                return;
+            }
+            
+            setAccount(account);
+            AccountUtils.setCurrentOwnCloudAccount(this, account.name);
             onAccountSet(false);
 
             Intent i = new Intent(this, FileDisplayActivity.class);
+            i.setAction(FileDisplayActivity.RESTART);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }

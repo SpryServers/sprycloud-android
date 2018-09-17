@@ -1,8 +1,8 @@
 /**
- *   spryCloud Android client application
+ *   Nextcloud Android client application
  *
  *   Copyright (C) 2016 Tobias Kaminsky
- *   Copyright (C) 2016 spryCloud.
+ *   Copyright (C) 2016 Nextcloud.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE

@@ -1,9 +1,9 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Tobias Kaminsky
  * Copyright (C) 2017 Tobias Kaminsky
- * Copyright (C) 2017 spryCloud GmbH.
+ * Copyright (C) 2017 Nextcloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -185,6 +185,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
 
                                 try {
                                     String privateKey = task.get();
+                                    String mnemonicUnchanged = passwordField.getText().toString();
                                     String mnemonic = passwordField.getText().toString().replaceAll("\\s", "")
                                             .toLowerCase(Locale.ROOT);
                                     String decryptedPrivateKey = EncryptionUtils.decryptPrivateKey(privateKey,
@@ -197,7 +198,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
                                     Log_OC.d(TAG, "Private key successfully decrypted and stored");
 
                                     arbitraryDataProvider.storeOrUpdateKeyValue(account.name, EncryptionUtils.MNEMONIC,
-                                            mnemonic);
+                                            mnemonicUnchanged);
 
                                     Intent intentExisting = new Intent();
                                     intentExisting.putExtra(SUCCESS, true);

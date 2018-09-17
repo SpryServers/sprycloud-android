@@ -1,5 +1,5 @@
-/**
- * spryCloud Android client application
+/*
+ * Nextcloud Android client application
  *
  * @author Sven R. Kunze
  * Copyright (C) 2017 Sven R. Kunze

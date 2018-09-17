@@ -125,7 +125,7 @@ public final class ThemeUtils {
         return elementColor(null, context);
     }
 
-    @spryCloudServer(max = 12)
+    @NextcloudServer(max = 12)
     public static int elementColor(Account account, Context context) {
         OCCapability capability = getCapability(account, context);
 

@@ -1,8 +1,8 @@
-/**
- *   spryCloud Android client application
+/*
+ *   Nextcloud Android client application
  *
  *   @author Bartosz Przybylski
- *   Copyright (C) 2016 spryCloud
+ *   Copyright (C) 2016 Nextcloud
  *   Copyright (C) 2016 Bartosz Przybylski
  *
  *   This program is free software; you can redistribute it and/or
@@ -24,14 +24,14 @@ package com.owncloud.android.datastorage.providers;
 import com.owncloud.android.datastorage.StoragePoint;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Bartosz Przybylski
  */
 abstract class AbstractStoragePointProvider implements IStoragePointProvider {
 
-    boolean canBeAddedToAvailableList(Vector<StoragePoint> currentList, String path) {
+    boolean canBeAddedToAvailableList(List<StoragePoint> currentList, String path) {
         if (path == null) {
             return false;
         }

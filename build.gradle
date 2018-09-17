@@ -17,7 +17,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'org.codehaus.groovy:groovy-all:2.4.12' 
-        classpath('com.dicedmelon.gradle:jacoco-android:0.1.3') { 
+        classpath('com.dicedmelon.gradle:jacoco-android:0.1.3') {
             exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         }
     }
@@ -38,7 +38,7 @@ configurations.all {
 
 ext {
     supportLibraryVersion = '27.1.1'
-    jacocoVersion = "0.7.4.201502262128"
+    jacocoVersion = "0.8.2"
 
     travisBuild = System.getenv("TRAVIS") == "true"
 
@@ -131,8 +131,8 @@ android {
             versionDev {
                 applicationId "net.spryservers.sprycloud.beta"
                 dimension "default"
-                versionCode 20180912
-                versionName "20180912"
+                versionCode 20180915
+                versionName "20180915"
             }
         }
     }
@@ -214,6 +214,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 //    implementation project('nextcloud-android-library')
     genericImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     gplayImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
     versionDevImplementation 'com.github.nextcloud:android-library:master-SNAPSHOT' // use always latest master
 

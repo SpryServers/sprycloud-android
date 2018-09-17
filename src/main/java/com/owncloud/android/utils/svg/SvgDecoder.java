@@ -1,5 +1,5 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * Copyright 2014 Google, Inc. All rights reserved.
  * Licenced under the BSD licence
@@ -41,11 +41,15 @@ public class SvgDecoder implements ResourceDecoder<InputStream, SVG> {
         try {
             SVG svg = SVG.getFromInputStream(source);
 
-            if (width > 0) svg.setDocumentWidth(width);
-            if (height > 0) svg.setDocumentHeight(height);
+            if (width > 0) {
+                svg.setDocumentWidth(width);
+            }
+            if (height > 0) {
+                svg.setDocumentHeight(height);
+            }
             svg.setDocumentPreserveAspectRatio(PreserveAspectRatio.LETTERBOX);
 
-            return new SimpleResource<SVG>(svg);
+            return new SimpleResource<>(svg);
         } catch (SVGParseException ex) {
             throw new IOException("Cannot load SVG from stream", ex);
         }

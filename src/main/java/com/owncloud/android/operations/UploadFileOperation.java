@@ -595,7 +595,7 @@ public class UploadFileOperation extends SyncOperation {
             result = mUploadOperation.execute(client, true);
 
             /// move local temporal file or original file to its corresponding
-            // location in the spryCloud local folder
+            // location in the Nextcloud local folder
             if (!result.isSuccess() && result.getHttpCode() == HttpStatus.SC_PRECONDITION_FAILED) {
                 result = new RemoteOperationResult(ResultCode.SYNC_CONFLICT);
             }
@@ -699,12 +699,10 @@ public class UploadFileOperation extends SyncOperation {
 
     private RemoteOperationResult unlockFolder(OCFile parentFolder, OwnCloudClient client, String token) {
         if (token != null) {
-            UnlockFileOperation unlockFileOperation = new UnlockFileOperation(parentFolder.getLocalId(), token);
-            RemoteOperationResult unlockFileOperationResult = unlockFileOperation.execute(client, true);
-
-            return unlockFileOperationResult;
-        } else
+            return new UnlockFileOperation(parentFolder.getLocalId(), token).execute(client, true);
+        } else {
             return new RemoteOperationResult(new Exception("No token available"));
+        }
     }
 
     private RemoteOperationResult checkConditions(File originalFile) {
@@ -835,7 +833,7 @@ public class UploadFileOperation extends SyncOperation {
                 result = mUploadOperation.execute(client, mFile.isEncrypted());
 
                 /// move local temporal file or original file to its corresponding
-                // location in the spryCloud local folder
+                // location in the Nextcloud local folder
                 if (!result.isSuccess() && result.getHttpCode() == HttpStatus.SC_PRECONDITION_FAILED) {
                     result = new RemoteOperationResult(ResultCode.SYNC_CONFLICT);
                 }

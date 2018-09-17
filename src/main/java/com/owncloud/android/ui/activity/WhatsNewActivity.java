@@ -1,10 +1,10 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Bartosz Przybylski
  * Copyright (C) 2015 Bartosz Przybylski
  * Copyright (C) 2015 ownCloud Inc.
- * Copyright (C) 2016 spryCloud.
+ * Copyright (C) 2016 Nextcloud.
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -180,7 +180,6 @@ public class WhatsNewActivity extends FragmentActivity implements ViewPager.OnPa
             return new FeatureItem[]{new FeatureItem(R.drawable.whats_new_device_credentials,
                     R.string.whats_new_device_credentials_title, R.string.whats_new_device_credentials_content,
                     false, false)};
-
         } else {
             return new FeatureItem[0];
         }

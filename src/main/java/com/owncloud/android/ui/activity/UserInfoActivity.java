@@ -1,11 +1,11 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Mario Danic
  * @author Andy Scherzinger
  * Copyright (C) 2017 Mario Danic
  * Copyright (C) 2017 Andy Scherzinger
- * Copyright (C) 2017 spryCloud GmbH.
+ * Copyright (C) 2017 Nextcloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -301,8 +301,9 @@ public class UserInfoActivity extends FileActivity {
 
     private void addToListIfNeeded(List<UserInfoDetailsItem> info, @DrawableRes int icon, String text,
                                    @StringRes int contentDescriptionInt) {
-        if (!TextUtils.isEmpty(text))
+        if (!TextUtils.isEmpty(text)) {
             info.add(new UserInfoDetailsItem(icon, text, getResources().getString(contentDescriptionInt)));
+        }
     }
 
     public static void openAccountRemovalConfirmationDialog(Account account, FragmentManager fragmentManager,

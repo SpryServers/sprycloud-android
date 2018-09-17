@@ -484,7 +484,7 @@ public class MainApp extends MultiDexApplication {
     }
 
     public static String getNextcloudUserAgent() {
-        // Mozilla/5.0 (Android) spryCloud-android/2.1.0
+        // Mozilla/5.0 (Android) Nextcloud-android/2.1.0
         return getUserAgent(R.string.nextcloud_user_agent);
     }
 

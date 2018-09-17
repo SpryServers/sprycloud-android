@@ -117,6 +117,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -151,6 +152,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
     private static final String DIALOG_CREATE_FOLDER = "DIALOG_CREATE_FOLDER";
 
+    private static final int SINGLE_SELECTION = 1;
+
     private FileFragment.ContainerActivity mContainerActivity;
 
     private OCFile mFile;
@@ -180,7 +183,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
     private MenuItemAddRemove menuItemAddRemoveValue = MenuItemAddRemove.DO_NOTHING;
 
-    private ArrayList<MenuItem> mOriginalMenuItems = new ArrayList<>();
+    private List<MenuItem> mOriginalMenuItems = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -316,9 +319,9 @@ public class OCFileListFragment extends ExtendedListFragment implements
         mHideFab = args != null && args.getBoolean(ARG_HIDE_FAB, false);
 
         if (mHideFab) {
-            setFabEnabled(false);
+            setFabVisible(false);
         } else {
-            setFabEnabled(true);
+            setFabVisible(true);
             registerFabListener();
         }
 
@@ -439,7 +442,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
         /**
          * Selected items in list when action mode is closed by drawer
          */
-        private HashSet<OCFile> mSelectionWhenActionModeClosedByDrawer = new HashSet<>();
+        private Set<OCFile> mSelectionWhenActionModeClosedByDrawer = new HashSet<>();
 
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -487,7 +490,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
             }
         }
 
-
         /**
          * Update action mode bar when an item is selected / unselected in the list
          */
@@ -512,7 +514,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             ThemeUtils.colorToolbarProgressBar(getActivity(), mProgressBarActionModeColor);
 
             // hide FAB in multi selection mode
-            setFabEnabled(false);
+            setFabVisible(false);
 
             mAdapter.setMultiSelect(true);
             return true;
@@ -561,7 +563,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
             // show FAB on multi selection mode exit
             if (!mHideFab && !searchFragment) {
-                setFabEnabled(true);
+                setFabVisible(true);
             }
 
             mAdapter.setMultiSelect(false);
@@ -894,7 +896,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             return false;
         }
 
-        if (checkedFiles.size() == 1) {
+        if (checkedFiles.size() == SINGLE_SELECTION) {
             /// action only possible on a single file
             OCFile singleFile = checkedFiles.iterator().next();
             switch (menuId) {
@@ -1021,7 +1023,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
     public void refreshDirectory() {
         searchFragment = false;
 
-        setFabEnabled(true);
+        setFabVisible(true);
         listDirectory(getCurrentFile(), MainApp.isOnlyOnDevice(), false);
     }
 
@@ -1095,6 +1097,9 @@ public class OCFileListFragment extends ExtendedListFragment implements
         } else {
             switchToListView();
         }
+
+        // FAB
+        setFabEnabled(mFile.canWrite());
 
         invalidateActionMode();
     }
@@ -1305,7 +1310,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
         getActivity().getIntent().removeExtra(OCFileListFragment.SEARCH_EVENT);
         getArguments().putParcelable(OCFileListFragment.SEARCH_EVENT, null);
 
-        setFabEnabled(true);
+        setFabVisible(true);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -1352,7 +1357,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
         setEmptyListLoadingMessage();
         mAdapter.setData(new ArrayList<>(), SearchType.NO_SEARCH, mContainerActivity.getStorageManager(), mFile);
 
-        setFabEnabled(false);
+        setFabVisible(false);
 
         if (event.getUnsetType().equals(SearchEvent.UnsetType.UNSET_BOTTOM_NAV_BAR)) {
             unsetAllMenuItems(false);

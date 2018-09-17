@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.owncloud.android.R;
 import com.owncloud.android.features.FeatureItem;
+import com.owncloud.android.utils.ThemeUtils;
 
 
 public class FeatureFragment extends Fragment {
@@ -46,7 +47,7 @@ public class FeatureFragment extends Fragment {
 
         ImageView whatsNewImage = view.findViewById(R.id.whatsNewImage);
         if (item.shouldShowImage()) {
-            whatsNewImage.setImageResource(item.getImage());
+            whatsNewImage.setImageDrawable(ThemeUtils.tintDrawable(item.getImage(), fontColor));
         }
 
         TextView whatsNewTitle = view.findViewById(R.id.whatsNewTitle);
@@ -94,7 +95,7 @@ public class FeatureFragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(doubleMargin, standardMargin, doubleMargin, zeroMargin);
-        textView.setTextAppearance(context, R.style.spryCloudTextAppearanceMedium);
+        textView.setTextAppearance(context, R.style.NextcloudTextAppearanceMedium);
         textView.setLayoutParams(layoutParams);
 
         if (showBulletPoints) {

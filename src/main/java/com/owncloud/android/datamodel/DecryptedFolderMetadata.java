@@ -1,9 +1,9 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Tobias Kaminsky
  * Copyright (C) 2017 Tobias Kaminsky
- * Copyright (C) 2017 spryCloud GmbH.
+ * Copyright (C) 2017 Nextcloud GmbH.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Decrypted class representation of metadata json of folder metadata
+ * Decrypted class representation of metadata json of folder metadata.
  */
 public class DecryptedFolderMetadata {
     private Metadata metadata;
@@ -36,7 +36,7 @@ public class DecryptedFolderMetadata {
         this.files = new HashMap<>();
     }
 
-    public DecryptedFolderMetadata(Metadata metadata, HashMap<String, DecryptedFile> files) {
+    public DecryptedFolderMetadata(Metadata metadata, Map<String, DecryptedFile> files) {
         this.metadata = metadata;
         this.files = files;
     }

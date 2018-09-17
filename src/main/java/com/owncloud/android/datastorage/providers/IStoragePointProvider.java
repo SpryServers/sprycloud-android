@@ -1,8 +1,8 @@
-/**
- *   spryCloud Android client application
+/*
+ *   Nextcloud Android client application
  *
  *   @author Bartosz Przybylski
- *   Copyright (C) 2016 spryCloud
+ *   Copyright (C) 2016 Nextcloud
  *   Copyright (C) 2016 Bartosz Przybylski
  *
  *   This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ package com.owncloud.android.datastorage.providers;
 
 import com.owncloud.android.datastorage.StoragePoint;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Bartosz Przybylski
@@ -38,11 +38,9 @@ public interface IStoragePointProvider {
      */
     boolean canProvideStoragePoints();
 
-
     /**
      *
      * @return available storage points
      */
-    Vector<StoragePoint> getAvailableStoragePoint();
-
+    List<StoragePoint> getAvailableStoragePoint();
 }

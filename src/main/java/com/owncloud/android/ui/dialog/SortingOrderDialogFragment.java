@@ -1,9 +1,9 @@
 /*
- * spryCloud Android client application
+ * Nextcloud Android client application
  *
  * @author Andy Scherzinger
  * Copyright (C) 2017 Andy Scherzinger
- * Copyright (C) 2017 spryCloud
+ * Copyright (C) 2017 Nextcloud
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE

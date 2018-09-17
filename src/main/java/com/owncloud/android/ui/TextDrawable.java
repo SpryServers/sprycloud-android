@@ -31,7 +31,7 @@ import android.support.annotation.NonNull;
 
 import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.utils.BitmapUtils;
-import com.owncloud.android.utils.spryCloudServer;
+import com.owncloud.android.utils.NextcloudServer;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -97,7 +97,7 @@ public class TextDrawable extends Drawable {
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    @spryCloudServer(max = 12)
+    @NextcloudServer(max = 12)
     public static TextDrawable createAvatar(String accountName, float radiusInDp) throws
             NoSuchAlgorithmException {
         String username = AccountUtils.getAccountUsername(accountName);
@@ -115,7 +115,7 @@ public class TextDrawable extends Drawable {
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    @spryCloudServer(max = 12)
+    @NextcloudServer(max = 12)
     public static TextDrawable createAvatarByUserId(String userId, float radiusInDp) throws
             NoSuchAlgorithmException {
         return createNamedAvatar(userId, radiusInDp);
