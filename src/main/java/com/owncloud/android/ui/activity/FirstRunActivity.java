@@ -96,9 +96,9 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
             }
         });
 
-        TextView hostOwnServerTextView = findViewById(R.id.host_own_server);
-        hostOwnServerTextView.setTextColor(getResources().getColor(R.color.login_text_color));
-        hostOwnServerTextView.setVisibility(isProviderOrOwnInstallationVisible ? View.VISIBLE : View.GONE);
+//        TextView hostOwnServerTextView = findViewById(R.id.host_own_server);
+//        hostOwnServerTextView.setTextColor(getResources().getColor(R.color.login_text_color));
+//        hostOwnServerTextView.setVisibility(isProviderOrOwnInstallationVisible ? View.VISIBLE : View.GONE);
 
         progressIndicator = findViewById(R.id.progressIndicator);
         ViewPager viewPager = findViewById(R.id.contentPanel);
