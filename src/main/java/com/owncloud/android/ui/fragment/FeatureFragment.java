@@ -95,7 +95,7 @@ public class FeatureFragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(doubleMargin, standardMargin, doubleMargin, zeroMargin);
-        textView.setTextAppearance(context, R.style.NextcloudTextAppearanceMedium);
+        textView.setTextAppearance(context, R.style.spryCloudTextAppearanceMedium);
         textView.setLayoutParams(layoutParams);
 
         if (showBulletPoints) {
