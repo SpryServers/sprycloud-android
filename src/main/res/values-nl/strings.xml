@@ -364,7 +364,7 @@
     <string name="activity_chooser_send_file_title">Versturen</string>
 
     <string name="copy_link">Link kopiëren</string>
-    <string name="clipboard_text_copied">Gekopieerd naar het klembord</string>
+    <string name="clipboard_text_copied">Link gekopieerd</string>
     <string name="clipboard_no_text_to_copy">Geen tekst ontvangen om te kopiëren naar het klembord</string>
     <string name="clipboard_unexpected_error">Onverwachte fout bij het kopiëren naar het klembord</string>
     <string name="clipboard_label">Tekst gekopieerd uit %1$s</string>
@@ -503,6 +503,7 @@
     <string name="share_group_clarification">%1$s (groep)</string>
     <string name="share_remote_clarification">%1$s (extern)</string>
     <string name="share_email_clarification">%1$s (email)</string>
+    <string name="share_room_clarification">%1$s (gesprek)</string>
     <string name="share_known_remote_clarification">%1$s ( op %2$s )</string>
 
     <string name="share_sharee_unavailable">Helaas, je serverversie staat niet toe om binnen clients te delen met andere gebruikers.\nNeem contact op met je server beheerder</string>

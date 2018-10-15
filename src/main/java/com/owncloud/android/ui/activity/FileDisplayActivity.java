@@ -537,6 +537,7 @@ public class FileDisplayActivity extends HookActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         if (ACTION_DETAILS.equalsIgnoreCase(intent.getAction())) {
             setIntent(intent);
             setFile(intent.getParcelableExtra(EXTRA_FILE));
@@ -546,8 +547,8 @@ public class FileDisplayActivity extends HookActivity
         } else // Verify the action and get the query
             if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
                 String query = intent.getStringExtra(SearchManager.QUERY);
+                setIntent(intent);
                 Log_OC.w(TAG, "Ignored Intent requesting to query for " + query);
-
             } else if (UsersAndGroupsSearchProvider.ACTION_SHARE_WITH.equals(intent.getAction())) {
                 Uri data = intent.getData();
                 String dataString = intent.getDataString();
@@ -1120,7 +1121,7 @@ public class FileDisplayActivity extends HookActivity
             return false;
         } else {
             View mSearchEditFrame = searchView.findViewById(android.support.v7.appcompat.R.id.search_edit_frame);
-            return (mSearchEditFrame != null && mSearchEditFrame.getVisibility() == View.VISIBLE);
+            return mSearchEditFrame != null && mSearchEditFrame.getVisibility() == View.VISIBLE;
         }
     }
 
@@ -1249,10 +1250,16 @@ public class FileDisplayActivity extends HookActivity
         registerReceiver(mDownloadFinishReceiver, downloadIntentFilter);
 
         // setup drawer
-        if (MainApp.isOnlyOnDevice()) {
-            setDrawerMenuItemChecked(R.id.nav_on_device);
+        int menuItemId = getIntent().getIntExtra(FileDisplayActivity.DRAWER_MENU_ID, -1);
+
+        if (menuItemId == -1) {
+            if (MainApp.isOnlyOnDevice()) {
+                setDrawerMenuItemChecked(R.id.nav_on_device);
+            } else {
+                setDrawerMenuItemChecked(R.id.nav_all_files);
+            }
         } else {
-            setDrawerMenuItemChecked(R.id.nav_all_files);
+            setDrawerMenuItemChecked(menuItemId);
         }
         
         Log_OC.v(TAG, "onResume() end");
@@ -1306,8 +1313,8 @@ public class FileDisplayActivity extends HookActivity
                         intent.getStringExtra(FileSyncAdapter.EXTRA_FOLDER_PATH);
                 RemoteOperationResult synchResult = (RemoteOperationResult)
                         DataHolderUtil.getInstance().retrieve(intent.getStringExtra(FileSyncAdapter.EXTRA_RESULT));
-                boolean sameAccount = (getAccount() != null &&
-                        accountName.equals(getAccount().name) && getStorageManager() != null);
+                boolean sameAccount = getAccount() != null &&
+                        accountName.equals(getAccount().name) && getStorageManager() != null;
 
                 if (sameAccount) {
 
@@ -1458,9 +1465,8 @@ public class FileDisplayActivity extends HookActivity
                 boolean sameFile = getFile().getRemotePath().equals(uploadedRemotePath) ||
                         renamedInUpload;
                 FileFragment details = getSecondFragment();
-                boolean detailFragmentIsShown = (details instanceof FileDetailFragment);
 
-                if (sameAccount && sameFile && detailFragmentIsShown) {
+                if (sameAccount && sameFile && details instanceof FileDetailFragment) {
                     if (uploadWasFine) {
                         setFile(getStorageManager().getFileByPath(uploadedRemotePath));
                     } else {
@@ -1468,7 +1474,7 @@ public class FileDisplayActivity extends HookActivity
                         Log_OC.d(TAG, "Remove upload progress bar after upload failed");
                     }
                     if (renamedInUpload) {
-                        String newName = (new File(uploadedRemotePath)).getName();
+                        String newName = new File(uploadedRemotePath).getName();
                         DisplayUtils.showSnackMessage(
                                 getActivity(),
                                 R.string.filedetails_renamed_in_upload_msg,
@@ -1565,19 +1571,15 @@ public class FileDisplayActivity extends HookActivity
 
         private boolean isDescendant(String downloadedRemotePath) {
             OCFile currentDir = getCurrentDir();
-            return (
-                    currentDir != null &&
-                            downloadedRemotePath != null &&
-                            downloadedRemotePath.startsWith(currentDir.getRemotePath())
-            );
+            return currentDir != null &&
+                    downloadedRemotePath != null &&
+                    downloadedRemotePath.startsWith(currentDir.getRemotePath());
         }
 
         private boolean isAscendant(String linkedToRemotePath) {
             OCFile currentDir = getCurrentDir();
-            return (
-                    currentDir != null &&
-                            currentDir.getRemotePath().startsWith(linkedToRemotePath)
-            );
+            return currentDir != null &&
+                    currentDir.getRemotePath().startsWith(linkedToRemotePath);
         }
 
         private boolean isSameAccount(Intent intent) {
@@ -2025,7 +2027,7 @@ public class FileDisplayActivity extends HookActivity
             snackbar.show();
         }
 
-        if (fileDetailFragment != null && fileDetailFragment instanceof FileDetailFragment) {
+        if (fileDetailFragment instanceof FileDetailFragment) {
             ((FileDetailFragment) fileDetailFragment).getFileDetailSharingFragment()
                     .onUpdateShareInformation(result, getFile());
         }

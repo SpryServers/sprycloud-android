@@ -366,7 +366,7 @@
     <string name="activity_chooser_send_file_title">Пошаљи</string>
 
     <string name="copy_link">Копирај везу</string>
-    <string name="clipboard_text_copied">Копирано у оставу</string>
+    <string name="clipboard_text_copied">Веза ископирана</string>
     <string name="clipboard_no_text_to_copy">Нема текста за копирање у оставу</string>
     <string name="clipboard_unexpected_error">Неочекивана грешка приликом копирања у оставу</string>
     <string name="clipboard_label">Текст прекопиран са %1$s</string>
@@ -507,6 +507,7 @@
     <string name="share_group_clarification">%1$s (група)</string>
     <string name="share_remote_clarification">%1$s(удаљено)</string>
     <string name="share_email_clarification">%1$s (е-пошта)</string>
+    <string name="share_room_clarification">%1$s (разговор)</string>
     <string name="share_known_remote_clarification">%1$s (на %2$s)</string>
 
     <string name="share_sharee_unavailable">Ажурирајте верзију сервера да дозвољава дељење између корисника из њихових клијената.\nКонтактирајте администратора</string>
@@ -805,4 +806,10 @@
     <string name="file_keep">Задржи</string>
     <string name="file_rename">Преименуј</string>
     <string name="fab_label">Додај или отпреми</string>
-    </resources>
+    <string name="account_creation_failed">Прављење налога није успело</string>
+
+    <string name="single_sign_on_request_token" formatted="true">Дозволи да %1$s приступа Вашем Некстклауд налогу %2$s?</string>
+    <string name="permission_deny">Одбиј</string>
+    <string name="permission_allow">Дозволи</string>
+
+</resources>

@@ -49,6 +49,7 @@ import java.util.Set;
 public class OfflineSyncJob extends Job {
     public static final String TAG = "OfflineSyncJob";
 
+    private static final String WAKELOCK_TAG_SEPARATION = ":";
     private List<OfflineFile> offlineFileList = new ArrayList<>();
 
     @NonNull
@@ -69,7 +70,8 @@ public class OfflineSyncJob extends Job {
 
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, MainApp.getAuthority() +
+                        WAKELOCK_TAG_SEPARATION + TAG);
                 wakeLock.acquire();
             }
 
@@ -84,9 +86,9 @@ public class OfflineSyncJob extends Job {
             if (cursorOnKeptInSync != null) {
                 if (cursorOnKeptInSync.moveToFirst()) {
 
-                    String localPath = "";
-                    String accountName = "";
-                    Account account = null;
+                    String localPath;
+                    String accountName;
+                    Account account;
                     do {
                         localPath = cursorOnKeptInSync.getString(cursorOnKeptInSync
                                 .getColumnIndex(ProviderMeta.ProviderTableMeta.FILE_STORAGE_PATH));

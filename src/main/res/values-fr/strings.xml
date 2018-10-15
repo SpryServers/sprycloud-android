@@ -366,7 +366,7 @@ Attention la suppression est irréversible.</string>
     <string name="activity_chooser_send_file_title">Envoyer</string>
 
     <string name="copy_link">Copier le lien</string>
-    <string name="clipboard_text_copied">Copié dans le presse-papier</string>
+    <string name="clipboard_text_copied">Lien copié</string>
     <string name="clipboard_no_text_to_copy">Aucun texte n\'a été reçu pour copier dans le presse-papier</string>
     <string name="clipboard_unexpected_error">Erreur inattendue lors de la copie vers le presse-papiers</string>
     <string name="clipboard_label">Texte copié depuis %1$s</string>
@@ -505,6 +505,7 @@ Attention la suppression est irréversible.</string>
     <string name="share_group_clarification">%1$s (groupe)</string>
     <string name="share_remote_clarification">%1$s (distant)</string>
     <string name="share_email_clarification">%1$s (courriel)</string>
+    <string name="share_room_clarification">%1$s (conversation)</string>
     <string name="share_known_remote_clarification">%1$s (sur %2$s)</string>
 
     <string name="share_sharee_unavailable">Désolé, la version du serveur n\'autorise pas le partage entre utilisateurs depuis leur client.
@@ -533,7 +534,7 @@ Veuillez contacter votre administrateur</string>
     <string name="confirmation_remove_files_alert">Souhaitez-vous vraiment supprimer les éléments sélectionnés ?</string>
     <string name="confirmation_remove_folders_alert">Souhaitez-vous vraiment supprimer les éléments sélectionnés ainsi que leurs contenus ?</string>
     <string name="maintenance_mode">Serveur en maintenance</string>
-    <string name="offline_mode">Aucune connexion internet</string>
+    <string name="offline_mode">Aucune connexion Internet</string>
 
     <string name="uploads_view_upload_status_waiting_for_charging">En attente de recharge de l\'appareil</string>
     <string name="actionbar_search">Rechercher</string>

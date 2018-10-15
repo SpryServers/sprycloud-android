@@ -364,7 +364,7 @@
     <string name="activity_chooser_send_file_title">Invia</string>
 
     <string name="copy_link">Copia collegamento</string>
-    <string name="clipboard_text_copied">Copiato negli appunti</string>
+    <string name="clipboard_text_copied">Collegamento copiato</string>
     <string name="clipboard_no_text_to_copy">Nessun testo ricevuto da copiare negli appunti</string>
     <string name="clipboard_unexpected_error">Errore inatteso durante la copia negli appunti</string>
     <string name="clipboard_label">Testo copiato da %1$s</string>
@@ -503,6 +503,7 @@
     <string name="share_group_clarification">%1$s (gruppo)</string>
     <string name="share_remote_clarification">%1$s (remota)</string>
     <string name="share_email_clarification">%1$s (email)</string>
+    <string name="share_room_clarification">%1$s (conversazione)</string>
     <string name="share_known_remote_clarification">%1$s ( su %2$s )</string>
 
     <string name="share_sharee_unavailable">Aggiorna la versione del server per consentire la condivisione tra utenti dai loro client.\nContatta il tuo amministratore</string>

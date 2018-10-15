@@ -365,7 +365,6 @@
     <string name="activity_chooser_send_file_title">Dërgoje</string>
 
     <string name="copy_link">Kopjoje lidhjen</string>
-    <string name="clipboard_text_copied">U kopjua te e papastra</string>
     <string name="clipboard_no_text_to_copy">S’u mor tekst për t’u kopjuar në të papastër</string>
     <string name="clipboard_unexpected_error">Gabim i panjohur teksa kopjohej në të papastër</string>
     <string name="clipboard_label">Tekst i kopjuar prej %1$s</string>
@@ -504,6 +503,7 @@
     <string name="share_group_clarification">%1$s (grup)</string>
     <string name="share_remote_clarification">%1$s (i largët)</string>
     <string name="share_email_clarification">%1$s (email)</string>
+    <string name="share_room_clarification">%1$s (bisedë)</string>
     <string name="share_known_remote_clarification">%1$s ( te %2$s )</string>
 
     <string name="share_sharee_unavailable">Përditësoni versionin e serverit për të lejuar ndarjen midis përdoruesve brenda klientëve të tyre.\nJu lutemi të kontaktoni administratorin tuaj</string>
@@ -801,4 +801,10 @@
     <string name="file_keep">Mbaje</string>
     <string name="file_rename">Riemërto</string>
     <string name="fab_label">Shtoni ose ngarkoni</string>
-    </resources>
+    <string name="account_creation_failed">Krijimi i llogarisë dështoi</string>
+
+    <string name="single_sign_on_request_token" formatted="true">Lejo %1$s të hyjë në llogarinë tënde Nextcloud %2$s?</string>
+    <string name="permission_deny">Refuzo</string>
+    <string name="permission_allow">Lejo</string>
+
+</resources>

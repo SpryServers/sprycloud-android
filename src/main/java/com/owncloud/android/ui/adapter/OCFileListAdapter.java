@@ -108,6 +108,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEWTYPE_IMAGE = 2;
 
     private List<ThumbnailsCacheManager.ThumbnailGenerationTask> asyncTasks = new ArrayList<>();
+    private boolean onlyOnDevice = false;
 
     public OCFileListAdapter(Context context, ComponentsGetter transferServiceGetter,
                              OCFileListFragmentInterface ocFileListFragmentInterface, boolean argHideItemOptions,
@@ -162,14 +163,16 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setFavoriteAttributeForItemID(String fileId, boolean favorite) {
-        for (int i = 0; i < mFiles.size(); i++) {
+        int filesSize = mFiles.size();
+        for (int i = 0; i < filesSize; i++) {
             if (mFiles.get(i).getRemoteId().equals(fileId)) {
                 mFiles.get(i).setFavorite(favorite);
                 break;
             }
         }
 
-        for (int i = 0; i < mFilesAll.size(); i++) {
+        filesSize = mFilesAll.size();
+        for (int i = 0; i < filesSize; i++) {
             if (mFilesAll.get(i).getRemoteId().equals(fileId)) {
                 mFilesAll.get(i).setFavorite(favorite);
                 break;
@@ -283,7 +286,21 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (holder instanceof OCFileListItemViewHolder) {
                 OCFileListItemViewHolder itemViewHolder = (OCFileListItemViewHolder) holder;
-                itemViewHolder.fileSize.setText(DisplayUtils.bytesToHumanReadable(file.getFileLength()));
+
+                if (onlyOnDevice) {
+                    File localFile = new File(file.getStoragePath());
+
+                    long localSize;
+                    if (localFile.isDirectory()) {
+                        localSize = FileStorageUtils.getFolderSize(localFile);
+                    } else {
+                        localSize = localFile.length();
+                    }
+
+                    itemViewHolder.fileSize.setText(DisplayUtils.bytesToHumanReadable(localSize));
+                } else {
+                    itemViewHolder.fileSize.setText(DisplayUtils.bytesToHumanReadable(file.getFileLength()));
+                }
                 itemViewHolder.lastModification.setText(DisplayUtils.getRelativeTimestamp(mContext,
                         file.getModificationTimestamp()));
 
@@ -323,7 +340,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 gridViewHolder.localFileIndicator.setVisibility(View.VISIBLE);
             }
 
-            gridViewHolder.favorite.setVisibility(file.getIsFavorite() ? View.VISIBLE : View.GONE);
+            gridViewHolder.favorite.setVisibility(file.isFavorite() ? View.VISIBLE : View.GONE);
             gridViewHolder.offlineIcon.setVisibility(file.isAvailableOffline() ? View.VISIBLE : View.GONE);
 
             if (multiSelect) {
@@ -365,7 +382,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if ((MimeTypeUtil.isImage(file) || MimeTypeUtil.isVideo(file)) && file.getRemoteId() != null) {
                 // Thumbnail in cache?
                 Bitmap thumbnail = ThumbnailsCacheManager.getBitmapFromDiskCache(
-                        ThumbnailsCacheManager.PREFIX_THUMBNAIL + String.valueOf(file.getRemoteId())
+                        ThumbnailsCacheManager.PREFIX_THUMBNAIL + file.getRemoteId()
                 );
 
                 if (thumbnail != null && !file.needsUpdateThumbnail()) {
@@ -499,6 +516,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public void swapDirectory(OCFile directory, FileDataStorageManager updatedStorageManager,
                               boolean onlyOnDevice) {
+        this.onlyOnDevice = onlyOnDevice;
         if (updatedStorageManager != null && !updatedStorageManager.equals(mStorageManager)) {
             mStorageManager = updatedStorageManager;
             mAccount = AccountUtils.getCurrentOwnCloudAccount(mContext);

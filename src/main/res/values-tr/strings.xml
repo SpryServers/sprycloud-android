@@ -364,7 +364,7 @@
     <string name="activity_chooser_send_file_title">Gönder</string>
 
     <string name="copy_link">Bağlantıyı kopyala</string>
-    <string name="clipboard_text_copied">Panoya kopyalandı</string>
+    <string name="clipboard_text_copied">Bağlantı kopyalandı</string>
     <string name="clipboard_no_text_to_copy">Panoya kopyalanacak bir metin alınamadı</string>
     <string name="clipboard_unexpected_error">Panoya kopyalama sırasında beklenmeyen bir sorun çıktı</string>
     <string name="clipboard_label">Metin %1$s kaynağından kopyalandı</string>
@@ -503,6 +503,7 @@
     <string name="share_group_clarification">%1$s (grup)</string>
     <string name="share_remote_clarification">%1$s (uzak)</string>
     <string name="share_email_clarification">%1$s (E-posta)</string>
+    <string name="share_room_clarification">%1$s (görüşme)</string>
     <string name="share_known_remote_clarification">%1$s (%2$s üzerinde)</string>
 
     <string name="share_sharee_unavailable">Kullanıcıların istemcileri içinden paylaşım yapabilmesini sağlamak için sunucu sürümünüzü yükseltin.\nLütfen yöneticinizle görüşün</string>

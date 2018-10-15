@@ -181,7 +181,7 @@
     <string name="sync_fail_ticker">Falha na sincronização</string>
     <string name="sync_fail_ticker_unauthorized">Sincronização falhou, logue-se novamente</string>
     <string name="sync_fail_content">Não foi possível sincronizar %1$s</string>
-    <string name="sync_fail_content_unauthorized">Senha errada para %1$s</string>
+    <string name="sync_fail_content_unauthorized">Senha incorreta para %1$s</string>
     <string name="sync_conflicts_in_favourites_ticker">Conflitos encontrados</string>
     <string name="sync_fail_in_favourites_ticker">Falha ao manter arquivos sincronizados</string>
     <plurals name="sync_fail_in_favourites_content">
@@ -364,7 +364,7 @@
     <string name="activity_chooser_send_file_title">Enviar</string>
 
     <string name="copy_link">Copiar link</string>
-    <string name="clipboard_text_copied">Copiado para área de transferência</string>
+    <string name="clipboard_text_copied">Link copiado</string>
     <string name="clipboard_no_text_to_copy">Nenhum texto foi recebido para copiar para a área de transferência</string>
     <string name="clipboard_unexpected_error">Erro inesperado ao copiar para a área de transferência</string>
     <string name="clipboard_label">Texto copiado de %1$s</string>
@@ -503,6 +503,7 @@
     <string name="share_group_clarification">%1$s (grupo)</string>
     <string name="share_remote_clarification">%1$s (remoto)</string>
     <string name="share_email_clarification">%1$s (e-mail)</string>
+    <string name="share_room_clarification">%1$s (conversa)</string>
     <string name="share_known_remote_clarification">%1$s ( em %2$s )</string>
 
     <string name="share_sharee_unavailable">Atualize a versão do servidor para permitir o compartilhamento entre usuários.\nPor favor contacte o administrador</string>
@@ -723,7 +724,7 @@
     <string name="account_icon">Ícone da conta</string>
     
     <string name="end_to_end_encryption_folder_not_empty">Esta pasta não está vazia.</string>
-    <string name="end_to_end_encryption_wrong_password">Erro descriptografando. Senha errada?</string>
+    <string name="end_to_end_encryption_wrong_password">Erro descriptografando. Senha incorreta?</string>
     <string name="end_to_end_encryption_decrypting">Descriptografando…</string>
     <string name="end_to_end_encryption_retrieving_keys">Retornando chaves…</string>
     <string name="end_to_end_encryption_enter_password">Digite a senha para descriptografar a chave privada.</string>

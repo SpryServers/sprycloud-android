@@ -248,7 +248,7 @@ public class PreviewImageFragment extends FileFragment {
                     if (ThumbnailsCacheManager.cancelPotentialThumbnailWork(getFile(), mImageView) &&
                             mContainerActivity.getStorageManager() != null) {
                         final ThumbnailsCacheManager.ResizedImageGenerationTask task =
-                                new ThumbnailsCacheManager.ResizedImageGenerationTask(PreviewImageFragment.this,
+                                new ThumbnailsCacheManager.ResizedImageGenerationTask(this,
                                         mImageView,
                                         mContainerActivity.getStorageManager(),
                                         mContainerActivity.getStorageManager().getAccount());
@@ -728,7 +728,7 @@ public class PreviewImageFragment extends FileFragment {
                 LayerDrawable layerDrawable = (LayerDrawable) mImageView.getDrawable();
                 Drawable layerOne;
 
-                if (previewImageActivity.getSystemUIVisible()) {
+                if (previewImageActivity.isSystemUIVisible()) {
                     layerOne = getResources().getDrawable(R.color.white);
                 } else {
                     layerOne = getResources().getDrawable(R.drawable.backrepeat);

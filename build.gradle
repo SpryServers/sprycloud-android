@@ -15,8 +15,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'org.codehaus.groovy:groovy-all:2.4.12' 
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'org.codehaus.groovy:groovy-all:2.4.12'
         classpath('com.dicedmelon.gradle:jacoco-android:0.1.3') {
             exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         }
@@ -37,7 +37,7 @@ configurations.all {
 }
 
 ext {
-    supportLibraryVersion = '27.1.1'
+    supportLibraryVersion = '28.0.0'
     jacocoVersion = "0.8.2"
 
     travisBuild = System.getenv("TRAVIS") == "true"
@@ -61,7 +61,7 @@ repositories {
 def versionMajor = 1
 def versionMinor = 3
 def versionPatch = 0
-def versionBuild = 99 // 0-49=Alpha / 50-98=RC / 99=stable
+def versionBuild = 0 // 0-50=Alpha / 51-98=RC / 99=stable
 
 def taskRequest = getGradle().getStartParameter().getTaskRequests().toString()
 if (taskRequest.contains("Gplay") || taskRequest.contains("findbugs") || taskRequest.contains("lint")) {
@@ -80,11 +80,11 @@ android {
         javaMaxHeapSize "4g"
     }
 
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -99,8 +99,8 @@ android {
 
         if (versionBuild > 98) {
             versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        } else if (versionBuild > 49) {
-            versionName "${versionMajor}.${versionMinor}.${versionPatch} RC" + (versionBuild - 49)
+        } else if (versionBuild > 50) {
+            versionName "${versionMajor}.${versionMinor}.${versionPatch} RC"+(versionBuild-50)
         } else {
             versionName "${versionMajor}.${versionMinor}.${versionPatch} Alpha" + (versionBuild + 1)
         }
@@ -131,8 +131,8 @@ android {
             versionDev {
                 applicationId "net.spryservers.sprycloud.beta"
                 dimension "default"
-                versionCode 20180915
-                versionName "20180915"
+                versionCode 20181016
+                versionName "20181016"
             }
         }
     }
@@ -184,7 +184,7 @@ android {
         ignoreFailures = false
         effort = "max"
         reportLevel = "medium"
-        classes = fileTree("$project.buildDir/intermediates/classes/gplay/debug/com/owncloud")
+        classes = fileTree("$project.buildDir/intermediates/javac/gplayDebug/compileGplayDebugJavaWithJavac/classes/")
         excludeFilter = file("${project.rootDir}/findbugs-filter.xml")
         source = fileTree('src/main/java')
         pluginClasspath = project.configurations.findbugsPlugins
@@ -214,10 +214,9 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 //    implementation project('nextcloud-android-library')
     genericImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     gplayImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
     versionDevImplementation 'com.github.nextcloud:android-library:master-SNAPSHOT' // use always latest master
-
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.android.support:design:${supportLibraryVersion}"
     implementation 'com.jakewharton:disklrucache:2.0.2'
@@ -250,7 +249,7 @@ dependencies {
 
     // dependencies for local unit tests
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.22.0'
+    testImplementation 'org.mockito:mockito-core:2.23.0'
     // dependencies for instrumented tests
     // JUnit4 Rules
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -264,7 +263,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
     // fix conflict in dependencies; see http://g.co/androidstudio/app-test-app-conflict for details
     //androidTestImplementation "com.android.support:support-annotations:${supportLibraryVersion}"
-    implementation 'org.jetbrains:annotations:16.0.2'
+    implementation 'org.jetbrains:annotations:16.0.3'
 
     androidTestImplementation 'tools.fastlane:screengrab:1.2.0'
 

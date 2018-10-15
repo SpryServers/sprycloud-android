@@ -211,9 +211,8 @@ public class SynchronizeFileOperation extends SyncOperation {
                 } else {
                     serverChanged = !mServerFile.getEtag().equals(mLocalFile.getEtag());
                 }
-                boolean localChanged = (
-                        mLocalFile.getLocalModificationTimestamp() > mLocalFile.getLastSyncDateForData()
-                );
+                boolean localChanged =
+                        mLocalFile.getLocalModificationTimestamp() > mLocalFile.getLastSyncDateForData();
 
                 /// decide action to perform depending upon changes
                 //if (!mLocalFile.getEtag().isEmpty() && localChanged && serverChanged) {
@@ -246,7 +245,7 @@ public class SynchronizeFileOperation extends SyncOperation {
                         // service when the upload finishes
                     } else {
                         // TODO CHECK: is this really useful in some point in the code?
-                        mServerFile.setFavorite(mLocalFile.getIsFavorite());
+                        mServerFile.setFavorite(mLocalFile.isFavorite());
                         mServerFile.setAvailableOffline(mLocalFile.isAvailableOffline());
                         mServerFile.setLastSyncDateForData(mLocalFile.getLastSyncDateForData());
                         mServerFile.setStoragePath(mLocalFile.getStoragePath());

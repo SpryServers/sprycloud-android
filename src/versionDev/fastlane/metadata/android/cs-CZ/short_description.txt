@@ -1,1 +1,1 @@
-Aplikace spryCloud Dev je vývojovým snímkem a může být nainstalována paralelně.
+Aplikace spryCloud Dev je ukázkou stavu vývoje a může být nainstalována paraleln

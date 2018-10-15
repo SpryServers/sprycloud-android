@@ -68,6 +68,7 @@ public class FilesSyncJob extends Job {
     public static final String TAG = "FilesSyncJob";
     public static final String SKIP_CUSTOM = "skipCustom";
     public static final String OVERRIDE_POWER_SAVING = "overridePowerSaving";
+    private static final String WAKELOCK_TAG_SEPARATION = ":";
 
     @NonNull
     @Override
@@ -77,7 +78,8 @@ public class FilesSyncJob extends Job {
 
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, MainApp.getAuthority() +
+                    WAKELOCK_TAG_SEPARATION + TAG);
             wakeLock.acquire();
         }
 
@@ -130,18 +132,23 @@ public class FilesSyncJob extends Job {
         Integer uploadAction;
         boolean needsCharging;
         boolean needsWifi;
+        File file;
+        ArbitraryDataProvider arbitraryDataProvider;
         Account account = AccountUtils.getOwnCloudAccountByName(context, syncedFolder.getAccount());
+
+        if (lightVersion) {
+            arbitraryDataProvider = new ArbitraryDataProvider(context.getContentResolver());
+        } else {
+            arbitraryDataProvider = null;
+        }
 
         for (String path : filesystemDataProvider.getFilesForUpload(syncedFolder.getLocalPath(),
                 Long.toString(syncedFolder.getId()))) {
-            File file = new File(path);
+            file = new File(path);
             Long lastModificationTime = calculateLastModificationTime(file, syncedFolder, sFormatter);
             String mimeType = MimeTypeUtil.getBestMimeTypeByFilename(file.getAbsolutePath());
 
             if (lightVersion) {
-                ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(
-                        context.getContentResolver());
-
                 needsCharging = resources.getBoolean(R.bool.syncedFolder_light_on_charging);
                 needsWifi = account == null || arbitraryDataProvider.getBooleanValue(account.name,
                         Preferences.SYNCED_FOLDER_LIGHT_UPLOAD_ON_WIFI);

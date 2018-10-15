@@ -347,7 +347,6 @@
     <string name="activity_chooser_send_file_title">보내기</string>
 
     <string name="copy_link">링크 주소 복사</string>
-    <string name="clipboard_text_copied">클립보드로 복사됨</string>
     <string name="clipboard_no_text_to_copy">클립보드에 복사할 텍스트가 없음</string>
     <string name="clipboard_unexpected_error">클립보드에 복사 중 알수없는 오류 발생</string>
     <string name="clipboard_label">%1$s에서 텍스트를 복사함</string>
@@ -691,6 +690,7 @@
     <string name="end_to_end_encryption_not_supported">암호화 기능은 KitKat(4.4) 이상에서만 지원합니다.</string>
     <string name="end_to_end_encryption_not_enabled">종단간 암호화가 서버단에서 사용 해제 되어 있습니다.</string>
     <string name="end_to_end_encryption_confirm_button">암호화 설정</string>
+    <string name="end_to_end_encryption_password">암호…</string>
     <string name="end_to_end_encryption_unsuccessful">키를 저장할 수 없습니다. 다시 시도하십시오.</string>
     <string name="end_to_end_encryption_dialog_close">닫기</string>
     <string name="end_to_end_encryption_storing_keys">키 저장 중</string>
@@ -703,6 +703,7 @@
     <string name="whats_new_device_credentials_content">데이터를 보호하기 위해 패턴, 비밀번호, PIN 또는 지문을 사용합니다</string>
     <string name="restore_button_description">삭제된 파일 복구</string>
 	<string name="new_version_was_created">새 버전 생성됨</string>
+    <string name="new_comment">새로운 댓글…</string>
     <string name="outdated_server">서버의 수명이 다된것 같네요, 업그레이드 해주세요!</string>
     <string name="feedback_no_mail_app">메일을 보내기 위한 앱이 없습니다!</string>
     <string name="drawer_item_trashbin">삭제된 파일</string>

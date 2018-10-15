@@ -204,6 +204,22 @@ public class OCFileListFragment extends ExtendedListFragment implements
         searchFragment = currentSearchType != null && searchEvent != null;
     }
 
+    @Override
+    public void onResume() {
+        if (getActivity() == null) {
+            return;
+        }
+
+        Intent intent = getActivity().getIntent();
+
+        if (intent.getParcelableExtra(OCFileListFragment.SEARCH_EVENT) != null) {
+            searchEvent = Parcels.unwrap(intent.getParcelableExtra(OCFileListFragment.SEARCH_EVENT));
+            onMessageEvent(searchEvent);
+        }
+
+        super.onResume();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -268,7 +284,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
         }
 
         Bundle args = getArguments();
-        boolean allowContextualActions = (args != null) && args.getBoolean(ARG_ALLOW_CONTEXTUAL_ACTIONS, false);
+        boolean allowContextualActions = args != null && args.getBoolean(ARG_ALLOW_CONTEXTUAL_ACTIONS, false);
         if (allowContextualActions) {
             setChoiceModeAsMultipleModal(savedInstanceState);
         }

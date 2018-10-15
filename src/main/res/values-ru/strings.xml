@@ -368,7 +368,6 @@
     <string name="activity_chooser_send_file_title">Отправить</string>
 
     <string name="copy_link">Копировать ссылку</string>
-    <string name="clipboard_text_copied">Скопировано в буфер обмена</string>
     <string name="clipboard_no_text_to_copy">Нет принятого текста для копирования в буфер обмена</string>
     <string name="clipboard_unexpected_error">Неожиданная ошибка во время копирования в буфер обмена</string>
     <string name="clipboard_label">Текст скопирован из %1$s</string>
@@ -511,6 +510,7 @@
     <string name="share_group_clarification">%1$s (группа)</string>
     <string name="share_remote_clarification">%1$s (на сервере)</string>
     <string name="share_email_clarification">%1$s (email)</string>
+    <string name="share_room_clarification">%1$s (беседа)</string>
     <string name="share_known_remote_clarification">%1$s ( в %2$s )</string>
 
     <string name="share_sharee_unavailable">Установленная на сервере устаревшая версия Nextcloud не позволяет предоставлять общий доступ используя приложения-клиенты. Обратитесь к своему администратору</string>

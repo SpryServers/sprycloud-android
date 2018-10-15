@@ -241,14 +241,14 @@ public class LocalFileListAdapter extends RecyclerView.Adapter<RecyclerView.View
             /* Cancellation needs do be checked and done before changing the drawable in fileIcon, or
              * {@link ThumbnailsCacheManager#cancelPotentialThumbnailWork} will NEVER cancel any task.
              */
-            boolean allowedToCreateNewThumbnail = (ThumbnailsCacheManager.cancelPotentialThumbnailWork(file, thumbnailView));
+            boolean allowedToCreateNewThumbnail = ThumbnailsCacheManager.cancelPotentialThumbnailWork(file, thumbnailView);
 
 
             // get Thumbnail if file is image
             if (MimeTypeUtil.isImage(file)) {
                 // Thumbnail in Cache?
                 Bitmap thumbnail = ThumbnailsCacheManager.getBitmapFromDiskCache(
-                        ThumbnailsCacheManager.PREFIX_THUMBNAIL + String.valueOf(file.hashCode())
+                        ThumbnailsCacheManager.PREFIX_THUMBNAIL + file.hashCode()
                 );
                 if (thumbnail != null) {
                     thumbnailView.setImageBitmap(thumbnail);
