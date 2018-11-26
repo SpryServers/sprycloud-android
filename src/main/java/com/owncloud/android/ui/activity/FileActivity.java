@@ -90,6 +90,8 @@ public abstract class FileActivity extends DrawerActivity
     public static final String EXTRA_ACCOUNT = "com.owncloud.android.ui.activity.ACCOUNT";
     public static final String EXTRA_FROM_NOTIFICATION = "com.owncloud.android.ui.activity.FROM_NOTIFICATION";
     public static final String APP_OPENED_COUNT = "APP_OPENED_COUNT";
+    public static final String EXTRA_SEARCH = "com.owncloud.android.ui.activity.SEARCH";
+    public static final String EXTRA_SEARCH_QUERY = "com.owncloud.android.ui.activity.SEARCH_QUERY";
 
     public static final String TAG = FileActivity.class.getSimpleName();
 
@@ -611,7 +613,7 @@ public abstract class FileActivity extends DrawerActivity
         LoadingVersionNumberTask loadTask = new LoadingVersionNumberTask(callback);
         loadTask.execute(url);
     }
-    
+
     public static void showDevSnackbar(Activity activity, Integer latestVersion, boolean openDirectly) {
         Integer currentVersion = -1;
         try {
@@ -628,7 +630,7 @@ public abstract class FileActivity extends DrawerActivity
                 String devApkLink = (String) activity.getText(R.string.dev_link) + latestVersion + ".apk";
                 Uri uriUrl = Uri.parse(devApkLink);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uriUrl);
-                activity.startActivity(intent);
+                DisplayUtils.startIntentIfAppAvailable(intent, activity, R.string.no_browser_available);
             } else {
                 Snackbar.make(activity.findViewById(android.R.id.content), R.string.dev_version_new_version_available,
                         Snackbar.LENGTH_LONG)
@@ -636,7 +638,7 @@ public abstract class FileActivity extends DrawerActivity
                             String devApkLink = (String) activity.getText(R.string.dev_link) + latestVersion + ".apk";
                             Uri uriUrl = Uri.parse(devApkLink);
                             Intent intent = new Intent(Intent.ACTION_VIEW, uriUrl);
-                            activity.startActivity(intent);
+                            DisplayUtils.startIntentIfAppAvailable(intent, activity, R.string.no_browser_available);
                         }).show();
             }
         } else {

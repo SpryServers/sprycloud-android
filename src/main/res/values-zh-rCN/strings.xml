@@ -202,7 +202,7 @@
     <string name="pass_code_enter_pass_code">请输入安全码</string>
     <string name="default_credentials_wrong">凭据不正确</string>
     <string name="credentials_disabled">设备凭证已禁用</string>
-    
+
     <string name="pass_code_configure_your_pass_code">输入安全码</string>
     <string name="pass_code_configure_your_pass_code_explanation">每次启动应用都会要求输入安全码</string>
     <string name="pass_code_reenter_your_pass_code">请再次输入安全码</string>
@@ -211,7 +211,7 @@
     <string name="pass_code_wrong">安全码不正确</string>
     <string name="pass_code_removed">密码已移除</string>
     <string name="pass_code_stored">已存储的安全码</string>
-    
+
     <string name="media_notif_ticker">%1$s 音乐播放器</string>
     <string name="media_state_playing">%1$s (播放)</string>
     <string name="media_state_loading">%1$s (加载)</string>
@@ -291,10 +291,10 @@
     <string name="filedisplay_no_file_selected">没有选择文件</string>
     <string name="activity_chooser_title">发送链接到…</string>
     <string name="wait_for_tmp_copy_from_private_storage">从私有存储中拷贝文件</string>
-    
+
     <string name="oauth_check_onoff">使用OAuth 2.0登录</string>
     <string name="oauth_login_connection">正在连接至 OAuth 2.0 服务器…</string>
-        
+
     <string name="ssl_validator_header">服务器身份无法验证</string>
     <string name="ssl_validator_reason_cert_not_trusted">- 不受信任的服务器证书</string>
     <string name="ssl_validator_reason_cert_expired">- 服务器证书过期</string>
@@ -362,6 +362,7 @@
     <string name="activity_chooser_send_file_title">发送</string>
 
     <string name="copy_link">复制链接</string>
+    <string name="clipboard_text_copied">已复制链接</string>
     <string name="clipboard_no_text_to_copy">收到没有文字复制到剪贴板</string>
     <string name="clipboard_unexpected_error">在复制内容到剪贴板时发生了一个预料外的错误</string>
     <string name="clipboard_label">从%1$s复制文本</string>
@@ -498,6 +499,7 @@
     <string name="share_group_clarification">%1$s (组)</string>
     <string name="share_remote_clarification">%1$s (远程)</string>
     <string name="share_email_clarification">%1$s (邮件)</string>
+    <string name="share_room_clarification">%1$s (对话)</string>
     <string name="share_known_remote_clarification">%1$s ( 在 %2$s )</string>
 
     <string name="share_sharee_unavailable">升级服务器版本以允许用户之间的共享。\n请与您的管理员联系</string>
@@ -701,7 +703,7 @@
     <string name="notification_channel_file_sync_description">显示文件同步进度和结果</string>
     <string name="notification_channel_file_observer_name">文件观察者</string>
     <string name="notification_channel_file_observer_description">监视文件修改</string>
-  
+
     <string name="account_not_found">账户未找到</string>
 
     <string name="screenshot_01_gridView">为你的数据找一个安全的家</string>
@@ -710,12 +712,12 @@
     <string name="screenshot_04_accounts">连接到不同的账户</string>
     <string name="screenshot_05_autoUpload">自动上传照片&amp;/视频 </string>
     <string name="screenshot_06_davdroid">通过DAVdroid 同步日历与 &amp; 个联系人</string>
-    
+
     <string name="userinfo_no_info_headline">没有设置个人信息</string>
     <string name="userinfo_no_info_text">在你的个人资料页上添加姓名，图片和联系方式。</string>
     <string name="drawer_header_background">抽屉标题的背景图片</string>
     <string name="account_icon">账户图标</string>
-    
+
     <string name="end_to_end_encryption_folder_not_empty">此文件夹不是空的。</string>
     <string name="end_to_end_encryption_wrong_password">解密时出错。密码错误？ </string>
     <string name="end_to_end_encryption_decrypting">正在解密…</string>
@@ -755,7 +757,10 @@
     <string name="prefs_e2e_no_device_credentials">启用端到端加密请打开设备认证</string>
     <string name="whats_new_device_credentials_title">使用 Android 设备内部保护</string>
     <string name="login">登录</string>
+    <string name="signup_with_provider">与提供商签约</string>
+    <string name="host_your_own_server">自己搭建服务器</string>
     <string name="first_run_1_text">保证您的数据安全并处于您的控制之下</string>
+    <string name="first_run_2_text">安全的交换 &amp; 个协作文件</string>
     <string name="first_run_3_text">易于使用的网络邮件，日历和&amp;联系</string>
     <string name="first_run_4_text">屏幕分享，在线会议，&amp;网络会议</string>
     <string name="whats_new_device_credentials_content">通过使用图案，密码，PIN 或指纹等方式来确保您的数据安全。</string>
@@ -796,5 +801,11 @@
     <string name="single_sign_on_request_token" formatted="true">是否允许%1$s访问您的Nextcloud 帐户%2$s？</string>
     <string name="permission_deny">禁止</string>
     <string name="permission_allow">允许</string>
+    <string name="note_confirm">发送</string>
+    <string name="note_could_not_sent">无法发送笔记</string>
+    <string name="hint_note">备注</string>
+    <string name="no_browser_available">没有可用来打开链接的应用</string>
+    <string name="no_pdf_app_available">没有可用来打开 PDF 的应用</string>
+    <string name="share_via_link_hide_download">隐藏下载</string>
 
 </resources>

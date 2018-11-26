@@ -7,16 +7,16 @@
  * @author Andy Scherzinger
  * Copyright (C) 2015 ownCloud Inc.
  * Copyright (C) 2018 Andy Scherzinger
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -535,10 +535,7 @@ public class FileOperationsHelper {
         updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
         updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
         updateShareIntent.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_PASSWORD,
-                (password == null) ? "" : password
-        );
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_PASSWORD, (password == null) ? "" : password);
 
         queueShareIntent(updateShareIntent);
     }
@@ -577,10 +574,7 @@ public class FileOperationsHelper {
         updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
         updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
         updateShareIntent.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS,
-                expirationTimeInMillis
-        );
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS, expirationTimeInMillis);
         queueShareIntent(updateShareIntent);
     }
 
@@ -597,14 +591,8 @@ public class FileOperationsHelper {
         updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
         updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
         updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_ID, share.getId());
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS,
-                expirationTimeInMillis
-        );
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_PERMISSIONS,
-                0
-        );
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_EXPIRATION_DATE_IN_MILLIS, expirationTimeInMillis);
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_PERMISSIONS, 0);
         queueShareIntent(updateShareIntent);
     }
 
@@ -620,10 +608,7 @@ public class FileOperationsHelper {
         updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
         updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
         updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_ID, share.getId());
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_PERMISSIONS,
-                permissions
-        );
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_PERMISSIONS, permissions);
         queueShareIntent(updateShareIntent);
     }
 
@@ -639,10 +624,7 @@ public class FileOperationsHelper {
         updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
         updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
         updateShareIntent.putExtra(OperationsService.EXTRA_REMOTE_PATH, folder.getRemotePath());
-        updateShareIntent.putExtra(
-                OperationsService.EXTRA_SHARE_PUBLIC_UPLOAD,
-                uploadPermission
-        );
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_PUBLIC_UPLOAD, uploadPermission);
         queueShareIntent(updateShareIntent);
     }
 
@@ -669,6 +651,26 @@ public class FileOperationsHelper {
         queueShareIntent(updateShareIntent);
     }
 
+    public void setHideFileDownloadPermissionsToShare(OCFile file, boolean hideFileDownload) {
+        Intent updateShareIntent = new Intent(mFileActivity, OperationsService.class);
+        updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE);
+        updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
+        updateShareIntent.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_HIDE_FILE_DOWNLOAD, hideFileDownload);
+
+        queueShareIntent(updateShareIntent);
+    }
+
+    public void updateNoteToShare(OCShare share, String note) {
+        Intent updateShareIntent = new Intent(mFileActivity, OperationsService.class);
+        updateShareIntent.setAction(OperationsService.ACTION_UPDATE_SHARE_NOTE);
+        updateShareIntent.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_ID, share.getId());
+        updateShareIntent.putExtra(OperationsService.EXTRA_SHARE_NOTE, note);
+
+        queueShareIntent(updateShareIntent);
+    }
+
     public void sendShareFile(OCFile file, boolean hideNcSharingOptions) {
         // Show dialog
         FragmentManager fm = mFileActivity.getSupportFragmentManager();
@@ -688,7 +690,7 @@ public class FileOperationsHelper {
     }
 
     public void sendShareFile(OCFile file) {
-        sendShareFile(file, false);
+        sendShareFile(file, !file.canReshare());
     }
 
     public void syncFiles(Collection<OCFile> files) {
@@ -709,7 +711,7 @@ public class FileOperationsHelper {
                     file.getRemotePath()));
             sendIntent.putExtra(Intent.ACTION_SEND, true);      // Send Action
 
-            mFileActivity.startActivity(Intent.createChooser(sendIntent, 
+            mFileActivity.startActivity(Intent.createChooser(sendIntent,
                     context.getString(R.string.actionbar_send_file)));
         } else {
             Log_OC.wtf(TAG, "Trying to send a NULL OCFile");

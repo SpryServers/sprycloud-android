@@ -7,19 +7,16 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
-        google()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'org.codehaus.groovy:groovy-all:2.4.12'
-        classpath('com.dicedmelon.gradle:jacoco-android:0.1.3') {
-            exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        }
+        classpath('com.dicedmelon.gradle:jacoco-android:0.1.3')
     }
 }
 
@@ -47,10 +44,10 @@ ext {
 }
 
 repositories {
+    google()
     jcenter()
     maven { url "https://jitpack.io" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    google()
 
     flatDir {
         dirs 'libs'
@@ -131,8 +128,8 @@ android {
             versionDev {
                 applicationId "net.spryservers.sprycloud.beta"
                 dimension "default"
-                versionCode 20181016
-                versionName "20181016"
+                versionCode 20181107
+                versionName "20181107"
             }
         }
     }
@@ -215,7 +212,7 @@ dependencies {
 //    implementation project('nextcloud-android-library')
     genericImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
     gplayImplementation "com.github.nextcloud:android-library:master-SNAPSHOT"
-    versionDevImplementation 'com.github.nextcloud:android-library:master-SNAPSHOT' // use always latest master
+    versionDevImplementation "com.github.nextcloud:android-library:master-SNAPSHOT" // use always latest master
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.android.support:design:${supportLibraryVersion}"
@@ -223,7 +220,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
     implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
     implementation "com.android.support:exifinterface:${supportLibraryVersion}"
-    implementation 'com.github.albfernandez:juniversalchardet:2.2.0'
+    implementation 'com.github.albfernandez:juniversalchardet:2.0.0' // need this version for Android <7
     implementation 'com.google.code.findbugs:annotations:2.0.1'
     implementation 'commons-io:commons-io:2.6'
     implementation 'com.github.evernote:android-job:v1.2.5'
@@ -249,7 +246,7 @@ dependencies {
 
     // dependencies for local unit tests
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.23.0'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
     // dependencies for instrumented tests
     // JUnit4 Rules
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -264,6 +261,9 @@ dependencies {
     // fix conflict in dependencies; see http://g.co/androidstudio/app-test-app-conflict for details
     //androidTestImplementation "com.android.support:support-annotations:${supportLibraryVersion}"
     implementation 'org.jetbrains:annotations:16.0.3'
+
+    compileOnly "org.projectlombok:lombok:1.18.4"
+    annotationProcessor "org.projectlombok:lombok:1.18.4"
 
     androidTestImplementation 'tools.fastlane:screengrab:1.2.0'
 

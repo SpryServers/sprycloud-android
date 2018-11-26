@@ -1,3 +1,17 @@
+## 3.3.2 (November, 2, 2018)
+- fix fingerprint not working on certain devices
+
+For full list please see https://github.com/nextcloud/android/milestone/27
+
+## 3.3.1 (October, 29, 2018)
+Bugfix release
+- fix crash on shared folder/file via Talk
+- fix crash on Notification activity
+- fixed setup DAVdroid via settings
+- hide edit option on shares, if not allowed
+
+For full list please see https://github.com/nextcloud/android/milestone/26
+
 ## 3.3.0 (September, 19, 2018)
 - Support for Trashbin (Nc14+)
 - Media streaming (Nc14+)

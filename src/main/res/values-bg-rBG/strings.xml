@@ -204,7 +204,7 @@
     <string name="pass_code_enter_pass_code">Моля, въведете кода за достъп</string>
     <string name="default_credentials_wrong">Грешни данни за вход</string>
     <string name="credentials_disabled">Потребителските данни са спрени</string>
-    
+
     <string name="pass_code_configure_your_pass_code">Въведете кода за достъп</string>
     <string name="pass_code_configure_your_pass_code_explanation">Кода ще бъде изискван при всяко стартиране на приложението</string>
     <string name="pass_code_reenter_your_pass_code">Моля, въведете кода за достъп отново</string>
@@ -213,7 +213,7 @@
     <string name="pass_code_wrong">Грешен код</string>
     <string name="pass_code_removed">Кодът за достъп е изтрит</string>
     <string name="pass_code_stored">Кодът е запаметен</string>
-    
+
     <string name="media_notif_ticker">%1$s музикален плеър</string>
     <string name="media_state_playing">%1$s (възпроизвеждане)</string>
     <string name="media_state_loading">%1$s (се зарежда)</string>
@@ -293,10 +293,10 @@
     <string name="filedisplay_no_file_selected">Не сте избрали файл</string>
     <string name="activity_chooser_title">Изпращане на връзка чрез…</string>
     <string name="wait_for_tmp_copy_from_private_storage">Копиране на файла от личното хранилище</string>
-    
+
     <string name="oauth_check_onoff">Вписване с OAuto 2.0</string>
     <string name="oauth_login_connection">Свързване към OAuth 2.0 сървър...</string>
-        
+
     <string name="ssl_validator_header">Идентичността на сървъра не може да бъде потвърдена</string>
     <string name="ssl_validator_reason_cert_not_trusted">- Сертификатът на сървъра не е доверен</string>
     <string name="ssl_validator_reason_cert_expired">- Сертификатът на сървъра е изтекъл</string>
@@ -610,14 +610,14 @@
     <string name="contacts_last_backup">Последно резервно копие</string>
     <string name="contacts_read_permission">Нужно е разрешение за да прочетете листът с контакти</string>
     <string name="contaclist_restore_selected">Възстанови избраните контакти</string>
-    <string name="contactlist_account_chooser_title">Изберете профил за вкарване в системата</string>
-    <string name="contactlist_no_permission">Няма предоставен достъп, нищо не е вкарано.</string>
+    <string name="contactlist_account_chooser_title">Изберете профил за внасяне</string>
+    <string name="contactlist_no_permission">Няма предоставен достъп, нищо не е внесено.</string>
     <string name="contacts_preference_choose_date">Изберете дата</string>
     <string name="contacts_preference_backup_never">никога</string>
     <string name="contacts_preferences_no_file_found">Няма намерен файл</string>
     <string name="contacts_preferences_something_strange_happened">Последното ви резервно копие не може да бъде намерено!</string>
     <string name="contacts_preferences_backup_scheduled">Резервното копие беше планирано и ще започне скоро</string>
-    <string name="contacts_preferences_import_scheduled">Импортирането е планирано и ще започне скоро</string>
+    <string name="contacts_preferences_import_scheduled">Внасянето е планирано и ще започне скоро</string>
 
     <string name="drawer_logout">Отписване</string>
     <string name="picture_set_as_no_app">Няма намерени приложения за задаване на снимка</string>
@@ -717,16 +717,20 @@
     <string name="trashbin_loading_failed">Зареждането на кошчето се провали!</string>
     <string name="trashbin_file_not_deleted">Файлът %1$s не може да бъде изтрит!</string>
     <string name="trashbin_file_not_restored">Файлът %1$s не може да бъде възстановен!</string>
+    <string name="trashbin_not_emptied">Файловете не могат да бъдат окончателно изтрити!</string>
+    <string name="stream">Стрийм с...</string>
+    <string name="stream_not_possible_headline">Вътрешен стрийм не невъзможен</string>
+    <string name="stream_not_possible_message">Моля свалете медиа файла или използвайте външно приложение</string>
     <string name="folder_already_exists">Папката вече съществува</string>
     <string name="notification_icon">Икона за известия</string>
     <string name="folder_confirm_create">Създай</string>
     <string name="file_delete">Изтрий</string>
     <string name="file_keep">Запази</string>
     <string name="file_rename">Преименувай</string>
+    <string name="fab_label">Добави или качи</string>
     <string name="account_creation_failed">Създаването на профила се провали</string>
 
     <string name="single_sign_on_request_token" formatted="true">Разрешавате ли на %1$s да достъпва вашия Nextcloud профил %2$s?</string>
     <string name="permission_deny">Не</string>
     <string name="permission_allow">Да</string>
-
-</resources>
+    </resources>

@@ -67,6 +67,7 @@ import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.ExternalLinksProvider;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
+import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.lib.common.ExternalLink;
 import com.owncloud.android.lib.common.ExternalLinkType;
 import com.owncloud.android.lib.common.OwnCloudAccount;
@@ -353,7 +354,7 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
             FileDataStorageManager storageManager = new FileDataStorageManager(account, getContentResolver());
             capability = storageManager.getCapability(account.name);
         }
-        
+
         DrawerMenuUtil.filterForBottomToolbarMenuItems(menu, getResources());
         DrawerMenuUtil.filterSearchMenuItems(menu, account, getResources());
         DrawerMenuUtil.filterTrashbinMenuItem(menu, account, capability);
@@ -545,7 +546,8 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
         for (ExternalLink link : externalLinksProvider.getExternalLink(ExternalLinkType.LINK)) {
             if (menuItem.getTitle().toString().equalsIgnoreCase(link.name)) {
                 if (link.redirect) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link.url)));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.url));
+                    DisplayUtils.startIntentIfAppAvailable(intent, this, R.string.no_browser_available);
                 } else {
                     Intent externalWebViewIntent = new Intent(getApplicationContext(), ExternalSiteWebView.class);
                     externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_TITLE, link.name);
@@ -1095,7 +1097,7 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
                     LayerDrawable layerDrawable = new LayerDrawable(drawables);
                     setNavigationHeaderBackground(layerDrawable, navigationHeader);
                 } else {
-                    // use url 
+                    // use url
                     if (URLUtil.isValidUrl(background) || background.isEmpty()) {
                         // background image
                         SimpleTarget target = new SimpleTarget<Drawable>() {
@@ -1251,7 +1253,8 @@ public abstract class DrawerActivity extends ToolbarActivity implements DisplayU
 
             if (result == RequestCredentialsActivity.KEY_CHECK_RESULT_CANCEL) {
                 Log_OC.d(TAG, "PassCodeManager cancelled");
-                super.onBackPressed();
+                PreferenceManager.setLockTimestamp(this, 0);
+                finish();
             }
         }
     }

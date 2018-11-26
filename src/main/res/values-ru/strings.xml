@@ -208,7 +208,7 @@
     <string name="pass_code_enter_pass_code">Введите ваш код</string>
     <string name="default_credentials_wrong">Неверные учётные данные</string>
     <string name="credentials_disabled">Учётная запись отключена</string>
-    
+
     <string name="pass_code_configure_your_pass_code">Введите код</string>
     <string name="pass_code_configure_your_pass_code_explanation">Код будет запрашиваться каждый раз при запуске приложения</string>
     <string name="pass_code_reenter_your_pass_code">Введите ваш код ещё раз</string>
@@ -217,7 +217,7 @@
     <string name="pass_code_wrong">Некорректный код</string>
     <string name="pass_code_removed">Код удалён</string>
     <string name="pass_code_stored">Код сохранён</string>
-    
+
     <string name="media_notif_ticker">%1$s аудиоплеер</string>
     <string name="media_state_playing">%1$s (проигрывается)</string>
     <string name="media_state_loading">%1$s (загружается)</string>
@@ -297,10 +297,10 @@
     <string name="filedisplay_no_file_selected">Файлы не выбраны</string>
     <string name="activity_chooser_title">Отправить ссылку…</string>
     <string name="wait_for_tmp_copy_from_private_storage">Копирование файла из частного хранилища</string>
-    
+
     <string name="oauth_check_onoff">Войти через OAuth 2.0</string>
     <string name="oauth_login_connection">Подключение к серверу OAuth 2.0…</string>
-        
+
     <string name="ssl_validator_header">Не удалось проверить подлинность сервера</string>
     <string name="ssl_validator_reason_cert_not_trusted">- Сертификат сервера не является доверенным</string>
     <string name="ssl_validator_reason_cert_expired">- Срок действия сертификата сервера истёк</string>
@@ -368,6 +368,7 @@
     <string name="activity_chooser_send_file_title">Отправить</string>
 
     <string name="copy_link">Копировать ссылку</string>
+    <string name="clipboard_text_copied">Ссылка скопирована</string>
     <string name="clipboard_no_text_to_copy">Нет принятого текста для копирования в буфер обмена</string>
     <string name="clipboard_unexpected_error">Неожиданная ошибка во время копирования в буфер обмена</string>
     <string name="clipboard_label">Текст скопирован из %1$s</string>
@@ -555,10 +556,10 @@
     <string name="participate_release_candidate_headline">Предвыпускная версия</string>
     <string name="participate_release_candidate_text">Предвыпускная версия — это текущее состояние готовящегося выпуска, и, ожидается, что он будет стабильным. Проверка с вашими индивидуальными настройками может помочь убедится в этом. Зарегистрируйтесь для тестирования в Google Play или загляните в раздел «версии» каталога приложений F-Droid.</string>
     <string name="participate_contribute_headline">Активное участие</string>
-    <string name="participate_contribute_irc_text">Присоединяйтесь  к беседе на канале IRC:</string>
-    <string name="participate_contribute_forum_text">Помогайте другим на</string>
+    <string name="participate_contribute_irc_text">Присоединиться к обсуждению на канале IRC:</string>
+    <string name="participate_contribute_forum_text">Помочь другим пользователям на</string>
     <string name="participate_contribute_forum_forum">форуме</string>
-    <string name="participate_contribute_translate_translate">Переводите</string>
+    <string name="participate_contribute_translate_translate">Помочь с переводом</string>
     <string name="participate_contribute_translate_text">приложение</string>
     <string name="participate_contribute_github_text">Просмотрите, измените и напишите код, подробности смотрите в %1$s</string>
     <string name="participate_rc_play_store">Скачать предвыпускную версию из магазина приложений Google Play</string>
@@ -717,7 +718,7 @@
     <string name="notification_channel_file_sync_description">Показывает состояние и результаты синхронизации файлов </string>
     <string name="notification_channel_file_observer_name">Обозреватель файлов</string>
     <string name="notification_channel_file_observer_description">Отслеживание изменений файлов</string>
-  
+
     <string name="account_not_found">Учётная запись не найдена!</string>
 
     <string name="screenshot_01_gridView">Надёжный дом для всех ваших данных</string>
@@ -726,12 +727,12 @@
     <string name="screenshot_04_accounts">Соединение с несколькими учётными записями</string>
     <string name="screenshot_05_autoUpload">Автоматическая передача фотографий &amp;видео</string>
     <string name="screenshot_06_davdroid">Синхронизация календаря и контактов с использованием используя приложения DAVdroid</string>
-    
+
     <string name="userinfo_no_info_headline">Личная информация не указана</string>
     <string name="userinfo_no_info_text">На странице профиля укажите своё имя, добавьте изображение и подробные сведения</string>
     <string name="drawer_header_background">Фоновое изображение заголовка</string>
     <string name="account_icon">Значок учётной записи</string>
-    
+
     <string name="end_to_end_encryption_folder_not_empty">Эта папка не пуста.</string>
     <string name="end_to_end_encryption_wrong_password">Ошибка расшифровывания. Неверный пароль?</string>
     <string name="end_to_end_encryption_decrypting">Расшифровка…</string>
@@ -771,10 +772,12 @@
     <string name="prefs_e2e_no_device_credentials">Для просмотра мнемофразы включите системную защитную блокировку.</string>
     <string name="whats_new_device_credentials_title">Использовать системные средства защиты</string>
     <string name="login">Войти</string>
-    <string name="signup_with_provider">Подключиться через провайдера</string>
-    <string name="host_your_own_server">Разместите ваш собственный сервер</string>
-    <string name="first_run_1_text">Храните ваши данные в безопасности и под вашим контролем.</string>
-    <string name="first_run_3_text">Легкие в использовании почта, календари &amp; контакты</string>
+    <string name="signup_with_provider">Подключиться через поставщика услуги</string>
+    <string name="host_your_own_server">Развернуть собственный сервер</string>
+    <string name="first_run_1_text">Храните свои данные в безопасности и под своим контролем</string>
+    <string name="first_run_2_text">Защищённое совместная работа &amp;обмен файлами</string>
+    <string name="first_run_3_text">Простые в использовании приложения для работы с почтой, календарями и контактами</string>
+    <string name="first_run_4_text">Доступ к изображению на экране, онлайн общение и веб-конференции</string>
     <string name="whats_new_device_credentials_content">Для защиты данных могут быть использованы пароль, ПИН, защитный узор или отпечаток пальца.</string>
     <string name="restore_button_description">Восстановить удаленный файл</string>
 	<string name="restore">Восстановить файл</string>
@@ -808,4 +811,18 @@
     <string name="file_keep">Сохранить</string>
     <string name="file_rename">Переименовать</string>
     <string name="fab_label">Добавить или выгрузить</string>
-    </resources>
+    <string name="account_creation_failed">Сбой при создании аккаунта</string>
+
+    <string name="single_sign_on_request_token" formatted="true">Разрешить %1$s получить доступ к вашей учетной записи Nextcloud %2$s?</string>
+    <string name="permission_deny">Запретить</string>
+    <string name="permission_allow">Разрешить</string>
+    <string name="share_send_note">Примечание для получателя</string>
+    <string name="note_confirm">Отправить</string>
+    <string name="send_note">Отправить примечание получателю</string>
+    <string name="note_could_not_sent">Не удалось отправить примечание</string>
+    <string name="hint_note">Примечание</string>
+    <string name="no_browser_available">Отсутствует приложение, которое может обрабатывать переход по ссылкам</string>
+    <string name="no_pdf_app_available">Отсутствует приложение, которое может отображать формат PDF</string>
+    <string name="share_via_link_hide_download">Скрыть загрузку</string>
+
+</resources>

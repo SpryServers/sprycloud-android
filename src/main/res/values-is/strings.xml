@@ -204,7 +204,7 @@
     <string name="pass_code_enter_pass_code">Settu inn lykilkóðann þinn</string>
     <string name="default_credentials_wrong">Röng auðkenni</string>
     <string name="credentials_disabled">Auðkenni óvirk</string>
-    
+
     <string name="pass_code_configure_your_pass_code">Settu inn lykilkóða</string>
     <string name="pass_code_configure_your_pass_code_explanation">Lykilkóðans verður krafist í hvert skipti sem forritið er ræst</string>
     <string name="pass_code_reenter_your_pass_code">Settu aftur inn lykilkóðann þinn</string>
@@ -213,7 +213,7 @@
     <string name="pass_code_wrong">Rangur lykilkóði</string>
     <string name="pass_code_removed">Aðgangskóða eytt</string>
     <string name="pass_code_stored">Geymdi lykilkóða</string>
-    
+
     <string name="media_notif_ticker">%1$s tónlistarspilari</string>
     <string name="media_state_playing">%1$s (í spilun)</string>
     <string name="media_state_loading">%1$s (hleðst)</string>
@@ -293,10 +293,10 @@
     <string name="filedisplay_no_file_selected">Engin skrá valin</string>
     <string name="activity_chooser_title">Senda tengil til…</string>
     <string name="wait_for_tmp_copy_from_private_storage">Afrita skrá úr einkageymslu</string>
-    
+
     <string name="oauth_check_onoff">Skrá inn með OAuth 2.0</string>
     <string name="oauth_login_connection">Tengist við OAuth 2.0-auðkenningarþjón …</string>
-        
+
     <string name="ssl_validator_header">Ekki tókst að sannvotta auðkenni þjónsins</string>
     <string name="ssl_validator_reason_cert_not_trusted">- Skilríki þjónsins er ekki treyst</string>
     <string name="ssl_validator_reason_cert_expired">- Skilríki þjónsins er útrunnið</string>
@@ -364,6 +364,7 @@
     <string name="activity_chooser_send_file_title">Senda</string>
 
     <string name="copy_link">Afrita tengil</string>
+    <string name="clipboard_text_copied">Tengill afritaður</string>
     <string name="clipboard_no_text_to_copy">Fékk engan texta til að afrita á klippispjald</string>
     <string name="clipboard_unexpected_error">Óvænt villa kom upp við afritun á klippispjald</string>
     <string name="clipboard_label">Texti afritaður úr %1$s</string>
@@ -707,7 +708,7 @@
     <string name="notification_channel_file_sync_description">Sýnir framvindu og niðurstöður samstillingar skráa</string>
     <string name="notification_channel_file_observer_name">Skráavöktun</string>
     <string name="notification_channel_file_observer_description">Fylgist með breytingum á skrám</string>
-  
+
     <string name="account_not_found">Notandaaðgangur fannst ekki!</string>
 
     <string name="screenshot_01_gridView">Öruggur staður fyrir öll gögnin þín</string>
@@ -716,12 +717,12 @@
     <string name="screenshot_04_accounts">Tengstu mismunandi notandaaðgöngum</string>
     <string name="screenshot_05_autoUpload">Sjálfvirk innsending mynda &amp; myndskeiða</string>
     <string name="screenshot_06_davdroid">Samstilltu dagatal &amp; tengiliði með DAVdroid</string>
-    
+
     <string name="userinfo_no_info_headline">Engar persónulegar upplýsingar stilltar</string>
     <string name="userinfo_no_info_text">Bættu nafni, mynd og tengiliðaupplýsingum á forsíðuna þína.</string>
     <string name="drawer_header_background">Bakgrunnsmynd á haus hliðarspjalds</string>
     <string name="account_icon">Táknmynd fyrir notandaaðgang</string>
-    
+
     <string name="end_to_end_encryption_folder_not_empty">Þessi mappa er ekki tóm.</string>
     <string name="end_to_end_encryption_wrong_password">Villa kom upp við afkóðun. Rangt lykilorð?</string>
     <string name="end_to_end_encryption_decrypting">Afkóða…</string>
@@ -761,8 +762,12 @@
     <string name="prefs_e2e_no_device_credentials">Til að birta minnishjálp skaltu virkja auðkenningu tækisins.</string>
     <string name="whats_new_device_credentials_title">Nota innri varnir Android tækis</string>
     <string name="login">Skrá inn</string>
+    <string name="signup_with_provider">Skráðu þig hjá þjónustu</string>
     <string name="host_your_own_server">Hýstu þinn eigin þjón</string>
+    <string name="first_run_1_text">Haltu gögnum þínum öruggum og undir þinni stjórn</string>
+    <string name="first_run_2_text">Örugg samvinna og skráaskipti</string>
     <string name="first_run_3_text">Einfaldur og auðveldur vefpóstur, dagatal &amp; tengiliðir</string>
+    <string name="first_run_4_text">Skjádeiling, netfundir og vefráðstefnur</string>
     <string name="whats_new_device_credentials_content">Notaðu tækni á borð við mynstur, lykilorð eða fingraför til að halda gögnunum þínum öruggum.</string>
     <string name="restore_button_description">Endurheimta eydda skrá</string>
 	<string name="restore">Endurheimta skrá</string>
@@ -801,5 +806,13 @@
     <string name="single_sign_on_request_token" formatted="true">Leyfa %1$s að að fá aðgang að %2$s Nextcloud-aðgangnum þínum?</string>
     <string name="permission_deny">Hafna</string>
     <string name="permission_allow">Leyfa</string>
+    <string name="share_send_note">Minnispunktur til viðtakanda</string>
+    <string name="note_confirm">Senda</string>
+    <string name="send_note">Senda minnispunkt til viðtakanda</string>
+    <string name="note_could_not_sent">Gat ekki sent minnispunkt</string>
+    <string name="hint_note">Minnispunktur</string>
+    <string name="no_browser_available">Ekkert forrit tiltækt til að meðhöndla tengla</string>
+    <string name="no_pdf_app_available">Ekkert forrit tiltækt til að meðhöndla PDF-skrár</string>
+    <string name="share_via_link_hide_download">Fela niðurhal</string>
 
 </resources>

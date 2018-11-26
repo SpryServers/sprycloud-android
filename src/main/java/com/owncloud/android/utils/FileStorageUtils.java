@@ -98,7 +98,7 @@ public final class FileStorageUtils {
 
     /**
      * Optimistic number of bytes available on sd-card. accountName is ignored.
-     * 
+     *
      * @return Optimistic number of available bytes (can be less)
      */
     public static long getUsableSpace() {
@@ -167,7 +167,7 @@ public final class FileStorageUtils {
         } else {
             file.setFileLength(remote.getLength());
         }
-        file.setMimetype(remote.getMimeType());
+        file.setMimeType(remote.getMimeType());
         file.setModificationTimestamp(remote.getModifiedTimestamp());
         file.setEtag(remote.getEtag());
         file.setPermissions(remote.getPermissions());
@@ -177,6 +177,8 @@ public final class FileStorageUtils {
             file.setEncrypted(remote.getIsEncrypted());
         }
         file.setMountType(remote.getMountType());
+        file.setHasPreview(remote.hasPreview());
+
         return file;
     }
 
@@ -318,7 +320,7 @@ public final class FileStorageUtils {
         return ret;
     }
 
-    public static boolean moveFile(File sourceFile, File targetFile) throws IOException {
+    public static boolean moveFile(File sourceFile, File targetFile) {
         if (copyFile(sourceFile, targetFile)) {
             return sourceFile.delete();
         } else {
@@ -366,7 +368,7 @@ public final class FileStorageUtils {
         if (file.isEncrypted()) {
             return true;
         }
-        
+
         while (!OCFile.ROOT_PATH.equals(file.getRemotePath())) {
             if (file.isEncrypted()) {
                 return true;

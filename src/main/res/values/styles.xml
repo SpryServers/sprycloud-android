@@ -31,6 +31,7 @@
 		<item name="alertDialogTheme">@style/ownCloud.AlertDialog</item>
 		<item name="android:windowBackground">@color/background_color</item>
 		<item name="searchViewStyle">@style/ownCloud.SearchView</item>
+        <item name="fontFamily">@font/nunito_regular</item>
 	</style>
 
 	<style name="FallbackThemingTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -121,6 +122,7 @@
 	<style name="Button.Primary" parent="Button">
 		<item name="colorButtonNormal">@color/primary_button_background_color</item>
 		<item name="android:textColor">@color/primary_button_text_color</item>
+        <item name="fontFamily">@font/nunito_bold</item>
 	</style>
 
 	<style name="Button.Login" parent="Button">
@@ -177,7 +179,7 @@
     </style>
 
 
-	<style name="Theme.ownCloud.Widget.ActionBar"
+    <style name="Theme.ownCloud.Widget.ActionBar"
 		parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
 		<item name="android:background">@color/primary</item>
 		<item name="background">@color/primary</item>
@@ -233,7 +235,7 @@
 		<!-- <item name="android:width">100dp</item> -->
 	</style>
 
-	<style name="PassCodeStyle">
+    <style name="PassCodeStyle">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
   		<item name="android:gravity">center</item>
