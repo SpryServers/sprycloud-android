@@ -28,7 +28,7 @@
     <string name="drawer_item_videos">Vidéos</string>
     <string name="drawer_item_settings">Paramètres</string>
     <string name="drawer_item_uploads_list">Historique des envois</string>
-    <string name="drawer_item_activities">Activités</string>
+    <string name="drawer_item_activities">Activité</string>
     <string name="drawer_item_notifications">Notifications</string>
     <string name="drawer_quota">%1$s utilisés sur %2$s</string>
     <string name="drawer_quota_unlimited">%1$s utilisé</string>
@@ -112,7 +112,7 @@
     <string name="file_list_empty_text_videos">Envoyez des vidéos ou activez l\'envoi automatique.</string>
     <string name="file_list_empty_text_videos_filter">Aucune vidéo.</string>
     <string name="trashbin_empty_headline">Aucun fichier supprimé</string>
-    <string name="trashbin_empty_message">Ici, vous verrez et pourrez restaurer vos fichiers supprimés</string>
+    <string name="trashbin_empty_message">Les fichiers supprimés s\'afficheront ici et vous pourrez les restaurer.</string>
     <string name="upload_list_empty_headline">Aucun historique d\'envoi</string>
     <string name="upload_list_empty_text_auto_upload">Envoyez du contenu ou activez l\'envoi automatique.</string>
     <string name="file_list_folder">dossier</string>
@@ -789,7 +789,7 @@ Veuillez contacter votre administrateur</string>
     <string name="feedback_no_mail_app">Aucune application disponible pour envoyer des mails !</string>
     <string name="drawer_item_trashbin">Fichiers supprimés</string>
     <string name="trashbin_activity_title">Fichiers supprimés</string>
-    <string name="action_empty_trashbin">Corbeille vide</string>
+    <string name="action_empty_trashbin">Vider la corbeille</string>
     <string name="trashbin_loading_failed">Erreur du chargement de la corbeille !</string>
     <string name="trashbin_file_not_deleted">Le fichier %1$s n\'a pas pu être supprimé !</string>
     <string name="trashbin_file_not_restored">Le fichier %1$s n\'a pas pu être restauré !</string>
@@ -798,6 +798,7 @@ Veuillez contacter votre administrateur</string>
     <string name="stream_not_possible_headline">Diffusion interne impossible</string>
     <string name="stream_not_possible_message">Merci, à la place, de télécharger le média ou d\'utiliser une application externe.</string>
     <string name="folder_already_exists">Le dossier existe déjà</string>
+    <string name="actionbar_open_as_richdocument">Ouvrir dans Collabora</string>
     <string name="notification_icon">Icône de notification</string>
     <string name="folder_confirm_create">Créer</string>
     <string name="file_delete">Supprimer</string>
@@ -805,7 +806,6 @@ Veuillez contacter votre administrateur</string>
     <string name="file_rename">Renommer</string>
     <string name="fab_label">Ajouter ou téléverser</string>
     <string name="account_creation_failed">Échec de création du compte</string>
-
     <string name="single_sign_on_request_token" formatted="true">Autoriser %1$s à accéder à votre compte Nextcloud  %2$s ?</string>
     <string name="permission_deny">Refuser</string>
     <string name="permission_allow">Accepter</string>
@@ -818,4 +818,14 @@ Veuillez contacter votre administrateur</string>
     <string name="no_pdf_app_available">Aucune application n\'est disponible pour ouvrir les fichiers PDF</string>
     <string name="share_via_link_hide_download">Masquer le téléchargement</string>
 
+    <string name="richdocuments_failed_to_load_document">Impossible de charger le document !</string>
+    <string name="create_new_document">Créer une nouveau document</string>
+    <string name="create_new_spreadsheet">Créer une nouvelle feuille de calcul</string>
+    <string name="create_new_presentation">Créer une nouvelle présentation</string>
+    <string name="select_template">Sélectionnez un modèle</string>
+    <string name="filename_hint">Nom du fichier</string>
+    <string name="thumbnail">Miniature</string>
+    <string name="enter_filename">Veuillez saisir un nom de fichier</string>
+    <string name="create_file_from_template">Création du fichier à partir du modèle…</string>
+    <string name="error_retrieving_templates">Erreur lors de la récupération des modèles</string>
 </resources>

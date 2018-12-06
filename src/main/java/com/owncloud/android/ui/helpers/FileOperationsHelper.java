@@ -61,7 +61,9 @@ import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.operations.SynchronizeFileOperation;
 import com.owncloud.android.services.OperationsService;
 import com.owncloud.android.ui.activity.ConflictsResolveActivity;
+import com.owncloud.android.ui.activity.ExternalSiteWebView;
 import com.owncloud.android.ui.activity.FileActivity;
+import com.owncloud.android.ui.activity.RichDocumentsWebView;
 import com.owncloud.android.ui.activity.ShareActivity;
 import com.owncloud.android.ui.dialog.SendShareDialog;
 import com.owncloud.android.ui.events.EncryptionEvent;
@@ -249,6 +251,20 @@ public class FileOperationsHelper {
             List<ResolveInfo> launchables = mFileActivity.getPackageManager().
                     queryIntentActivities(openFileWithIntent, PackageManager.GET_RESOLVED_FILTER);
 
+            if (launchables.isEmpty()) {
+                Account account = mFileActivity.getAccount();
+                OCCapability capability = mFileActivity.getStorageManager().getCapability(account.name);
+                if (capability.getRichDocumentsMimeTypeList().contains(file.getMimeType()) &&
+                    android.os.Build.VERSION.SDK_INT >= RichDocumentsWebView.MINIMUM_API &&
+                    capability.getRichDocumentsDirectEditing().isTrue()) {
+                    openFileAsRichDocument(file, mFileActivity);
+                    return;
+                } else {
+                    DisplayUtils.showSnackMessage(mFileActivity, R.string.file_list_no_app_for_file_type);
+                    return;
+                }
+            }
+
             mFileActivity.showLoadingDialog(mFileActivity.getResources().getString(R.string.sync_in_progress));
             new Thread(new Runnable() {
                 @Override
@@ -272,7 +288,7 @@ public class FileOperationsHelper {
                         i.putExtra(ConflictsResolveActivity.EXTRA_ACCOUNT, account);
                         mFileActivity.startActivity(i);
                     } else {
-                        if (launchables != null && launchables.size() > 0) {
+                        if (!launchables.isEmpty()) {
                             try {
                                 if (!result.isSuccess()) {
                                     DisplayUtils.showSnackMessage(mFileActivity, R.string.file_not_synced);
@@ -305,6 +321,14 @@ public class FileOperationsHelper {
         } else {
             Log_OC.e(TAG, "Trying to open a NULL OCFile");
         }
+    }
+
+    public void openFileAsRichDocument(OCFile file, Context context) {
+        Intent collaboraWebViewIntent = new Intent(context, RichDocumentsWebView.class);
+        collaboraWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_TITLE, "Collabora");
+        collaboraWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_FILE, file);
+        collaboraWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_SHOW_SIDEBAR, false);
+        context.startActivity(collaboraWebViewIntent);
     }
 
     @NonNull
@@ -346,9 +370,9 @@ public class FileOperationsHelper {
     private Uri getFileUri(OCFile file, String... officeExtensions) {
         if (file.getFileName().contains(".") &&
                 Arrays.asList(officeExtensions).contains(file.getFileName().substring(file.getFileName().
-                        lastIndexOf(".") + 1, file.getFileName().length())) &&
+                        lastIndexOf(".") + 1)) &&
                 !file.getStoragePath().startsWith(MainApp.getAppContext().getFilesDir().getAbsolutePath())) {
-            return file.getLegacyExposedFileUri(mFileActivity);
+            return file.getLegacyExposedFileUri();
         } else {
             return file.getExposedFileUri(mFileActivity);
         }

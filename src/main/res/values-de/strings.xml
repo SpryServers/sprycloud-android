@@ -795,6 +795,7 @@
     <string name="stream_not_possible_headline">Internes Streamen nicht möglich</string>
     <string name="stream_not_possible_message">Laden Sie sich den Inhalt herunter oder nutzen Sie eine externe App.</string>
     <string name="folder_already_exists">Ordner existiert bereits</string>
+    <string name="actionbar_open_as_richdocument">Mit Collabora öffnen</string>
     <string name="notification_icon">Benachrichtigungssymbol</string>
     <string name="folder_confirm_create">Erstellen</string>
     <string name="file_delete">Löschen</string>
@@ -802,7 +803,6 @@
     <string name="file_rename">Umbenennen</string>
     <string name="fab_label">Hinzufügen oder hochladen</string>
     <string name="account_creation_failed">Kontoerstellung fehlgeschlagen</string>
-
     <string name="single_sign_on_request_token" formatted="true">Zulassen, dass %1$s auf Ihr Nextcloud Konto %2$s zugreifen darf?</string>
     <string name="permission_deny">Ablehnen</string>
     <string name="permission_allow">Zulassen</string>
@@ -815,4 +815,14 @@
     <string name="no_pdf_app_available">Keine App verfügbar um PDFs anzuzeigen</string>
     <string name="share_via_link_hide_download">Download verbergen</string>
 
+    <string name="richdocuments_failed_to_load_document">Laden des Dokuments fehlgeschlagen!</string>
+    <string name="create_new_document">Neues Dokument erstellen</string>
+    <string name="create_new_spreadsheet">Neue Tabelle erstellen</string>
+    <string name="create_new_presentation">Neue Präsentation erstellen</string>
+    <string name="select_template">Vorlage auswählen</string>
+    <string name="filename_hint">Dateiname</string>
+    <string name="thumbnail">Vorschaubild</string>
+    <string name="enter_filename">Bitte Dateinamen eingeben</string>
+    <string name="create_file_from_template">Erzeuge Datei aus Vorlage…</string>
+    <string name="error_retrieving_templates">Fehler beim Laden der Vorlagen</string>
 </resources>

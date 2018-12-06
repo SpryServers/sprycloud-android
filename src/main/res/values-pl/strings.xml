@@ -738,7 +738,7 @@ Wersja Nextcloud Dev jest wersją rozwojową, można ją zainstalować równoleg
     <string name="end_to_end_encryption_folder_not_empty">Ten katalog nie jest pusty</string>
     <string name="end_to_end_encryption_wrong_password">Wystąpił błąd podczas deszyfracji. Nieprawidłowe hasło?</string>
     <string name="end_to_end_encryption_decrypting">Odszyfrowywanie…</string>
-    <string name="end_to_end_encryption_retrieving_keys">Pobieranie kluczy...</string>
+    <string name="end_to_end_encryption_retrieving_keys">Pobieranie kluczy…</string>
     <string name="end_to_end_encryption_enter_password">Wprowadź hasło aby odszyfrować klucz prywatny</string>
     <string name="end_to_end_encryption_generating_keys">Generowanie nowych kluczy</string>
     <string name="end_to_end_encryption_keywords_description">Wszystkie 12 słów utworzy bardzo trudne hasło, które pozwoli na przeglądanie i korzystanie z zaszyfrowanych plików. Zapisz je i przechowuj w bezpiecznym miejscu.</string>
@@ -803,10 +803,11 @@ Wersja Nextcloud Dev jest wersją rozwojową, można ją zainstalować równoleg
     <string name="trashbin_file_not_deleted">Plik %1$s nie może zostać usunięty!</string>
     <string name="trashbin_file_not_restored">Plik %1$s nie może zostać przywrócony!</string>
     <string name="trashbin_not_emptied">Nie udało się trwale usunąć!</string>
-    <string name="stream">Streamuj...</string>
+    <string name="stream">Streamuj…</string>
     <string name="stream_not_possible_headline">Wewnętrzny streaming niemożliwy</string>
     <string name="stream_not_possible_message">Pobierz plik lub użyj zewnętrznej aplikacji.</string>
     <string name="folder_already_exists">Katalog już istnieje</string>
+    <string name="actionbar_open_as_richdocument">Otwórz z Collabora</string>
     <string name="notification_icon">Ikona powiadomień</string>
     <string name="folder_confirm_create">Utwórz</string>
     <string name="file_delete">Usuń</string>
@@ -814,7 +815,6 @@ Wersja Nextcloud Dev jest wersją rozwojową, można ją zainstalować równoleg
     <string name="file_rename">Zmień nazwę</string>
     <string name="fab_label">Dodaj lub wyślij</string>
     <string name="account_creation_failed">Błąd tworzenia konta</string>
-
     <string name="single_sign_on_request_token" formatted="true">Pozwolić %1$s na dostęp do Twojego konta Nextcloud %2$s?</string>
     <string name="permission_deny">Odrzuć</string>
     <string name="permission_allow">Akceptuj</string>
@@ -825,4 +825,13 @@ Wersja Nextcloud Dev jest wersją rozwojową, można ją zainstalować równoleg
     <string name="hint_note">Notatka</string>
     <string name="no_browser_available">Brak aplikacji obsługującej odnośniki</string>
     <string name="no_pdf_app_available">Brak aplikacji obsługującej PDF</string>
+    <string name="share_via_link_hide_download">Ukryj pobieranie</string>
+
+    <string name="richdocuments_failed_to_load_document">Nie udało się pobrać dokumentu</string>
+    <string name="create_new_document">Stwórz nowy dokument</string>
+    <string name="create_new_spreadsheet">Stwórz nowy arkusz kalkulacyjny</string>
+    <string name="create_new_presentation">Stwórz nową prezentację</string>
+    <string name="filename_hint">Nazwa pliku</string>
+    <string name="thumbnail">Miniatura</string>
+    <string name="enter_filename">Wprowadź nazwę pliku</string>
     </resources>

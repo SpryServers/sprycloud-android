@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.owncloud.android.MainApp;
 import com.owncloud.android.db.ProviderMeta.ProviderTableMeta;
@@ -53,6 +54,7 @@ import com.owncloud.android.utils.MimeTypeUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -474,7 +476,7 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_FAVORITE, file.isFavorite());
         cv.put(ProviderTableMeta.FILE_IS_ENCRYPTED, file.isEncrypted());
         cv.put(ProviderTableMeta.FILE_MOUNT_TYPE, file.getMountType().ordinal());
-        cv.put(ProviderTableMeta.FILE_HAS_PREVIEW, file.hasPreview() ? 1 : 0);
+        cv.put(ProviderTableMeta.FILE_HAS_PREVIEW, file.isPreviewAvailable() ? 1 : 0);
         return cv;
     }
 
@@ -968,7 +970,7 @@ public class FileDataStorageManager {
             }
             file.setMountType(WebdavEntry.MountType.values()[c.getInt(
                     c.getColumnIndex(ProviderTableMeta.FILE_MOUNT_TYPE))]);
-            file.setHasPreview(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_HAS_PREVIEW)) == 1);
+            file.setPreviewAvailable(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_HAS_PREVIEW)) == 1);
         }
         return file;
     }
@@ -1889,7 +1891,7 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_MICRO, capability.getVersionMicro());
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_STRING, capability.getVersionString());
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_EDITION, capability.getVersionEdition());
-        cv.put(ProviderTableMeta.CAPABILITIES_CORE_POLLINTERVAL, capability.getCorePollinterval());
+        cv.put(ProviderTableMeta.CAPABILITIES_CORE_POLLINTERVAL, capability.getCorePollInterval());
         cv.put(ProviderTableMeta.CAPABILITIES_SHARING_API_ENABLED, capability.getFilesSharingApiEnabled().getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_SHARING_PUBLIC_ENABLED,
                 capability.getFilesSharingPublicEnabled().getValue());
@@ -1929,6 +1931,11 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN, capability.getServerBackgroundPlain()
                 .getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_ACTIVITY, capability.isActivityEnabled().getValue());
+        cv.put(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT, capability.getRichDocuments().getValue());
+        cv.put(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_MIMETYPE_LIST,
+                TextUtils.join(",", capability.getRichDocumentsMimeTypeList()));
+        cv.put(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING, capability.getRichDocumentsDirectEditing()
+            .getValue());
 
         if (capabilityExists(account.name)) {
             if (getContentResolver() != null) {
@@ -2031,7 +2038,7 @@ public class FileDataStorageManager {
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_VERSION_STRING)));
             capability.setVersionEdition(c.getString(c
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_VERSION_EDITION)));
-            capability.setCorePollinterval(c.getInt(c
+            capability.setCorePollInterval(c.getInt(c
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_CORE_POLLINTERVAL)));
             capability.setFilesSharingApiEnabled(CapabilityBooleanType.fromValue(c.getInt(c
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_SHARING_API_ENABLED))));
@@ -2084,6 +2091,15 @@ public class FileDataStorageManager {
                     c.getInt(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN))));
             capability.setActivity(CapabilityBooleanType.fromValue(
                     c.getInt(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_ACTIVITY))));
+            capability.setRichDocuments(CapabilityBooleanType.fromValue(c.getInt(
+                    c.getColumnIndex(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT))));
+            String mimetypes = c.getString(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_MIMETYPE_LIST));
+            capability.setRichDocumentsDirectEditing(CapabilityBooleanType.fromValue(c.getInt(
+                c.getColumnIndex(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING))));
+            if (mimetypes == null) {
+                mimetypes = "";
+            }
+            capability.setRichDocumentsMimeTypeList(Arrays.asList(mimetypes.split(",")));
         }
         return capability;
     }

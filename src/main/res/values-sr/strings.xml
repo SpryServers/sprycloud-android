@@ -800,6 +800,7 @@
     <string name="stream_not_possible_headline">Интерно стримовање није могуће</string>
     <string name="stream_not_possible_message">Или преузмите мултимедију или користите неку екстерну апликацију.</string>
     <string name="folder_already_exists">Фасцикла већ постоји</string>
+    <string name="actionbar_open_as_richdocument">Отвори помоћу Collabora</string>
     <string name="notification_icon">Иконица обавештења</string>
     <string name="folder_confirm_create">Направи</string>
     <string name="file_delete">Обриши</string>
@@ -807,7 +808,6 @@
     <string name="file_rename">Преименуј</string>
     <string name="fab_label">Додај или отпреми</string>
     <string name="account_creation_failed">Прављење налога није успело</string>
-
     <string name="single_sign_on_request_token" formatted="true">Дозволи да %1$s приступа Вашем Некстклауд налогу %2$s?</string>
     <string name="permission_deny">Одбиј</string>
     <string name="permission_allow">Дозволи</string>
@@ -820,4 +820,14 @@
     <string name="no_pdf_app_available">Нема апликације која зна да ради са PDF-овима</string>
     <string name="share_via_link_hide_download">Сакриј преузимање</string>
 
+    <string name="richdocuments_failed_to_load_document">Грешка приликом учитавања документа!</string>
+    <string name="create_new_document">Направи нови документ</string>
+    <string name="create_new_spreadsheet">Направи нову табелу</string>
+    <string name="create_new_presentation">Направи нову презентацију</string>
+    <string name="select_template">Одаберите шаблон</string>
+    <string name="filename_hint">Име фајла</string>
+    <string name="thumbnail">Сличица</string>
+    <string name="enter_filename">Унесите име фајла</string>
+    <string name="create_file_from_template">Направите фајл из шаблона…</string>
+    <string name="error_retrieving_templates">Грешка при учитавању шаблона</string>
 </resources>

@@ -813,7 +813,10 @@ public class FileContentProvider extends ContentProvider {
                 + ProviderTableMeta.CAPABILITIES_END_TO_END_ENCRYPTION + INTEGER
                 + ProviderTableMeta.CAPABILITIES_ACTIVITY + INTEGER
                 + ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_DEFAULT + INTEGER
-                + ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN + " INTEGER );");
+                + ProviderTableMeta.CAPABILITIES_SERVER_BACKGROUND_PLAIN + INTEGER
+                + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT + INTEGER
+            + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_MIMETYPE_LIST + TEXT
+            + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING + " INTEGER );");
     }
 
     private void createUploadsTable(SQLiteDatabase db) {
@@ -1791,6 +1794,44 @@ public class FileContentProvider extends ContentProvider {
                 try {
                     db.execSQL(ALTER_TABLE + ProviderTableMeta.OCSHARES_TABLE_NAME +
                         ADD_COLUMN + ProviderTableMeta.OCSHARES_HIDE_DOWNLOAD + " INTEGER ");
+
+                    upgraded = true;
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+
+            if (!upgraded) {
+                Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
+            }
+
+            if (oldVersion < 38 && newVersion >= 38) {
+                Log_OC.i(SQL, "Entering in the #38 add richdocuments");
+                db.beginTransaction();
+                try {
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.CAPABILITIES_TABLE_NAME +
+                            ADD_COLUMN + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT + " INTEGER "); // boolean
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.CAPABILITIES_TABLE_NAME +
+                            ADD_COLUMN + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_MIMETYPE_LIST + " TEXT "); // string
+
+                    upgraded = true;
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+
+            if (!upgraded) {
+                Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
+            }
+
+            if (oldVersion < 39 && newVersion >= 39) {
+                Log_OC.i(SQL, "Entering in the #39 add richdocuments direct editing");
+                db.beginTransaction();
+                try {
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.CAPABILITIES_TABLE_NAME +
+                        ADD_COLUMN + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING + " INTEGER "); // bool
 
                     upgraded = true;
                     db.setTransactionSuccessful();
