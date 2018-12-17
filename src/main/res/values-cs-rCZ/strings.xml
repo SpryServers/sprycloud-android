@@ -271,10 +271,6 @@
     <string name="auth_access_failed">Přístup se nezdařil: %1$s</string>
     <string name="auth_illegal_login_used">Byla použita neplatná přihlašovací URL</string>
 
-    <string name="favorite">Nastavit jako dostupné offline</string>
-    <string name="unfavorite">Zrušit nastavení dostupnosti offline</string>
-    <string name="favorite_real">Přidat do oblíbených</string>
-    <string name="unset_favorite_real">Odebrat z oblíbených</string>
     <string name="encrypted">Nastavit jako šifrované</string>
     <string name="unset_encrypted">Zrušit šifrování</string>
     <string name="common_rename">Přejmenovat</string>
@@ -514,7 +510,6 @@
     <string name="share_room_clarification">%1$s (konverzace)</string>
     <string name="share_known_remote_clarification">%1$s (v %2$s)</string>
 
-    <string name="share_sharee_unavailable">Aby bylo možné, aby uživatelé mohli mezi sebou sdílet ze svých klientů, přejděte na novější verzi Nextcloud serveru.\nObraťte se na svého správce</string>
     <string name="share_privilege_unshare">Zrušit sdílení</string>
     <string name="share_privilege_can_share">může sdílet</string>
     <string name="share_privilege_can_edit">lze upravovat</string>
@@ -660,7 +655,6 @@
 
     <string name="resized_image_not_possible">Nejsou k dispozici žádné zmenšené obrázky.</string>
     <string name="resized_image_not_possible_download">Zmenšená verze obrázku není k dispozici. Stáhnout obrázek v plné velikosti?</string>
-    <string name="resized_images_download_full_image">Stáhnout obrázek v plné velikosti?</string>
 
     <string name="store_short_desc">Aplikace Nextcloud pro Android poskytuje přístup ke všem souborům na vašem Nextcloud.</string>
     <string name="store_full_desc">Svobodná (copyleft) aplikace Nextcloud pro Android, poskytující mobilní svobodu.\n\nFunkce:\n* Snadno použitelné moderní rozhraní, hodící se k vzhledu vašeho serveru\n* Nahrávání souborů na Nextcloud server\n* Jejich sdílení s ostatními\n* Synchronizace vašich oblíbených souborů a složek\n* Hledání napříč všemi složkami na serveru\n* Automatické nahrávání fotek a videí pořízených vaším zařízením\n* Doručování oznámení\n* Podpora vícero účtů\n* Zabezpečený přístup k vašim datům pomocí otisku prstu nebo PIN kódu\n* Začlenění DAVdroid pro snadný přístup ke kalendáři &amp; synchronizaci kontaktů\n\nJakékoli problémy prosím hlaste na https://github.com/nextcloud/android/issues a o aplikaci diskutujte na https://help.nextcloud.com/c/clients/android\n\nJeště Nextcloud neznáte? Nextcloud je server pro soukromou synchronizaci souborů &amp;, sdílení a komunikaci. Je to svobodný software a můžete ho buď provozovat sami nebo si pronajímat od nějaké společnosti. Tím vy vládnete svým fotkám, údajům v kalendáři a kontaktech, dokumentům a všemu ostatnímu.\n\nPodívejte se na Nextcloud na https://nextcloud.com</string>
@@ -674,7 +668,6 @@
     <string name="user_icon">Uživatel</string>
     <string name="favorite_icon">Oblíbené</string>
     <string name="synced_icon">Synchronizováno</string>
-    <string name="available_offline_icon">Dostupné offline</string>
     <string name="checkbox">Zatržítko</string>
     <string name="shared_icon_share">sdílet</string>
     <string name="shared_icon_shared_via_link">sdílet odkazem</string>
@@ -824,7 +817,6 @@
     <string name="no_browser_available">Není k dispozici aplikace pro práci s odkazy</string>
     <string name="no_pdf_app_available">Není k dispozice aplikace pro práci s PDF</string>
     <string name="share_via_link_hide_download">Skrýt stahování</string>
-
     <string name="richdocuments_failed_to_load_document">Dokument se nepodařilo načíst!</string>
     <string name="create_new_document">Vytvořit nový dokument</string>
     <string name="create_new_spreadsheet">Vytvořit nový sešit</string>
@@ -835,4 +827,4 @@
     <string name="enter_filename">Zadejte název souboru</string>
     <string name="create_file_from_template">Vytváření souboru ze šablony…</string>
     <string name="error_retrieving_templates">Chyba při získávání šablon</string>
-</resources>
+    </resources>

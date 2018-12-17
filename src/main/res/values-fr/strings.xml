@@ -10,12 +10,12 @@
     <string name="actionbar_send_file">Envoyer</string>
     <string name="actionbar_sort">Trier</string>
     <string name="sort_by">Trier par</string>
-    <string name="menu_item_sort_by_name_a_z">De A à Z</string>
-    <string name="menu_item_sort_by_name_z_a">De Z à A</string>
-    <string name="menu_item_sort_by_date_newest_first">Le plus récent en premier</string>
-    <string name="menu_item_sort_by_date_oldest_first">Le plus ancien en premier</string>
-    <string name="menu_item_sort_by_size_biggest_first">Le plus grand en premier</string>
-    <string name="menu_item_sort_by_size_smallest_first">Le plus petit en premier</string>
+    <string name="menu_item_sort_by_name_a_z">Nom : de A à Z</string>
+    <string name="menu_item_sort_by_name_z_a">Nom : de Z à A</string>
+    <string name="menu_item_sort_by_date_newest_first">Date : Récent d\'abord</string>
+    <string name="menu_item_sort_by_date_oldest_first">Date : Ancien d\'abord</string>
+    <string name="menu_item_sort_by_size_biggest_first">Taille : Grand d\'abord</string>
+    <string name="menu_item_sort_by_size_smallest_first">Taille : Petit d\'abord</string>
 
     <string name="drawer_item_all_files">Tous les fichiers</string>
     <string name="drawer_item_home">Accueil</string>
@@ -37,7 +37,7 @@
     <string name="prefs_category_general">Général</string>
     <string name="prefs_category_more">Plus</string>
     <string name="prefs_manage_accounts">Gestion des comptes</string>
-    <string name="prefs_lock">Verrouiller</string>
+    <string name="prefs_lock">Verrouillage</string>
     <string name="prefs_lock_title">Verrouillage utilisé</string>
     <string name="prefs_lock_none">Aucun</string>
     <string name="prefs_lock_using_passcode">Code de sécurité</string>
@@ -150,11 +150,11 @@ Attention la suppression est irréversible.</string>
     <string name="uploader_upload_succeeded_content_single">%1$s envoyé</string>
     <string name="uploader_upload_failed_ticker">Échec de l\'envoi</string>
     <string name="uploader_upload_failed_content_single">Impossible d\'envoyer %1$s</string>
-    <string name="uploader_upload_failed_credentials_error">Envoi échoué, reconnectez-vous</string>
+    <string name="uploader_upload_failed_credentials_error">L\'envoi a échoué, reconnectez-vous</string>
     <string name="uploads_view_upload_status_failed_ssl_certificate_not_trusted">Certificat du serveur non approuvé</string>
     <string name="uploads_view_title">Historique des envois</string>
     <string name="uploads_view_group_current_uploads">En cours</string>
-    <string name="uploads_view_group_failed_uploads">Envoi échoué / Nouvel envoi possible</string>
+    <string name="uploads_view_group_failed_uploads">Erreur d\'envoi / Nouvel envoi possible</string>
     <string name="uploads_view_group_finished_uploads">Envoyé</string>
     <string name="uploads_view_upload_status_succeeded">Terminé</string>
     <string name="uploads_view_upload_status_cancelled">Annulé</string>
@@ -269,10 +269,8 @@ Attention la suppression est irréversible.</string>
     <string name="auth_access_failed">L\'accès a échoué: %1$s</string>
     <string name="auth_illegal_login_used">Utilisation d\'une URL d\'identification non autorisée</string>
 
-    <string name="favorite">Rendre disponible hors-ligne</string>
-    <string name="unfavorite">Ne plus rendre disponible hors-ligne</string>
-    <string name="favorite_real">Ajouter aux favoris</string>
-    <string name="unset_favorite_real">Supprimer des favoris</string>
+    <string name="favorite">Ajouter aux favoris</string>
+    <string name="unset_favorite">Supprimer des favoris</string>
     <string name="encrypted">Définir comme chiffré</string>
     <string name="unset_encrypted">Désactiver le chiffrement</string>
     <string name="common_rename">Renommer</string>
@@ -508,8 +506,6 @@ Attention la suppression est irréversible.</string>
     <string name="share_room_clarification">%1$s (conversation)</string>
     <string name="share_known_remote_clarification">%1$s (sur %2$s)</string>
 
-    <string name="share_sharee_unavailable">Désolé, la version du serveur n\'autorise pas le partage entre utilisateurs depuis leur client.
-Veuillez contacter votre administrateur</string>
     <string name="share_privilege_unshare">Cesser le partage</string>
     <string name="share_privilege_can_share">peut partager</string>
     <string name="share_privilege_can_edit">peut modifier</string>
@@ -517,8 +513,8 @@ Veuillez contacter votre administrateur</string>
     <string name="share_privilege_can_edit_change">Peut modifier</string>
     <string name="share_privilege_can_edit_delete">Peut supprimer</string>
 
-    <string name="action_retry_uploads">Relancer les envois échoués</string>
-    <string name="action_clear_failed_uploads">Effacer les envois échoués</string>
+    <string name="action_retry_uploads">Relancer les envois en erreur</string>
+    <string name="action_clear_failed_uploads">Effacer les envois en erreur</string>
     <string name="action_clear_successful_uploads">Effacer les envois réussis</string>
     <string name="action_force_rescan">Actualiser</string>
 
@@ -603,7 +599,7 @@ Veuillez contacter votre administrateur</string>
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Aucune activité</string>
-    <string name="activities_no_results_message">Aucun ajout, changement ou un partage à afficher</string>
+    <string name="activities_no_results_message">Aucun événement d\'ajout, de modification ou de partage pour l\'instant</string>
     <string name="prefs_category_about">À propos</string>
 
     <string name="actionbar_contacts">Sauvegarde des contacts</string>
@@ -653,7 +649,6 @@ Veuillez contacter votre administrateur</string>
 
     <string name="resized_image_not_possible">Aucune image réduite disponible.</string>
     <string name="resized_image_not_possible_download">Aucune image réduite disponible. Télécharger l\'image originale ?</string>
-    <string name="resized_images_download_full_image">Télécharger l\'image originale ?</string>
 
     <string name="store_short_desc">L\'application Android Nextcloud donne un accès mobile à tous les fichiers sur votre Nextcloud</string>
     <string name="store_full_desc">L\'application, libre de copie, Nextcloud pour Android, vous donne accès à tous les fichiers dans votre Nextcloud.\nFonctionnalitées :\n* Interface moderne et simple d\'utilisation, adapté au thème de votre serveur\n* Envoyer des fichiers sur votre serveur Nextcloud\n* Partage de fichiers avec d\'autres personnes\n* Conserver vos fichiers et dossiers favoris synchronisés\n* Rechercher parmis tout vos dossiers sur votre serveur\n* Envoi automatisé de vos photos et vidéos prises sur vos appareils\n* Rester à jour avec vos notifications\n* Utilisation de plusieurs comptes\n* Accès sécurisé à vos données avec votre empreinte digitale ou code PIN\n* Intégration avec DAVdroid pour une synchronisation facile des contacts &amp; agenda\n\nS\'il vous plait, rapporter les bogues à l\'adresse suivante : https://github.com/nextcloud/android/issues et parler de cette application à l\'adresse suivante : https://help.nextcloud.com/c/clients/android\n\nNouveau sur Nextcloud? Nextcloud est un serveur privé de synchronisation &amp; partage de fichier, et de communication. C\'est un logiciel libre, et vous pouvez héberger vous même ou payez une companie pour le faire pour vous. Vous êtes en total contrôle de vos photos, votre calendrier, vos contacts, vos documents et tout le reste.\n\nAllez voir Nextcloud à l\'adresse suivante https://nextcloud.com</string>
@@ -667,7 +662,6 @@ Veuillez contacter votre administrateur</string>
     <string name="user_icon">Utilisateur</string>
     <string name="favorite_icon">Favoris</string>
     <string name="synced_icon">Synchronisé</string>
-    <string name="available_offline_icon">Disponible hors-ligne</string>
     <string name="checkbox">Case à cocher</string>
     <string name="shared_icon_share">partage</string>
     <string name="shared_icon_shared_via_link">partagé par lien</string>
@@ -817,6 +811,7 @@ Veuillez contacter votre administrateur</string>
     <string name="no_browser_available">Aucune application n\'est disponible pour ouvrir les liens</string>
     <string name="no_pdf_app_available">Aucune application n\'est disponible pour ouvrir les fichiers PDF</string>
     <string name="share_via_link_hide_download">Masquer le téléchargement</string>
+    <string name="unread_comments">Il y a des commentaire non lus</string>
 
     <string name="richdocuments_failed_to_load_document">Impossible de charger le document !</string>
     <string name="create_new_document">Créer une nouveau document</string>
@@ -828,4 +823,7 @@ Veuillez contacter votre administrateur</string>
     <string name="enter_filename">Veuillez saisir un nom de fichier</string>
     <string name="create_file_from_template">Création du fichier à partir du modèle…</string>
     <string name="error_retrieving_templates">Erreur lors de la récupération des modèles</string>
-</resources>
+    <string name="battery_optimization_title">Optimisation de la batterie</string>
+    <string name="battery_optimization_disable">désactiver</string>
+    <string name="battery_optimization_close">Fermer</string>
+    </resources>

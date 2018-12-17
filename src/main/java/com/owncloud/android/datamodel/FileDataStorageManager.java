@@ -33,7 +33,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.owncloud.android.MainApp;
@@ -41,8 +40,8 @@ import com.owncloud.android.db.ProviderMeta.ProviderTableMeta;
 import com.owncloud.android.lib.common.network.WebdavEntry;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.ReadRemoteFileOperation;
-import com.owncloud.android.lib.resources.files.RemoteFile;
+import com.owncloud.android.lib.resources.files.ReadFileRemoteOperation;
+import com.owncloud.android.lib.resources.files.model.RemoteFile;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.CapabilityBooleanType;
@@ -63,6 +62,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -194,8 +194,8 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_ACCOUNT_OWNER, account.name);
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE, file.getLastSyncDateForProperties());
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA, file.getLastSyncDateForData());
-        cv.put(ProviderTableMeta.FILE_KEEP_IN_SYNC, file.isAvailableOffline() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_ETAG, file.getEtag());
+        cv.put(ProviderTableMeta.FILE_ETAG_ON_SERVER, file.getEtagOnServer());
         cv.put(ProviderTableMeta.FILE_SHARED_VIA_LINK, file.isSharedViaLink() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_SHARED_WITH_SHAREE, file.isSharedWithSharee() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_PUBLIC_LINK, file.getPublicLink());
@@ -204,17 +204,16 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_UPDATE_THUMBNAIL, file.isUpdateThumbnailNeeded());
         cv.put(ProviderTableMeta.FILE_IS_DOWNLOADING, file.isDownloading());
         cv.put(ProviderTableMeta.FILE_ETAG_IN_CONFLICT, file.getEtagInConflict());
+        cv.put(ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT, file.getUnreadCommentsCount());
 
         boolean sameRemotePath = fileExists(file.getRemotePath());
         if (sameRemotePath ||
                 fileExists(file.getFileId())) {  // for renamed files; no more delete and create
 
-            OCFile oldFile;
+
             if (sameRemotePath) {
-                oldFile = getFileByPath(file.getRemotePath());
+                OCFile oldFile = getFileByPath(file.getRemotePath());
                 file.setFileId(oldFile.getFileId());
-            } else {
-                oldFile = getFileById(file.getFileId());
             }
 
             overridden = true;
@@ -269,7 +268,7 @@ public class FileDataStorageManager {
             OCFile returnFile;
             if (parentFile == null) {
                 // remote request
-                ReadRemoteFileOperation operation = new ReadRemoteFileOperation(parentPath);
+                ReadFileRemoteOperation operation = new ReadFileRemoteOperation(parentPath);
                 RemoteOperationResult result = operation.execute(getAccount(), context);
                 if (result.isSuccess()) {
                     OCFile remoteFolder = FileStorageUtils.fillOCFile((RemoteFile) result.getData().get(0));
@@ -400,7 +399,7 @@ public class FileDataStorageManager {
         if (results != null) {
             long newId;
             Iterator<OCFile> filesIt = updatedFiles.iterator();
-            OCFile file = null;
+            OCFile file;
             for (ContentProviderResult result : results) {
                 if (filesIt.hasNext()) {
                     file = filesIt.next();
@@ -434,8 +433,8 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_ACCOUNT_OWNER, account.name);
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE, folder.getLastSyncDateForProperties());
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA, folder.getLastSyncDateForData());
-        cv.put(ProviderTableMeta.FILE_KEEP_IN_SYNC, folder.isAvailableOffline() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_ETAG, folder.getEtag());
+        cv.put(ProviderTableMeta.FILE_ETAG_ON_SERVER, folder.getEtagOnServer());
         cv.put(ProviderTableMeta.FILE_SHARED_VIA_LINK, folder.isSharedViaLink() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_SHARED_WITH_SHAREE, folder.isSharedWithSharee() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_PUBLIC_LINK, folder.getPublicLink());
@@ -443,6 +442,8 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_REMOTE_ID, folder.getRemoteId());
         cv.put(ProviderTableMeta.FILE_FAVORITE, folder.isFavorite());
         cv.put(ProviderTableMeta.FILE_IS_ENCRYPTED, folder.isEncrypted());
+        cv.put(ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT, folder.getUnreadCommentsCount());
+
         return cv;
     }
 
@@ -463,8 +464,8 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_ACCOUNT_OWNER, account.name);
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE, file.getLastSyncDateForProperties());
         cv.put(ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA, file.getLastSyncDateForData());
-        cv.put(ProviderTableMeta.FILE_KEEP_IN_SYNC, file.isAvailableOffline() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_ETAG, file.getEtag());
+        cv.put(ProviderTableMeta.FILE_ETAG_ON_SERVER, file.getEtagOnServer());
         cv.put(ProviderTableMeta.FILE_SHARED_VIA_LINK, file.isSharedViaLink() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_SHARED_WITH_SHAREE, file.isSharedWithSharee() ? 1 : 0);
         cv.put(ProviderTableMeta.FILE_PUBLIC_LINK, file.getPublicLink());
@@ -477,6 +478,8 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.FILE_IS_ENCRYPTED, file.isEncrypted());
         cv.put(ProviderTableMeta.FILE_MOUNT_TYPE, file.getMountType().ordinal());
         cv.put(ProviderTableMeta.FILE_HAS_PREVIEW, file.isPreviewAvailable() ? 1 : 0);
+        cv.put(ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT, file.getUnreadCommentsCount());
+
         return cv;
     }
 
@@ -653,8 +656,8 @@ public class FileDataStorageManager {
             /// 2. prepare a batch of update operations to change all the descendants
             ArrayList<ContentProviderOperation> operations = new ArrayList<>(c.getCount());
             String defaultSavePath = FileStorageUtils.getSavePath(account.name);
-            List<String> originalPathsToTriggerMediaScan = new ArrayList<String>();
-            List<String> newPathsToTriggerMediaScan = new ArrayList<String>();
+            List<String> originalPathsToTriggerMediaScan = new ArrayList<>();
+            List<String> newPathsToTriggerMediaScan = new ArrayList<>();
             if (c.moveToFirst()) {
                 int lengthOfOldPath = file.getRemotePath().length();
                 int lengthOfOldStoragePath = defaultSavePath.length() + lengthOfOldPath;
@@ -891,7 +894,7 @@ public class FileDataStorageManager {
     }
 
     private Cursor getFileCursorForValue(String key, String value) {
-        Cursor c = null;
+        Cursor c;
         if (getContentResolver() != null) {
             c = getContentResolver()
                     .query(ProviderTableMeta.CONTENT_URI,
@@ -953,8 +956,8 @@ public class FileDataStorageManager {
                     c.getColumnIndex(ProviderTableMeta.FILE_MODIFIED_AT_LAST_SYNC_FOR_DATA)));
             file.setLastSyncDateForProperties(c.getLong(c.getColumnIndex(ProviderTableMeta.FILE_LAST_SYNC_DATE)));
             file.setLastSyncDateForData(c.getLong(c.getColumnIndex(ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA)));
-            file.setAvailableOffline(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_KEEP_IN_SYNC)) == 1);
             file.setEtag(c.getString(c.getColumnIndex(ProviderTableMeta.FILE_ETAG)));
+            file.setEtagOnServer(c.getString(c.getColumnIndex(ProviderTableMeta.FILE_ETAG_ON_SERVER)));
             file.setSharedViaLink(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_SHARED_VIA_LINK)) == 1);
             file.setSharedWithSharee(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_SHARED_WITH_SHAREE)) == 1);
             file.setPublicLink(c.getString(c.getColumnIndex(ProviderTableMeta.FILE_PUBLIC_LINK)));
@@ -971,7 +974,9 @@ public class FileDataStorageManager {
             file.setMountType(WebdavEntry.MountType.values()[c.getInt(
                     c.getColumnIndex(ProviderTableMeta.FILE_MOUNT_TYPE))]);
             file.setPreviewAvailable(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_HAS_PREVIEW)) == 1);
+            file.setUnreadCommentsCount(c.getInt(c.getColumnIndex(ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT)));
         }
+
         return file;
     }
 
@@ -1125,7 +1130,7 @@ public class FileDataStorageManager {
      * @return First {@link OCShare} instance found in DB bound to the file in 'path'
      */
     public OCShare getFirstShareByPathAndType(String path, ShareType type, String shareWith) {
-        Cursor cursor = null;
+        Cursor cursor;
         if (shareWith == null) {
             shareWith = "";
         }
@@ -1378,22 +1383,16 @@ public class FileDataStorageManager {
                         ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA,
                         file.getLastSyncDateForData()
                 );
-                cv.put(ProviderTableMeta.FILE_KEEP_IN_SYNC, file.isAvailableOffline() ? 1 : 0);
                 cv.put(ProviderTableMeta.FILE_ETAG, file.getEtag());
+                cv.put(ProviderTableMeta.FILE_ETAG_ON_SERVER, file.getEtagOnServer());
                 cv.put(ProviderTableMeta.FILE_SHARED_VIA_LINK, file.isSharedViaLink() ? 1 : 0);
                 cv.put(ProviderTableMeta.FILE_SHARED_WITH_SHAREE, file.isSharedWithSharee() ? 1 : 0);
                 cv.put(ProviderTableMeta.FILE_PUBLIC_LINK, file.getPublicLink());
                 cv.put(ProviderTableMeta.FILE_PERMISSIONS, file.getPermissions());
                 cv.put(ProviderTableMeta.FILE_REMOTE_ID, file.getRemoteId());
                 cv.put(ProviderTableMeta.FILE_FAVORITE, file.isFavorite());
-                cv.put(
-                        ProviderTableMeta.FILE_UPDATE_THUMBNAIL,
-                        file.isUpdateThumbnailNeeded() ? 1 : 0
-                );
-                cv.put(
-                        ProviderTableMeta.FILE_IS_DOWNLOADING,
-                        file.isDownloading() ? 1 : 0
-                );
+                cv.put(ProviderTableMeta.FILE_UPDATE_THUMBNAIL, file.isUpdateThumbnailNeeded() ? 1 : 0);
+                cv.put(ProviderTableMeta.FILE_IS_DOWNLOADING, file.isDownloading() ? 1 : 0);
                 cv.put(ProviderTableMeta.FILE_ETAG_IN_CONFLICT, file.getEtagInConflict());
 
                 boolean existsByPath = fileExists(file.getRemotePath());
@@ -1511,7 +1510,7 @@ public class FileDataStorageManager {
 
     public void removeSharesForFile(String remotePath) {
         resetShareFlagInAFile(remotePath);
-        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations = prepareRemoveSharesInFile(remotePath, operations);
         // apply operations in batch
         if (operations.size() > 0) {
@@ -1533,7 +1532,7 @@ public class FileDataStorageManager {
 
     public void saveSharesInFolder(ArrayList<OCShare> shares, OCFile folder) {
         resetShareFlagsInFolder(folder);
-        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations = prepareRemoveSharesInFolder(folder, operations);
 
         if (shares != null) {
@@ -1667,8 +1666,8 @@ public class FileDataStorageManager {
                 cursor = null;
             }
         }
-        ArrayList<OCShare> shares = new ArrayList<OCShare>();
-        OCShare share = null;
+        ArrayList<OCShare> shares = new ArrayList<>();
+        OCShare share;
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
@@ -2009,7 +2008,7 @@ public class FileDataStorageManager {
     }
 
     public OCCapability getCapability(String accountName) {
-        OCCapability capability = null;
+        OCCapability capability;
         Cursor c = getCapabilityCursorForAccount(accountName);
 
         if (c.moveToFirst()) {

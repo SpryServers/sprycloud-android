@@ -22,12 +22,6 @@ package com.owncloud.android.ui.trashbin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +29,10 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.owncloud.android.R;
 import com.owncloud.android.db.PreferenceManager;
-import com.owncloud.android.lib.resources.files.TrashbinFile;
+import com.owncloud.android.lib.resources.trashbin.model.TrashbinFile;
 import com.owncloud.android.ui.EmptyRecyclerView;
 import com.owncloud.android.ui.activity.FileActivity;
 import com.owncloud.android.ui.activity.FileDisplayActivity;
@@ -49,6 +44,11 @@ import com.owncloud.android.utils.ThemeUtils;
 
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +85,8 @@ public class TrashbinActivity extends FileActivity implements TrashbinActivityIn
     private TrashbinListAdapter trashbinListAdapter;
     private TrashbinPresenter trashbinPresenter;
 
+    private boolean active = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +108,8 @@ public class TrashbinActivity extends FileActivity implements TrashbinActivityIn
     @Override
     protected void onStart() {
         super.onStart();
+
+        active = true;
 
         setupContent();
     }
@@ -229,6 +233,8 @@ public class TrashbinActivity extends FileActivity implements TrashbinActivityIn
     @Override
     protected void onPause() {
         super.onPause();
+        active = false;
+
         trashbinListAdapter.cancelAllPendingTasks();
     }
 
@@ -253,13 +259,17 @@ public class TrashbinActivity extends FileActivity implements TrashbinActivityIn
 
     @Override
     public void showTrashbinFolder(List<Object> trashbinFiles) {
-        trashbinListAdapter.setTrashbinFiles(trashbinFiles, true);
-        swipeListRefreshLayout.setRefreshing(false);
+        if (active) {
+            trashbinListAdapter.setTrashbinFiles(trashbinFiles, true);
+            swipeListRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
     public void removeFile(TrashbinFile file) {
-        trashbinListAdapter.removeFile(file);
+        if (active) {
+            trashbinListAdapter.removeFile(file);
+        }
     }
 
     @Override
@@ -269,23 +279,26 @@ public class TrashbinActivity extends FileActivity implements TrashbinActivityIn
 
     @Override
     public void showSnackbarError(int message, TrashbinFile file) {
-        swipeListRefreshLayout.setRefreshing(false);
-        Snackbar.make(recyclerView, String.format(getString(message), file.getFileName()), Snackbar.LENGTH_LONG).show();
+        if (active) {
+            swipeListRefreshLayout.setRefreshing(false);
+            Snackbar.make(recyclerView, String.format(getString(message), file.getFileName()), Snackbar.LENGTH_LONG)
+                .show();
+        }
     }
 
     @Override
     public void showError(int message) {
-        if (swipeListRefreshLayout != null) {
+        if (active) {
             swipeListRefreshLayout.setRefreshing(false);
-        }
 
-        if (emptyContentMessage != null && emptyContentHeadline != null && emptyContentIcon != null) {
-            emptyContentHeadline.setText(R.string.common_error);
-            emptyContentIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_list_empty_error));
-            emptyContentMessage.setText(message);
+            if (emptyContentMessage != null) {
+                emptyContentHeadline.setText(R.string.common_error);
+                emptyContentIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_list_empty_error));
+                emptyContentMessage.setText(message);
 
-            emptyContentMessage.setVisibility(View.VISIBLE);
-            emptyContentIcon.setVisibility(View.VISIBLE);
+                emptyContentMessage.setVisibility(View.VISIBLE);
+                emptyContentIcon.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

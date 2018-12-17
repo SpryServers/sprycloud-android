@@ -236,10 +236,6 @@
 	<string name="auth_fail_get_user_name">Su servidor no está devolviendo una ID de usuario correcta, póngase en contacto con un administrador</string>
 	<string name="auth_can_not_auth_against_server">No es posible autenticarse en este servidor</string>
     <string name="auth_account_does_not_exist">La cuenta aún no se ha agregado a este dispositivo.</string>
-    <string name="favorite">Establer como disponible sin conexión</string>
-    <string name="unfavorite">Establecer como disponible con conexión</string>
-    <string name="favorite_real">Añadir a favoritos</string>
-    <string name="unset_favorite_real">Borrar de favoritos</string>
     <string name="encrypted">Establecer como cifrado</string>
     <string name="unset_encrypted">Cifrado no establecido</string>
     <string name="common_rename">Renombrar</string>
@@ -460,7 +456,6 @@
     <string name="share_email_clarification">%1$s (correo electrónico)</string>
     <string name="share_known_remote_clarification">%1$s ( a las %2$s )</string>
 
-    <string name="share_sharee_unavailable">Actualice la versión del servidor para permitir compartir entre usuarios desde sus clientes. Póngase en contacto con su administrador</string>
     <string name="share_privilege_unshare">No compartir</string>
     <string name="share_privilege_can_share">puede compartir</string>
     <string name="share_privilege_can_edit">puede editar</string>
@@ -602,7 +597,6 @@
 
     <string name="resized_image_not_possible">No hay imagen redimensionada disponible.</string>
     <string name="resized_image_not_possible_download">¿No hay imagen redimensionada disponible. Descargar imagen completa?</string>
-    <string name="resized_images_download_full_image">¿Descargar imagen completa?</string>
 
     <string name="store_short_desc">La aplicación de Android Nextcloud le da acceso móvil a todos los archivos en su Nextcloud.</string>
     <string name="drawer_current_account">Cuenta actual</string>
@@ -614,7 +608,6 @@
     <string name="user_icon">Usuario</string>
     <string name="favorite_icon">Favorito</string>
     <string name="synced_icon">Sincronizado</string>
-    <string name="available_offline_icon">Disponible sin conexión</string>
     <string name="checkbox">Casilla de verificación</string>
     <string name="shared_icon_share">compartir</string>
     <string name="shared_icon_shared_via_link">compartido a través del Link</string>
@@ -742,5 +735,4 @@
     <string name="no_browser_available">No hay aplicación disponible para manejar enlaces</string>
     <string name="no_pdf_app_available">No hay aplicación disponible para manejar PDF</string>
     <string name="share_via_link_hide_download">Ocultar descarga</string>
-
     </resources>

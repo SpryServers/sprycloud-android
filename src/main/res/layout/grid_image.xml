@@ -13,7 +13,7 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
+
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ListItemLayout"
@@ -60,6 +60,20 @@
             android:src="@drawable/shared_via_link" />
 
         <ImageView
+            android:id="@+id/unreadComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginTop="@dimen/grid_image_shared_icon_layout_top_margin"
+            android:clickable="true"
+            android:contentDescription="@string/unread_comments"
+            android:focusable="true"
+            android:src="@drawable/ic_comment_grid"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/localFileIndicator"
             android:layout_width="@dimen/grid_image_local_file_indicator_layout_width"
             android:layout_height="@dimen/grid_image_local_file_indicator_layout_height"
@@ -70,17 +84,6 @@
             android:layout_marginTop="@dimen/standard_quarter_margin"
             android:contentDescription="@string/synced_icon"
             android:src="@drawable/ic_synced" />
-
-        <ImageView
-            android:id="@+id/keptOfflineIcon"
-            android:layout_width="@dimen/grid_image_kept_offline_icon_layout_width"
-            android:layout_height="@dimen/grid_image_kept_offline_icon_layout_height"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/standard_quarter_margin"
-            android:layout_marginEnd="@dimen/grid_image_kept_offline_icon_layout_right_end_margin"
-            android:layout_marginRight="@dimen/grid_image_kept_offline_icon_layout_right_end_margin"
-            android:contentDescription="@string/available_offline_icon"
-            android:src="@drawable/ic_available_offline" />
 
         <ImageView
             android:id="@+id/custom_checkbox"

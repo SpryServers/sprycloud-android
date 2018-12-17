@@ -269,10 +269,8 @@
     <string name="auth_access_failed">Неуспео приступ: %1$s</string>
     <string name="auth_illegal_login_used">Искоришћена неисправна адреса за податке пријаве</string>
 
-    <string name="favorite">Постави као доступно и ван мреже</string>
-    <string name="unfavorite">Склони да буде доступно и ван мреже</string>
-    <string name="favorite_real">Додај у омиљене</string>
-    <string name="unset_favorite_real">Уклони из омиљених</string>
+    <string name="favorite">Додај у омиљене</string>
+    <string name="unset_favorite">Уклони из омиљених</string>
     <string name="encrypted">Постави као шифровано</string>
     <string name="unset_encrypted">Искључи шифровање</string>
     <string name="common_rename">Преименуј</string>
@@ -510,7 +508,6 @@
     <string name="share_room_clarification">%1$s (разговор)</string>
     <string name="share_known_remote_clarification">%1$s (на %2$s)</string>
 
-    <string name="share_sharee_unavailable">Ажурирајте верзију сервера да дозвољава дељење између корисника из њихових клијената.\nКонтактирајте администратора</string>
     <string name="share_privilege_unshare">Укини дељење</string>
     <string name="share_privilege_can_share">може да дели</string>
     <string name="share_privilege_can_edit">може да мења</string>
@@ -655,7 +652,6 @@
 
     <string name="resized_image_not_possible">Нема доступне умањене сличице.</string>
     <string name="resized_image_not_possible_download">Нема доступне умањене сличице. Скини оригиналну слику?</string>
-    <string name="resized_images_download_full_image">Скидање оригиналне слике?</string>
 
     <string name="store_short_desc">Некстклауд Андроид апликација даје мобилни приступ Вашим фајловима на Некстклауд серверу.</string>
     <string name="store_full_desc">Некстклауд андроид апликација отвореног кода омогућава приступ свим фајловима на Вашем Некстклауд серверу, дајући Вам мобилну слободу.\nОсобине:\n* Лако и модерно сучеље, потпуно усклађено са темом са сервера\n* Отпремање фајлова на Некстклауд сервер\n* Дељење фајлова са другима\n* Синхронизација омиљених фајлова и фасцикли\n* Претрага кроз све фасцикле на серверу\n* Аутоматско отпремање слика и видео записа са уређаја\n* Обавештења са сервера\n* Подршка за више налога\n* Безбедан приступ свим подацима преко отиска прста или пина\n* Интеграција са ДАВдроидом за брзо подешавање синхронизације календара &amp; контаката\n\nСве проблеме можете да пријавите на https://github.com/nextcloud/android/issues а о апликацији дискутујте на https://help.nextcloud.com/c/clients/android\n\nНови сте на Некстклауду? Некстклауд је лични сервер за синхронизацију, дељење фајлова &amp; комуникацију. Потпуно је отвореног кода и можете да га сами хостовати или платити компанији да која то већ ради. На овај начин, сами контролишете своје слике, календаре, контакате, документа и све остало.\n\nПогледајте Некстклауд на https://nextcloud.com</string>
@@ -669,7 +665,6 @@
     <string name="user_icon">Корисник </string>
     <string name="favorite_icon">Омиљени</string>
     <string name="synced_icon">Синхронизовано</string>
-    <string name="available_offline_icon">Досступно ван мреже</string>
     <string name="checkbox">Штиклирање</string>
     <string name="shared_icon_share">дељење</string>
     <string name="shared_icon_shared_via_link">дељено путем везе</string>
@@ -819,6 +814,7 @@
     <string name="no_browser_available">Нема апликације која зна да отвори везу</string>
     <string name="no_pdf_app_available">Нема апликације која зна да ради са PDF-овима</string>
     <string name="share_via_link_hide_download">Сакриј преузимање</string>
+    <string name="unread_comments">Постоје непрочитани коментари</string>
 
     <string name="richdocuments_failed_to_load_document">Грешка приликом учитавања документа!</string>
     <string name="create_new_document">Направи нови документ</string>
@@ -830,4 +826,9 @@
     <string name="enter_filename">Унесите име фајла</string>
     <string name="create_file_from_template">Направите фајл из шаблона…</string>
     <string name="error_retrieving_templates">Грешка при учитавању шаблона</string>
+    <string name="battery_optimization_title">Оптимизација батерије</string>
+    <string name="battery_optimization_message">Ваш уређај можда има укључену оптимизацију батерије. Аутоматско отпремање ради само ако искључите ову апликацију из оптимизације батерије.</string>
+    <string name="battery_optimization_disable">искључи</string>
+    <string name="battery_optimization_close">Затвори</string>
+    <string name="battery_optimization_no_setting">Не могу да покренем поставке батерије. Искључите је ручно у поставкама.</string>
 </resources>

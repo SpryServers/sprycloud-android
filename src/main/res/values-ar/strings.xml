@@ -197,9 +197,7 @@
 	<string name="auth_expired_basic_auth_toast">إدخل كلمة المرور الخاصة بك من فضلك</string>
 	<string name="auth_expired_saml_sso_token_toast">مدة الجلسة انتهت , يرجى اعادة الاتصال</string>
     <string name="auth_unsupported_multiaccount">%1$s لا يدعم الحسابات المتعددة </string>
-	<string name="favorite">حدد كمتوفر بدون اتصال الانترنت</string>
-    <string name="unfavorite">الغ التحدد كمتوفر بدون اتصال الانترنت</string>
-    <string name="common_rename">إعادة التسمية</string>
+	<string name="common_rename">إعادة التسمية</string>
     <string name="common_remove">حذف</string>
     <string name="confirmation_remove_local">محليا فقط</string>
     <string name="remove_success_msg">تم حذفه</string>
@@ -373,8 +371,6 @@
     <string name="prefs_sourcecode">الحصول على الشفرة المصدرية</string>
     <string name="prefs_license">الرخصة</string>
     <string name="date_unknown">مجهول</string>
-
-    <string name="resized_images_download_full_image">هل تود تنزيل الصورة بأكملها ؟</string>
 
     <string name="drawer_current_account">الحساب الحالي</string>
     <string name="drawer_middle_account">الحساب الوسيط</string>

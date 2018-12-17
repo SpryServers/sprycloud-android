@@ -22,13 +22,12 @@ import android.accounts.Account;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.webkit.MimeTypeMap;
 
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.network.WebdavEntry;
-import com.owncloud.android.lib.resources.files.ServerFileInterface;
+import com.owncloud.android.lib.resources.files.model.ServerFileInterface;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +39,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * <p>Helper class for detecting the right icon for a file or folder,
@@ -157,7 +158,7 @@ public final class MimeTypeUtil {
      * @return Identifier of an image resource.
      */
     public static Drawable getFolderTypeIcon(boolean isSharedViaUsers, boolean isSharedViaLink,
-                                             boolean isEncrypted, Account account, WebdavEntry.MountType mountType, 
+                                             boolean isEncrypted, Account account, WebdavEntry.MountType mountType,
                                              Context context) {
         int drawableId;
 
@@ -167,7 +168,7 @@ public final class MimeTypeUtil {
             drawableId = R.drawable.shared_with_me_folder;
         } else if (isEncrypted) {
             drawableId = R.drawable.ic_list_encrypted_folder;
-        } else if (WebdavEntry.MountType.EXTERNAL.equals(mountType)) {
+        } else if (WebdavEntry.MountType.EXTERNAL == mountType) {
             drawableId = R.drawable.folder_external;
         } else {
             drawableId = R.drawable.folder;
@@ -196,6 +197,10 @@ public final class MimeTypeUtil {
         return candidates.get(0);
     }
 
+    public static boolean isImageOrVideo(String mimeType) {
+        return isImage(mimeType) || isVideo(mimeType);
+    }
+
     /**
      * @return 'True' if the mime type defines image
      */
@@ -221,7 +226,7 @@ public final class MimeTypeUtil {
     /**
      * @return 'True' if mime type defines text
      */
-    public static boolean isText(String mimeType) {
+    private static boolean isText(String mimeType) {
         return mimeType != null && mimeType.toLowerCase(Locale.ROOT).startsWith("text/");
     }
 
@@ -296,6 +301,10 @@ public final class MimeTypeUtil {
      */
     public static boolean isVCard(OCFile file) {
         return isVCard(file.getMimeType()) || isVCard(getMimeTypeFromPath(file.getRemotePath()));
+    }
+
+    public static boolean isFolder(String mimeType) {
+        return MimeType.DIRECTORY.equalsIgnoreCase(mimeType);
     }
 
     /**

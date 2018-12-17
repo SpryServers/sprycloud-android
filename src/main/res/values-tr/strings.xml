@@ -267,10 +267,8 @@
     <string name="auth_access_failed">Erişilemedi: %1$s</string>
     <string name="auth_illegal_login_used">Kullanılan veri adresi geçersiz</string>
 
-    <string name="favorite">Çevrimdışı kullanılabilir olarak işaretle</string>
-    <string name="unfavorite">Çevrimdışı kullanılabilir işaretini kaldır</string>
-    <string name="favorite_real">Sık kullanılanlara ekle</string>
-    <string name="unset_favorite_real">Sık kullanılanlardan kaldır</string>
+    <string name="favorite">Sık Kullanılanlara Ekle</string>
+    <string name="unset_favorite">Sık kullanılanlardan kaldır</string>
     <string name="encrypted">Şifrelensin</string>
     <string name="unset_encrypted">Şifrelemeyi kaldır</string>
     <string name="common_rename">Yeniden adlandır</string>
@@ -506,7 +504,6 @@
     <string name="share_room_clarification">%1$s (görüşme)</string>
     <string name="share_known_remote_clarification">%1$s (%2$s üzerinde)</string>
 
-    <string name="share_sharee_unavailable">Kullanıcıların istemcileri içinden paylaşım yapabilmesini sağlamak için sunucu sürümünüzü yükseltin.\nLütfen yöneticinizle görüşün</string>
     <string name="share_privilege_unshare">Paylaşımı Kaldır</string>
     <string name="share_privilege_can_share">paylaşabilir</string>
     <string name="share_privilege_can_edit">düzenleyebilir</string>
@@ -650,7 +647,6 @@
 
     <string name="resized_image_not_possible">Boyutu değiştirilmiş bir görsel yok.</string>
     <string name="resized_image_not_possible_download">Boyutu değiştirilmiş bir görsel yok. Tam görsel indirilsin mi?</string>
-    <string name="resized_images_download_full_image">Tam görsel indirilsin mi?</string>
 
     <string name="store_short_desc">Nextcloud Android uygulaması Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.</string>
     <string name="store_full_desc">Copyleft Nextcloud Android uygulaması, Nextcloud üzerindeki tüm dosyalarınıza erişmenizi sağlar.\n\nÖzellikleri:\* Sunucunuzun temasına uygun, kolay kullanılan modern arayüz\n* Dosyalarınızı Nextcloud sunucunuza yükleme\n* Dosyalarınızı başkalarıyla paylaşma\n* Sık kullandığınız dosya ve klasörleri eşitleme\n* Sunucunuzdaki tüm klasörlerde arama yapma\n* Çektiğiniz fotoğraf ve görüntüleri otomatik yükleme\n* Bildirimler ile güncel kalma\n* Birden çok hesap desteği\n*Parmak izi ya da PIN kodu ile verilerinize güvenli erişme\n* Davdroid bütünleştirmesi ile takvim ve kişileri eşitleme\n\nKullanımda karşılaşabileceğiniz hataları https://github.com/nextcloud/android/issues adresinden bildirebilir, uygulama hakkındaki konuları https://help.nextcloud.com/c/clients/android adresinde tartışabilirsiniz\n\nNextcloud ile yeni mi tanıştınız? Nextcloud özel bir veri depolama ve paylaşma ağıdır. Tamamen açık kaynak kodludur. Dosyalarınızı kendi sunucunuzda saklayabileceğiniz gibi ücretli hizmet olarak da satın alabilirsiniz. Böylece fotoğraflarınız, dosyalarınız, takviminiz, belgeleriniz, kişileriniz ve diğer tüm özel bilgileriniz sizin kontrolünüzde olur. \n\nAyrıntılı bilgi almak için https://nextcloud.com adresinden web sitemize bakabilirsiniz.</string>
@@ -664,7 +660,6 @@
     <string name="user_icon">Kullanıcı</string>
     <string name="favorite_icon">Sık Kullanılanlara Ekle</string>
     <string name="synced_icon">Eşitle</string>
-    <string name="available_offline_icon">Çevrimdışı kullanılabilir</string>
     <string name="checkbox">İşaret kutusu</string>
     <string name="shared_icon_share">paylaş</string>
     <string name="shared_icon_shared_via_link">bağlantı ile paylaşılmış</string>
@@ -814,6 +809,7 @@
     <string name="no_browser_available">Bağlantıları işleyecek bir uygulama bulunamadı</string>
     <string name="no_pdf_app_available">PDF dosyalarını işleyecek bir uygulama bulunamadı</string>
     <string name="share_via_link_hide_download">İndirmeyi gizle</string>
+    <string name="unread_comments">Okunmamış yorumlar var</string>
 
     <string name="richdocuments_failed_to_load_document">Belge yüklenemedi!</string>
     <string name="create_new_document">Yeni belge</string>
@@ -825,4 +821,9 @@
     <string name="enter_filename">Lütfen bir dosya adı yazın</string>
     <string name="create_file_from_template">Kalıptan dosya oluşturuluyor…</string>
     <string name="error_retrieving_templates">Kalıplar alınırken sorun çıktı</string>
+    <string name="battery_optimization_title">Pil kullanımı iyileştirmesi</string>
+    <string name="battery_optimization_message">Aygıtınızda pil kullanımı iyileştirmesi kullanılıyor olabilir. Otomatik yükleme yalnız bu uygulamayı pil kullanımı iyileştirmesinin dışında tuttuğunuzda düzgün çalışır.</string>
+    <string name="battery_optimization_disable">devre dışı bırak</string>
+    <string name="battery_optimization_close">Kapat</string>
+    <string name="battery_optimization_no_setting">Pil ayarları açılamadı. Lütfen ayarlar bölümünden el ile ayarlayın.</string>
 </resources>

@@ -267,10 +267,8 @@
     <string name="auth_access_failed">Zugriffsfehler: %1$s</string>
     <string name="auth_illegal_login_used">Ungültige Anmeldeadresse verwendet</string>
 
-    <string name="favorite">Als Offline verfügbar markieren</string>
-    <string name="unfavorite">Offline verfügbar Markierung entfernen</string>
-    <string name="favorite_real">Zu den Favoriten hinzufügen</string>
-    <string name="unset_favorite_real">Von Favoriten entfernen</string>
+    <string name="favorite">Zu den Favoriten hinzufügen</string>
+    <string name="unset_favorite">Aus den Favoriten entfernen</string>
     <string name="encrypted">Als verschlüsselt festlegen</string>
     <string name="unset_encrypted">Verschlüsselung aufheben</string>
     <string name="common_rename">Umbenennen</string>
@@ -506,7 +504,6 @@
     <string name="share_room_clarification">%1$s (Unterhaltung)</string>
     <string name="share_known_remote_clarification">%1$s ( at %2$s )</string>
 
-    <string name="share_sharee_unavailable">Entschuldigung, Ihre Serverversion erlaubt das Teilen mit Nutzern innerhalb der Clients nicht. \nBitte kontaktieren Sie Ihren Administrator</string>
     <string name="share_privilege_unshare">Freigabe aufheben</string>
     <string name="share_privilege_can_share">kann teilen</string>
     <string name="share_privilege_can_edit">kann bearbeiten</string>
@@ -650,7 +647,6 @@
 
     <string name="resized_image_not_possible">Kein verkleinertes Bild verfügbar.</string>
     <string name="resized_image_not_possible_download">Kein verkleinertes Bild verfügbar. Vollbild herunterladen?</string>
-    <string name="resized_images_download_full_image">Originalbild herunterladen?</string>
 
     <string name="store_short_desc">Die Nextcloud Android App erlaubt Ihnen den Zugriff auf alle Dateien in Ihrer Nextcloud.</string>
     <string name="store_full_desc">Die Open Source Nextcloud Android App erlaubt Ihnen Zugriff auf alle Dateien in Ihrer Nextcloud.\n\nEigenschaften:\n* Einfache, moderne Oberfläche\n* Laden Sie Ihre Dateien auf Ihren Nextcloud Server\n* Teilen Sie Ihre Dateien mit anderen\n* Wichtige Dateien und Verzeichnisse können aktuell gehalten werden\n* Suche über alle Ordner auf Ihrem Server\n* Automatisches Hochladen von Photos und Videos von Ihrem Gerät\n* Bleiben Sie auf dem Laufenden durch Benachrichtigungen\n* Mehrere Konten gleichzeitig\n* Geschützter Zugriff durch Fingerabdruck oder PIN\n* Integration mit DAVdroid für einfaches Konfigurieren von Kalender &amp; Kontakte Synchronisierung\n\nBitte melden Sie alle Probleme unter https://github.com/nextcloud/android/issues oder diskutieren Sie über die App auf https://help.nextcloud.com/c/clients/android\n\nWas ist die Nextcloud? Die Nextcloud ist ein privater Dateiaustausch &amp; -synchronisierungs Server. Nextcloud ist Open Source und kann auf einem eigenen Server installiert werden. So behalten Sie die Kontrolle über Ihre Fotos, Ihre Kalender und Kontakte, Ihre Dokumente und alle anderen Daten.\n\nSchauen Sie sich Nextcloud unter https://nextcloud.com an.</string>
@@ -664,7 +660,6 @@
     <string name="user_icon">Nutzer</string>
     <string name="favorite_icon">Favoriten</string>
     <string name="synced_icon">Synchronisiert</string>
-    <string name="available_offline_icon">Offline verfügbar</string>
     <string name="checkbox">Checkbox</string>
     <string name="shared_icon_share">Teilen</string>
     <string name="shared_icon_shared_via_link">Über einen Link geteilt</string>
@@ -814,6 +809,7 @@
     <string name="no_browser_available">Keine App verfügbar um Links zu öffnen</string>
     <string name="no_pdf_app_available">Keine App verfügbar um PDFs anzuzeigen</string>
     <string name="share_via_link_hide_download">Download verbergen</string>
+    <string name="unread_comments">Es gibt  ungelesene Kommentare</string>
 
     <string name="richdocuments_failed_to_load_document">Laden des Dokuments fehlgeschlagen!</string>
     <string name="create_new_document">Neues Dokument erstellen</string>
@@ -825,4 +821,9 @@
     <string name="enter_filename">Bitte Dateinamen eingeben</string>
     <string name="create_file_from_template">Erzeuge Datei aus Vorlage…</string>
     <string name="error_retrieving_templates">Fehler beim Laden der Vorlagen</string>
+    <string name="battery_optimization_title">Batterie-Optimierung</string>
+    <string name="battery_optimization_message">Ihr Gerät hat möglicherweise Batterieoptimierung aktiv. AutoUpload funktioniert nur dann richtig, wenn Sie diese App davon ausschließen.</string>
+    <string name="battery_optimization_disable">Deaktivieren</string>
+    <string name="battery_optimization_close">Schliessen</string>
+    <string name="battery_optimization_no_setting">Die Batterieeinstellungen konnten nicht direkt aufgerufen werden. Bitte passen Sie die Einstellungen manuell an.</string>
 </resources>

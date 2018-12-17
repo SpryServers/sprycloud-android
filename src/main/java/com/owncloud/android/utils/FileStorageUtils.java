@@ -28,7 +28,7 @@ import com.owncloud.android.MainApp;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.RemoteFile;
+import com.owncloud.android.lib.resources.files.model.RemoteFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -178,6 +178,7 @@ public final class FileStorageUtils {
         }
         file.setMountType(remote.getMountType());
         file.setPreviewAvailable(remote.hasPreview());
+        file.setUnreadCommentsCount(remote.getUnreadCommentsCount());
 
         return file;
     }

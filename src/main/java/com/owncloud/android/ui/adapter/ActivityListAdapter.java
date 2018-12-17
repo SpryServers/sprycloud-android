@@ -24,8 +24,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
@@ -56,10 +54,13 @@ import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.activities.models.Activity;
-import com.owncloud.android.lib.resources.activities.models.RichElement;
-import com.owncloud.android.lib.resources.activities.models.RichObject;
+import com.owncloud.android.lib.resources.activities.model.Activity;
+import com.owncloud.android.lib.resources.activities.model.RichElement;
+import com.owncloud.android.lib.resources.activities.model.RichObject;
+import com.owncloud.android.lib.resources.activities.models.PreviewObject;
 import com.owncloud.android.lib.resources.files.FileUtils;
+import com.owncloud.android.lib.resources.status.OCCapability;
+import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.ui.interfaces.ActivityListInterface;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.MimeTypeUtil;
@@ -72,29 +73,34 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Adapter for the activity view
  */
 public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected static final int HEADER_TYPE = 100;
-    protected static final int ACTIVITY_TYPE = 101;
-    protected final ActivityListInterface activityListInterface;
+    static final int HEADER_TYPE = 100;
+    static final int ACTIVITY_TYPE = 101;
+    private final ActivityListInterface activityListInterface;
     private final int px;
     private static final String TAG = ActivityListAdapter.class.getSimpleName();
     protected OwnCloudClient client;
 
     protected Context context;
     private FileDataStorageManager storageManager;
+    private OCCapability capability;
     protected List<Object> values;
     private boolean isDetailView;
 
     public ActivityListAdapter(Context context, ActivityListInterface activityListInterface,
-                               FileDataStorageManager storageManager, boolean isDetailView) {
+                               FileDataStorageManager storageManager, OCCapability capability, boolean isDetailView) {
         this.values = new ArrayList<>();
         this.context = context;
         this.activityListInterface = activityListInterface;
         this.storageManager = storageManager;
+        this.capability = capability;
         px = getThumbnailDimension();
         this.isDetailView = isDetailView;
     }
@@ -102,11 +108,11 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setActivityItems(List<Object> activityItems, OwnCloudClient client, boolean clear) {
         this.client = client;
         String sTime = "";
-        
+
         if (clear) {
             values.clear();
         }
-        
+
         for (Object o : activityItems) {
             Activity activity = (Activity) o;
             String time;
@@ -187,7 +193,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 activityViewHolder.list.post(() -> {
                     int w = activityViewHolder.list.getMeasuredWidth();
                     int elPxSize = px + 20;
-                    int totalColumnCount = (int) Math.floor(w / elPxSize);
+                    int totalColumnCount = w / elPxSize;
 
                     try {
                         activityViewHolder.list.setColumnCount(totalColumnCount);
@@ -196,14 +202,22 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 });
 
-
-                for (RichObject richObject : activity.getRichSubjectElement().getRichObjectList()) {
-                    if (richObject.getPath() != null) {
-                        ImageView imageView = createThumbnail(richObject, isDetailView);
-                        activityViewHolder.list.addView(imageView);
+                if (capability.getVersion().isNewerOrEqual(OwnCloudVersion.nextcloud_15)) {
+                    for (PreviewObject previewObject : activity.getPreviews()) {
+                        if (!isDetailView || MimeTypeUtil.isImageOrVideo(previewObject.getMimeType()) ||
+                            MimeTypeUtil.isVideo(previewObject.getMimeType())) {
+                            ImageView imageView = createThumbnailNew(previewObject);
+                            activityViewHolder.list.addView(imageView);
+                        }
+                    }
+                } else {
+                    for (RichObject richObject : activity.getRichSubjectElement().getRichObjectList()) {
+                        if (richObject.getPath() != null) {
+                            ImageView imageView = createThumbnailOld(richObject, isDetailView);
+                            activityViewHolder.list.addView(imageView);
+                        }
                     }
                 }
-
             } else {
                 activityViewHolder.list.removeAllViews();
                 activityViewHolder.list.setVisibility(View.GONE);
@@ -214,7 +228,29 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private ImageView createThumbnail(final RichObject richObject, boolean isDetailView) {
+    private ImageView createThumbnailNew(PreviewObject previewObject) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(px, px);
+        params.setMargins(10, 10, 10, 10);
+        ImageView imageView = new ImageView(context);
+        imageView.setLayoutParams(params);
+
+        if (MimeTypeUtil.isImageOrVideo(previewObject.getMimeType())) {
+            int placeholder = R.drawable.file;
+            Glide.with(context).using(new CustomGlideStreamLoader()).load(previewObject.getSource()).
+                placeholder(placeholder).error(placeholder).into(imageView);
+        } else {
+            if (MimeTypeUtil.isFolder(previewObject.getMimeType())) {
+                imageView.setImageDrawable(
+                    MimeTypeUtil.getDefaultFolderIcon(context));
+            } else {
+                imageView.setImageDrawable(MimeTypeUtil.getFileTypeIcon(previewObject.getMimeType(), "", context));
+            }
+        }
+
+        return imageView;
+    }
+
+    private ImageView createThumbnailOld(final RichObject richObject, boolean isDetailView) {
         String path = FileUtils.PATH_SEPARATOR + richObject.getPath();
         OCFile file = storageManager.getFileByPath(path);
 
@@ -249,17 +285,17 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
 
                 String uri = client.getBaseUri() + "/index.php/apps/files/api/v1/thumbnail/" + px + "/" + px +
-                        Uri.encode(file.getRemotePath(), "/");
+                    Uri.encode(file.getRemotePath(), "/");
 
                 Glide.with(context).using(new CustomGlideStreamLoader()).load(uri).placeholder(placeholder)
-                        .error(placeholder).into(fileIcon); // using custom fetcher
+                    .error(placeholder).into(fileIcon); // using custom fetcher
 
             } else {
                 if (isDetailView) {
                     fileIcon.setVisibility(View.GONE);
                 } else {
                     fileIcon.setImageDrawable(MimeTypeUtil.getFileTypeIcon(file.getMimeType(), file.getFileName(),
-                            context));
+                                                                           context));
                 }
             }
         } else {
@@ -268,8 +304,8 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 fileIcon.setVisibility(View.GONE);
             } else {
                 fileIcon.setImageDrawable(
-                        MimeTypeUtil.getFolderTypeIcon(file.isSharedWithMe() || file.isSharedWithSharee(),
-                                file.isSharedViaLink(), file.isEncrypted(), file.getMountType(), context));
+                    MimeTypeUtil.getFolderTypeIcon(file.isSharedWithMe() || file.isSharedWithSharee(),
+                                                   file.isSharedViaLink(), file.isEncrypted(), file.getMountType(), context));
             }
         }
     }
@@ -312,12 +348,12 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 idx2 = idx1 + name.length();
                 ssb.setSpan(new ClickableSpan() {
                     @Override
-                    public void onClick(View widget) {
+                    public void onClick(@NonNull View widget) {
                         activityListInterface.onActivityClicked(richObject);
                     }
 
                     @Override
-                    public void updateDrawState(TextPaint ds) {
+                    public void updateDrawState(@NonNull TextPaint ds) {
                         ds.setUnderlineText(false);
                     }
                 }, idx1, idx2, 0);
@@ -366,7 +402,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return d.intValue();
     }
 
-    protected CharSequence getHeaderDateString(Context context, long modificationTimestamp) {
+    CharSequence getHeaderDateString(Context context, long modificationTimestamp) {
         if ((System.currentTimeMillis() - modificationTimestamp) < DateUtils.WEEK_IN_MILLIS) {
             return DisplayUtils.getRelativeDateTimeString(context, modificationTimestamp, DateUtils.DAY_IN_MILLIS,
                     DateUtils.WEEK_IN_MILLIS, 0);
@@ -383,7 +419,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private final TextView dateTime;
         private final GridLayout list;
 
-        protected ActivityViewHolder(View itemView) {
+        ActivityViewHolder(View itemView) {
             super(itemView);
             activityIcon = itemView.findViewById(R.id.activity_icon);
             subject = itemView.findViewById(R.id.activity_subject);
@@ -397,7 +433,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         private final TextView title;
 
-        protected ActivityViewHeaderHolder(View itemView) {
+        ActivityViewHeaderHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title_header);
 

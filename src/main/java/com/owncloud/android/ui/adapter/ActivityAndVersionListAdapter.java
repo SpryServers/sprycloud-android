@@ -1,8 +1,6 @@
 package com.owncloud.android.ui.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,9 @@ import android.widget.TextView;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.lib.common.OwnCloudClient;
-import com.owncloud.android.lib.resources.activities.models.Activity;
-import com.owncloud.android.lib.resources.files.FileVersion;
+import com.owncloud.android.lib.resources.activities.model.Activity;
+import com.owncloud.android.lib.resources.files.model.FileVersion;
+import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.ui.interfaces.ActivityListInterface;
 import com.owncloud.android.ui.interfaces.VersionListInterface;
 import com.owncloud.android.utils.DisplayUtils;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,8 +34,8 @@ public class ActivityAndVersionListAdapter extends ActivityListAdapter {
 
     public ActivityAndVersionListAdapter(Context context, ActivityListInterface activityListInterface,
                                          VersionListInterface.View versionListInterface,
-                                         FileDataStorageManager storageManager) {
-        super(context, activityListInterface, storageManager, true);
+                                         FileDataStorageManager storageManager, OCCapability capability) {
+        super(context, activityListInterface, storageManager, capability, true);
 
         this.versionListInterface = versionListInterface;
     }

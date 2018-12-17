@@ -267,10 +267,6 @@
     <string name="auth_access_failed">Aðgangur mistókst: %1$s</string>
     <string name="auth_illegal_login_used">Notaði óleyfileg slóð á innskráningargögn</string>
 
-    <string name="favorite">Stilla sem tiltækt án nettengingar</string>
-    <string name="unfavorite">Afstilla sem tiltækt án nettengingar</string>
-    <string name="favorite_real">Bæta í eftirlæti</string>
-    <string name="unset_favorite_real">Fjarlægja úr eftirlætum</string>
     <string name="encrypted">Setja sem dulritað</string>
     <string name="unset_encrypted">Gera dulritun óvirka</string>
     <string name="common_rename">Endurnefna</string>
@@ -506,7 +502,6 @@
     <string name="share_room_clarification">%1$s (samtal)</string>
     <string name="share_known_remote_clarification">%1$s ( á %2$s )</string>
 
-    <string name="share_sharee_unavailable">Uppfærðu vefþjóninn til að leyfa deilingu milli notenda innan úr biðlaraforritum þeirra.\nHafðu samband við kerfisstjórann þinn</string>
     <string name="share_privilege_unshare">Hætta deilingu</string>
     <string name="share_privilege_can_share">getur deilt</string>
     <string name="share_privilege_can_edit">getur breytt</string>
@@ -650,7 +645,6 @@
 
     <string name="resized_image_not_possible">Engar aðlagaðar myndir tiltækar.</string>
     <string name="resized_image_not_possible_download">Engin stærðarbreytt mynd í boði. Sækja alla myndina?</string>
-    <string name="resized_images_download_full_image">Sækja alla myndina?</string>
 
     <string name="store_short_desc">Nextcloud Android forritið gerir þér kleift að nálgast allar skrárnar þínar á Nextcloud-skýinu þínu.</string>
     <string name="store_full_desc">Nextcloud-forritið fyrir Android er opið og frjálst, og gefur þér frelsi á ferðinni.\n\nEiginleikar:\n* Einfalt, nútímalegt viðmót, með þema í samræmi við netþjóninn þinn\n* Sendir skrár inn á Nextcloud-þjóninn þinn\n* Deilir skránum þínum með öðrum\n* Heldur eftirlætisskránum og möppunum þínum samstilltum\n* Leitar í öllum möppum á þjóninum þínum\n* Sjálfvirk innsending mynda og myndskeiða sem tekin eru með tækjunum þínum\n* Heldur uppfærðu með tilkynningum\n* Styður við marga notandaaðganga\n* Öruggur aðgangur að gögnunum þínum með fingrafari eða PIN-númeri\n* Samþætting við DAVdroid fyrir auðvelda uppsetningu á samstillingu dagatals og tengiliða\n\nTilkynntu um vandamál á https://github.com/nextcloud/android/issues og ræddu um þetta forrit á https://help.nextcloud.com/c/clients/android\n\nNýr í Nextcloud? Nextcloud er þinn eiginn vefþjónn til samstillingar, samskipta og deilingar á skrám. Kóði hugbúnaðarins er fullkomlega opinn og frjáls til afnota; þú getur hýst hann sjálfur eða borgað fyrirtæki fyrir að gera það fyrir þig. Á þennan máta, hefur þú sjálfur full yfirráð yfir myndunum þínum, dagatalinu, tengiliðaskránum, skjölunum þínum og öllu öðru tilheyrandi.\n\nSkoðaðu fleira um Nextcloud á https://nextcloud.com</string>
@@ -664,7 +658,6 @@
     <string name="user_icon">Notandi</string>
     <string name="favorite_icon">Eftirlæti</string>
     <string name="synced_icon">Samstillt</string>
-    <string name="available_offline_icon">Tiltækt án nettengingar</string>
     <string name="checkbox">Hakreitur</string>
     <string name="shared_icon_share">deila</string>
     <string name="shared_icon_shared_via_link">deilt með tengli</string>
@@ -813,5 +806,4 @@
     <string name="no_browser_available">Ekkert forrit tiltækt til að meðhöndla tengla</string>
     <string name="no_pdf_app_available">Ekkert forrit tiltækt til að meðhöndla PDF-skrár</string>
     <string name="share_via_link_hide_download">Fela niðurhal</string>
-
     </resources>

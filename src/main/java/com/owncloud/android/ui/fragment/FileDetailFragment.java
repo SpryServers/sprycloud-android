@@ -26,10 +26,6 @@ import android.accounts.Account;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +38,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.FileDataStorageManager;
@@ -64,6 +61,9 @@ import com.owncloud.android.utils.ThemeUtils;
 
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -277,11 +277,24 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
 
         final FileDetailTabAdapter adapter = new FileDetailTabAdapter(getFragmentManager(), getFile(), account);
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (activeTab == 0) {
+                    getFileDetailActivitiesFragment().markCommentsAsRead();
+                }
+
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                if (tab.getPosition() == 0) {
+                    getFileDetailActivitiesFragment().markCommentsAsRead();
+                }
             }
 
             @Override
@@ -404,14 +417,6 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
             case R.id.action_download_file:
             case R.id.action_sync_file: {
                 mContainerActivity.getFileOperationsHelper().syncFile(getFile());
-                return true;
-            }
-            case R.id.action_keep_files_offline: {
-                mContainerActivity.getFileOperationsHelper().toggleOfflineFile(getFile(), true);
-                return true;
-            }
-            case R.id.action_unset_keep_files_offline: {
-                mContainerActivity.getFileOperationsHelper().toggleOfflineFile(getFile(), false);
                 return true;
             }
             case R.id.action_encrypted: {

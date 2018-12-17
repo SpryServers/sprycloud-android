@@ -28,14 +28,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +37,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
@@ -54,27 +49,36 @@ import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.activities.GetRemoteActivitiesOperation;
-import com.owncloud.android.lib.resources.activities.models.RichObject;
-import com.owncloud.android.lib.resources.files.FileVersion;
-import com.owncloud.android.lib.resources.files.ReadFileVersionsOperation;
+import com.owncloud.android.lib.resources.activities.GetActivitiesRemoteOperation;
+import com.owncloud.android.lib.resources.activities.model.RichObject;
+import com.owncloud.android.lib.resources.comments.MarkCommentsAsReadRemoteOperation;
+import com.owncloud.android.lib.resources.files.ReadFileVersionsRemoteOperation;
+import com.owncloud.android.lib.resources.files.model.FileVersion;
 import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.operations.CommentFileOperation;
 import com.owncloud.android.ui.activity.ComponentsGetter;
 import com.owncloud.android.ui.activity.FileActivity;
 import com.owncloud.android.ui.adapter.ActivityAndVersionListAdapter;
+import com.owncloud.android.ui.events.CommentsEvent;
 import com.owncloud.android.ui.helpers.FileOperationsHelper;
 import com.owncloud.android.ui.interfaces.ActivityListInterface;
 import com.owncloud.android.ui.interfaces.VersionListInterface;
 import com.owncloud.android.utils.ThemeUtils;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -198,9 +202,16 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
 
     @OnClick(R.id.submitComment)
     public void submitComment() {
-        if (commentInput.getText().toString().trim().length() > 0) {
-            new SubmitCommentTask(commentInput.getText().toString().trim(), userId, file.getLocalId(),
-                    callback, ownCloudClient).execute();
+        Editable commentField = commentInput.getText();
+
+        if (commentField == null) {
+            return;
+        }
+
+        String trimmedComment = commentField.toString().trim();
+
+        if (trimmedComment.length() > 0) {
+            new SubmitCommentTask(trimmedComment, userId, file.getLocalId(), callback, ownCloudClient).execute();
         }
     }
 
@@ -238,7 +249,7 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
                 PorterDuff.Mode.SRC_IN);
         emptyContentIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_activity_light_grey));
 
-        adapter = new ActivityAndVersionListAdapter(getContext(), this, this, storageManager);
+        adapter = new ActivityAndVersionListAdapter(getContext(), this, this, storageManager, capability);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -247,7 +258,7 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 int visibleItemCount = recyclerView.getChildCount();
@@ -289,7 +300,7 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
                 ownCloudClient.setOwnCloudVersion(AccountUtils.getServerVersion(currentAccount));
                 isLoadingActivities = true;
 
-                GetRemoteActivitiesOperation getRemoteNotificationOperation = new GetRemoteActivitiesOperation(
+                GetActivitiesRemoteOperation getRemoteNotificationOperation = new GetActivitiesRemoteOperation(
                         file.getLocalId());
 
                 if (pageUrl != null) {
@@ -301,7 +312,7 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
 
                 ArrayList<Object> versions = null;
                 if (restoreFileVersionSupported) {
-                    ReadFileVersionsOperation readFileVersionsOperation = new ReadFileVersionsOperation(
+                    ReadFileVersionsRemoteOperation readFileVersionsOperation = new ReadFileVersionsRemoteOperation(
                             file.getLocalId(), userId);
 
                     RemoteOperationResult result1 = readFileVersionsOperation.execute(ownCloudClient);
@@ -352,6 +363,20 @@ public class FileDetailActivitiesFragment extends Fragment implements ActivityLi
         });
 
         t.start();
+    }
+
+    public void markCommentsAsRead() {
+        new Thread(() -> {
+            if (file.getUnreadCommentsCount() > 0) {
+                MarkCommentsAsReadRemoteOperation unreadOperation = new MarkCommentsAsReadRemoteOperation(
+                    file.getLocalId());
+                RemoteOperationResult remoteOperationResult = unreadOperation.execute(ownCloudClient);
+
+                if (remoteOperationResult.isSuccess()) {
+                    EventBus.getDefault().post(new CommentsEvent(file.getRemoteId()));
+                }
+            }
+        }).start();
     }
 
     private void populateList(List<Object> activities, boolean clear) {

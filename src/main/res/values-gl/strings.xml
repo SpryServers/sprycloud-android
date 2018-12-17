@@ -267,10 +267,6 @@
     <string name="auth_access_failed">Acceso fallado: %1$s</string>
     <string name="auth_illegal_login_used">Usouse un URL de datos de acceso ilegal</string>
 
-    <string name="favorite">Estabelecer como dispoñíbel sen conexión</string>
-    <string name="unfavorite">Estabelecer como NON dispoñíbel con conexión</string>
-    <string name="favorite_real">Engadir aos marcadores</string>
-    <string name="unset_favorite_real">Retirar dos marcadores</string>
     <string name="encrypted">Estabelecer como cifrado</string>
     <string name="unset_encrypted">Estabelecer como NON cifrado</string>
     <string name="common_rename">Renomear</string>
@@ -506,7 +502,6 @@
     <string name="share_room_clarification">%1$s (conversa)</string>
     <string name="share_known_remote_clarification">%1$s ( en %2$s )</string>
 
-    <string name="share_sharee_unavailable">Actualice a versión do servidor para permitir compartir entre usuarios dende os seus clientes.\nContacte co administrador</string>
     <string name="share_privilege_unshare">Deixar de compartir</string>
     <string name="share_privilege_can_share">pode compartir</string>
     <string name="share_privilege_can_edit">pode editar</string>
@@ -650,7 +645,6 @@
 
     <string name="resized_image_not_possible">No se dispón da imaxe noutros tamaños.</string>
     <string name="resized_image_not_possible_download">No se dispón da imaxe noutros tamaños. Descargala en tamaño total?</string>
-    <string name="resized_images_download_full_image">Descargar a imaxe en tamaño total?</string>
 
     <string name="store_short_desc">A aplicación para Android de Nextcloud dálle acceso a todos os seus ficheiros no seu Nextcloud.</string>
     <string name="store_full_desc">A aplicación libre para Android de Nextcloud, dálle liberdade móbil.
@@ -682,7 +676,6 @@ Coñeza o Nextcloud en https://nextcloud.com</string>
     <string name="user_icon">Usuario</string>
     <string name="favorite_icon">Favorito</string>
     <string name="synced_icon">Sincronizado</string>
-    <string name="available_offline_icon">Dispoñíbel sen conexión</string>
     <string name="checkbox">Caixa de verificación</string>
     <string name="shared_icon_share">compartir</string>
     <string name="shared_icon_shared_via_link">compartido por ligazón</string>
@@ -834,7 +827,6 @@ Esta é a versión oficial de desenvolvemento, que presenta unha mostra diaria d
     <string name="no_browser_available">Non hai ningunha aplicación para manexar ligazóns</string>
     <string name="no_pdf_app_available">Non hai ningunha aplicación para manexar PDF</string>
     <string name="share_via_link_hide_download">Agachar a descarga</string>
-
     <string name="richdocuments_failed_to_load_document">Produciuse un fallo ao cargar o documento!</string>
     <string name="create_new_document">Crear un documento novo</string>
     <string name="create_new_spreadsheet">Crear unha folla de cálculo nova</string>
@@ -845,4 +837,4 @@ Esta é a versión oficial de desenvolvemento, que presenta unha mostra diaria d
     <string name="enter_filename">Escriba o nome do ficheiro</string>
     <string name="create_file_from_template">Creando o ficheiro dende un modelo…</string>
     <string name="error_retrieving_templates">Produciuse un erro ao recuperar modelos</string>
-</resources>
+    </resources>

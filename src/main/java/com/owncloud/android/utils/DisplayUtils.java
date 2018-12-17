@@ -36,12 +36,6 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -61,6 +55,8 @@ import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.SVG;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
@@ -69,7 +65,7 @@ import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.SearchOperation;
+import com.owncloud.android.lib.resources.files.SearchRemoteOperation;
 import com.owncloud.android.ui.TextDrawable;
 import com.owncloud.android.ui.activity.FileDisplayActivity;
 import com.owncloud.android.ui.events.MenuItemClickEvent;
@@ -97,6 +93,11 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatDrawableManager;
 
 /**
  * A helper class for UI/display related operations.
@@ -463,7 +464,7 @@ public final class DisplayUtils {
 
         ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(context.getContentResolver());
 
-        String serverName = account.name.substring(account.name.lastIndexOf('@') + 1, account.name.length());
+        String serverName = account.name.substring(account.name.lastIndexOf('@') + 1);
         String eTag = arbitraryDataProvider.getValue(userId + "@" + serverName, ThumbnailsCacheManager.AVATAR);
         String avatarKey = "a_" + userId + "_" + serverName + "_" + eTag;
 
@@ -589,14 +590,14 @@ public final class DisplayUtils {
                                 break;
                             case R.id.nav_bar_favorites:
                                 SearchEvent favoritesEvent = new SearchEvent("",
-                                        SearchOperation.SearchType.FAVORITE_SEARCH,
+                                    SearchRemoteOperation.SearchType.FAVORITE_SEARCH,
                                         SearchEvent.UnsetType.UNSET_DRAWER);
 
                                 switchToSearchFragment(activity, favoritesEvent);
                                 break;
                             case R.id.nav_bar_photos:
                                 SearchEvent photosEvent = new SearchEvent("image/%",
-                                        SearchOperation.SearchType.CONTENT_TYPE_SEARCH,
+                                    SearchRemoteOperation.SearchType.CONTENT_TYPE_SEARCH,
                                         SearchEvent.UnsetType.UNSET_DRAWER);
 
                                 switchToSearchFragment(activity, photosEvent);

@@ -268,10 +268,6 @@
     <string name="auth_access_failed">Hyrja dështoi: %1$s</string>
     <string name="auth_illegal_login_used">URL e të dhënave të përdorur për t\'u identifikimit e paligjshme </string>
 
-    <string name="favorite">Caktojeni si të gatshëm jo në linjë</string>
-    <string name="unfavorite">Hiqeni si të gatshëm jo në linjë</string>
-    <string name="favorite_real">U shtua te të parapëlqyerat</string>
-    <string name="unset_favorite_real">U hoq nga të parapëlqyerat</string>
     <string name="encrypted">Vendose si të enkriptuar</string>
     <string name="unset_encrypted">Hiq enkriptimin</string>
     <string name="common_rename">Riemërtojeni</string>
@@ -365,6 +361,7 @@
     <string name="activity_chooser_send_file_title">Dërgoje</string>
 
     <string name="copy_link">Kopjoje lidhjen</string>
+    <string name="clipboard_text_copied">Linku u kopjua</string>
     <string name="clipboard_no_text_to_copy">S’u mor tekst për t’u kopjuar në të papastër</string>
     <string name="clipboard_unexpected_error">Gabim i panjohur teksa kopjohej në të papastër</string>
     <string name="clipboard_label">Tekst i kopjuar prej %1$s</string>
@@ -506,7 +503,6 @@
     <string name="share_room_clarification">%1$s (bisedë)</string>
     <string name="share_known_remote_clarification">%1$s ( te %2$s )</string>
 
-    <string name="share_sharee_unavailable">Përditësoni versionin e serverit për të lejuar ndarjen midis përdoruesve brenda klientëve të tyre.\nJu lutemi të kontaktoni administratorin tuaj</string>
     <string name="share_privilege_unshare">Hiqe ndarjen</string>
     <string name="share_privilege_can_share">mund të ndajë</string>
     <string name="share_privilege_can_edit">mund të përpunojnë</string>
@@ -650,7 +646,6 @@
 
     <string name="resized_image_not_possible">Nuk ka në gjëndje asnjë imazh me përmasa të reja.</string>
     <string name="resized_image_not_possible_download">Nuk ka në gjëndje asnjë imazh me përmasa të reja. Doni të shkarkoni imazhin e plotë?</string>
-    <string name="resized_images_download_full_image">Shkarko imazhin e plotë?</string>
 
     <string name="store_short_desc">Aplikacioni Android i Nextcloud jep akses te të gjithë skedarët në Nextcloud-in tuaj.</string>
     <string name="store_full_desc">Aplikacioni copyleft për Android Nextcloud, që ju ofron liri në celularin tuaj.\n\nKarakteristika:\n* Ndërfaqe e thjeshtë, moderne, e përshtatshme për strukturën e serverit tuaj\n* Ngarko skedarët në serverin tuaj Nextcloud\n* Ndajini ato me të tjerët\n* Mbani skedarët dhe dosjet e tua të preferuara të sinkronizuara\n* Kërkoni në të gjitha dosjet në serverin tuaj\n* Ngarkoni automatikisht fotot dhe videot e marra nga pajisja juaj\n* Qëndroni të përditësuar me njoftimet\n* Mbështetje me shumë llogari\n* Qasje e sigurt në të dhënat tuaja me gjurmët e gishtave ose PIN-in\n* Integrimi me DAVdroid për konfigurim të lehtë të kalendarit &amp; \nSinkronizimi i kontakteve\nJu lutem raportoni problematikat në https://github.com/nextcloud/android/issues dhe bisedoni rreth aplikacionit në https://help.nextcloud.com/c/clients/android\n\nI ri në Nextcloud? Nextcloud është sinkronizim privat &amp; shpërndarje dhe komunikim në server. Është software pa pagesë, dhe mund ta strehosh vetë ose të paguash një kompani për ta bërë atë për ju. Në këtë mënyrë, ju jeni në kontroll të fotove tuaja, kalendarin tuaj dhe të dhënat e kontaktit, dokumentet tuaja dhe gjithçka tjetër.\n\nVizito https://nextcloud.com</string>
@@ -664,7 +659,6 @@
     <string name="user_icon">Përdorues</string>
     <string name="favorite_icon">E parapëlqyer</string>
     <string name="synced_icon">i sinkronizuar</string>
-    <string name="available_offline_icon">I disponueshëm jo në linjë</string>
     <string name="checkbox">Checkbox</string>
     <string name="shared_icon_share">ndaje</string>
     <string name="shared_icon_shared_via_link">shpërndarë me anë të lidhjes</string>
@@ -795,6 +789,7 @@
     <string name="stream_not_possible_headline">Rrjedhja e brendshme nuk është e mundur</string>
     <string name="stream_not_possible_message">Ju lutemi të shkarkoni mediat ose të përdorni aplikacionin e jashtëm.</string>
     <string name="folder_already_exists">Dosja ekziston tashmë</string>
+    <string name="actionbar_open_as_richdocument">Hape me Collabora</string>
     <string name="notification_icon">Ikona e njoftimit</string>
     <string name="folder_confirm_create">Krijo</string>
     <string name="file_delete">Fshini</string>
@@ -805,6 +800,22 @@
     <string name="single_sign_on_request_token" formatted="true">Lejo %1$s të hyjë në llogarinë tënde Nextcloud %2$s?</string>
     <string name="permission_deny">Refuzo</string>
     <string name="permission_allow">Lejo</string>
+    <string name="share_send_note">Shënim për marrësin</string>
     <string name="note_confirm">Dërgo</string>
+    <string name="send_note">Dërgo shënim për marrësin</string>
+    <string name="note_could_not_sent">Shënimi nuk mund të dërgohej</string>
     <string name="hint_note">Shënim</string>
+    <string name="no_browser_available">Nuk ka asnjë aplikacion në dispozicion për të trajtuar lidhjet</string>
+    <string name="no_pdf_app_available">Nuk ka asnjë aplikacion në dispozicion për të trajtuar PDF</string>
+    <string name="share_via_link_hide_download">Fshih shkarkimin</string>
+    <string name="richdocuments_failed_to_load_document">Dështoi ngarkimi i dokumentit!</string>
+    <string name="create_new_document">Krijo një dokument te ri</string>
+    <string name="create_new_spreadsheet">Krijo një spreadsheet të ri</string>
+    <string name="create_new_presentation">Krijo një prezantim të ri</string>
+    <string name="select_template">Zgjidh shabllonin</string>
+    <string name="filename_hint">Emri i skedarit</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="enter_filename">Ju lutemi shkruani një emër skedari</string>
+    <string name="create_file_from_template">Duke krijuar skedar nga shablloni...</string>
+    <string name="error_retrieving_templates">Gabim gjatë marrjes së shablloneve</string>
     </resources>

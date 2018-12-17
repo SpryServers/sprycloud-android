@@ -267,10 +267,8 @@
     <string name="auth_access_failed">Hozzáférési hiba: %1$s</string>
     <string name="auth_illegal_login_used">Érvénytelen bejelentkezési URL</string>
 
-    <string name="favorite">Állítsa be kapcsolat nélkül is elérhetőnek</string>
-    <string name="unfavorite">Törölje a kapcsolat nélküli elérhetőséget</string>
-    <string name="favorite_real">Hozzáadás a kedvencekhez</string>
-    <string name="unset_favorite_real">Eltávolítás a kedvencekből</string>
+    <string name="favorite">Hozzáadás a kedvencekhez </string>
+    <string name="unset_favorite">Eltávolítás a kedvencekből</string>
     <string name="encrypted">Titkosítottra állítás</string>
     <string name="unset_encrypted">Titkosítás kikapcsolása</string>
     <string name="common_rename">Átnevezés</string>
@@ -507,8 +505,6 @@
     <string name="share_room_clarification">%1$s(beszélgetés)</string>
     <string name="share_known_remote_clarification">%1$s ( itt: %2$s )</string>
 
-    <string name="share_sharee_unavailable">Frissítsd a szerveredet, a felhasználók egymás-közti megosztásának engedélyezéséhez.
-Lépj kapcsolatba a rendszergazdával</string>
     <string name="share_privilege_unshare">Megosztás visszavonása</string>
     <string name="share_privilege_can_share">megosztható</string>
     <string name="share_privilege_can_edit">módosíthat</string>
@@ -652,7 +648,6 @@ Lépj kapcsolatba a rendszergazdával</string>
 
     <string name="resized_image_not_possible">Nincs elérhető átméretezett kép.</string>
     <string name="resized_image_not_possible_download">Átméretezett kép nem elérhető. Letöltsem a teljes képet?</string>
-    <string name="resized_images_download_full_image">Teljes kép letöltése?</string>
 
     <string name="store_short_desc">A Nextcloud Android alkalmazás segítségével hozzáférhetsz a saját Nextcloud-on tárolt fájlaidhoz.</string>
     <string name="store_full_desc">A nyílt forrású Nextcloud android app segítségével hozzáférhetsz a saját Nextcloudod fájljaihoz.
@@ -684,7 +679,6 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="user_icon">Felhasználó</string>
     <string name="favorite_icon">Kedvenc</string>
     <string name="synced_icon">Szinkronizált</string>
-    <string name="available_offline_icon">Offline elérhető</string>
     <string name="checkbox">Pipáló</string>
     <string name="shared_icon_share">megosztás</string>
     <string name="shared_icon_shared_via_link">link által megosztott</string>
@@ -804,6 +798,7 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="trashbin_file_not_deleted">%1$s fájl nem törölhető!</string>
     <string name="trashbin_file_not_restored">%1$s nem állítható vissza!</string>
     <string name="trashbin_not_emptied">A fájlok nem törölhetők véglegesen!</string>
+    <string name="stream">Streamelni vele…</string>
     <string name="folder_already_exists">A mappa már létezik</string>
     <string name="notification_icon">Értesítő ikon</string>
     <string name="folder_confirm_create">Létrehozás</string>
@@ -814,4 +809,24 @@ A Nextcloud itt érhető el: https://nextcloud.com</string>
     <string name="account_creation_failed">Fiók létrehozás sikertelen</string>
     <string name="permission_deny">Megtagad</string>
     <string name="permission_allow">Engedélyez</string>
+    <string name="share_send_note">Megjegyzés a címzettnek</string>
+    <string name="note_confirm">Küld</string>
+    <string name="send_note">Megjegyzés küldése a címzettnek</string>
+    <string name="note_could_not_sent">Nem sikerült elküldeni a jegyzetet</string>
+    <string name="hint_note">Megjegyzés</string>
+    <string name="unread_comments">Olvasatlan hozzászólások vannak</string>
+
+    <string name="richdocuments_failed_to_load_document">A dokumentum betöltése sikertelen!</string>
+    <string name="create_new_document">Új dokumentum létrehozása</string>
+    <string name="create_new_spreadsheet">Új munkafüzet létrehozása</string>
+    <string name="create_new_presentation">Új bemutató létrehozása</string>
+    <string name="select_template">Sablon kiválasztása</string>
+    <string name="filename_hint">Fájlnév</string>
+    <string name="thumbnail">Előnézet</string>
+    <string name="enter_filename">Kérlek adj meg egy fájlnevet</string>
+    <string name="create_file_from_template">Fájl készítése sablonból...</string>
+    <string name="error_retrieving_templates">Hiba történt a sablon lékérésekor</string>
+    <string name="battery_optimization_title">Akkumlátor optimalizálás</string>
+    <string name="battery_optimization_disable">letilt</string>
+    <string name="battery_optimization_close">Bezár</string>
     </resources>

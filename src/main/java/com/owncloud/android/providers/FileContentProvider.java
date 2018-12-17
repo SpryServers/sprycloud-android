@@ -40,7 +40,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Binder;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.owncloud.android.MainApp;
@@ -58,6 +57,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
 
 /**
  * The ContentProvider for the ownCloud App.
@@ -734,22 +735,23 @@ public class FileContentProvider extends ContentProvider {
                 + ProviderTableMeta.FILE_STORAGE_PATH + TEXT
                 + ProviderTableMeta.FILE_ACCOUNT_OWNER + TEXT
                 + ProviderTableMeta.FILE_LAST_SYNC_DATE + INTEGER
-                + ProviderTableMeta.FILE_KEEP_IN_SYNC + INTEGER
                 + ProviderTableMeta.FILE_LAST_SYNC_DATE_FOR_DATA + INTEGER
                 + ProviderTableMeta.FILE_MODIFIED_AT_LAST_SYNC_FOR_DATA + INTEGER
                 + ProviderTableMeta.FILE_ETAG + TEXT
+                       + ProviderTableMeta.FILE_ETAG_ON_SERVER + TEXT
                 + ProviderTableMeta.FILE_SHARED_VIA_LINK + INTEGER
                 + ProviderTableMeta.FILE_PUBLIC_LINK + TEXT
                 + ProviderTableMeta.FILE_PERMISSIONS + " TEXT null,"
                 + ProviderTableMeta.FILE_REMOTE_ID + " TEXT null,"
-                + ProviderTableMeta.FILE_UPDATE_THUMBNAIL + INTEGER //boolean
+                       + ProviderTableMeta.FILE_UPDATE_THUMBNAIL + INTEGER //boolean
                 + ProviderTableMeta.FILE_IS_DOWNLOADING + INTEGER //boolean
                 + ProviderTableMeta.FILE_FAVORITE + INTEGER // boolean
                 + ProviderTableMeta.FILE_IS_ENCRYPTED + INTEGER // boolean
                 + ProviderTableMeta.FILE_ETAG_IN_CONFLICT + TEXT
                 + ProviderTableMeta.FILE_SHARED_WITH_SHAREE + INTEGER
-            + ProviderTableMeta.FILE_MOUNT_TYPE + INTEGER
-            + ProviderTableMeta.FILE_HAS_PREVIEW + " INTEGER);"
+                + ProviderTableMeta.FILE_MOUNT_TYPE + INTEGER
+                + ProviderTableMeta.FILE_HAS_PREVIEW + INTEGER
+                + ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT + " INTEGER);"
         );
     }
 
@@ -1832,6 +1834,42 @@ public class FileContentProvider extends ContentProvider {
                 try {
                     db.execSQL(ALTER_TABLE + ProviderTableMeta.CAPABILITIES_TABLE_NAME +
                         ADD_COLUMN + ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING + " INTEGER "); // bool
+
+                    upgraded = true;
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+
+            if (!upgraded) {
+                Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
+            }
+
+            if (oldVersion < 40 && newVersion >= 40) {
+                Log_OC.i(SQL, "Entering in the #40 add unreadCommentsCount to file table");
+                db.beginTransaction();
+                try {
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.FILE_TABLE_NAME +
+                            ADD_COLUMN + ProviderTableMeta.FILE_UNREAD_COMMENTS_COUNT + " INTEGER ");
+
+                    upgraded = true;
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+
+            if (!upgraded) {
+                Log_OC.i(SQL, String.format(Locale.ENGLISH, UPGRADE_VERSION_MSG, oldVersion, newVersion));
+            }
+
+            if (oldVersion < 41 && newVersion >= 41) {
+                Log_OC.i(SQL, "Entering in the #41 add eTagOnServer");
+                db.beginTransaction();
+                try {
+                    db.execSQL(ALTER_TABLE + ProviderTableMeta.FILE_TABLE_NAME +
+                        ADD_COLUMN + ProviderTableMeta.FILE_ETAG_ON_SERVER + " TEXT ");
 
                     upgraded = true;
                     db.setTransactionSuccessful();

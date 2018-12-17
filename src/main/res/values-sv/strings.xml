@@ -148,6 +148,7 @@
     <string name="uploads_view_upload_status_failed_ssl_certificate_not_trusted">Otillförlitligt servercertifikat</string>
     <string name="uploads_view_title">Uppladdningar</string>
     <string name="uploads_view_group_current_uploads">Nuvarande</string>
+    <string name="uploads_view_group_failed_uploads">Misslyckades/väntar omstart</string>
     <string name="uploads_view_group_finished_uploads">Uppladdad</string>
     <string name="uploads_view_upload_status_succeeded">Slutförande</string>
     <string name="uploads_view_upload_status_cancelled">Avbruten</string>
@@ -255,10 +256,6 @@
 	<string name="auth_can_not_auth_against_server">Det går inte att autentisera mot denna server</string>
     <string name="auth_account_does_not_exist">Kontot har ännu inte lagts till på den här enheten</string>
     <string name="auth_access_failed">Åtkomst misslyckades: %1$s</string>
-    <string name="favorite">Sätt som tillgänglig offline</string>
-    <string name="unfavorite">Ta bort som tillgänglig offline</string>
-    <string name="favorite_real">Lägg till i favoriter</string>
-    <string name="unset_favorite_real">Ta bort från favoriter</string>
     <string name="encrypted">Sätt som krypterad</string>
     <string name="unset_encrypted">Ta bort som krypterad</string>
     <string name="common_rename">Byt namn</string>
@@ -489,7 +486,6 @@
     <string name="share_email_clarification">%1$s (e-post)</string>
     <string name="share_known_remote_clarification">%1$s ( på %2$s )</string>
 
-    <string name="share_sharee_unavailable">Uppgradera serverversionen för att tillåta delning mellan användare inifrån sina klienter.\nKontakta din administratör</string>
     <string name="share_privilege_unshare">Sluta dela</string>
     <string name="share_privilege_can_share">får dela</string>
     <string name="share_privilege_can_edit">kan redigera</string>
@@ -580,6 +576,7 @@
 
     <!-- Activities -->
     <string name="activities_no_results_headline">Ingen aktivitet än</string>
+    <string name="activities_no_results_message">Inga händelser som tillägg, ändringar och delningar ännu</string>
     <string name="prefs_category_about">Om</string>
 
     <string name="actionbar_contacts">Backa upp kontakter</string>
@@ -627,8 +624,8 @@
     <string name="sync_in_progress">Hämtar den nyaste versionen av filen.</string>
     <string name="date_unknown">Okänd</string>
 
+    <string name="resized_image_not_possible">Ingen storleksändrad bild tillgänglig.</string>
     <string name="resized_image_not_possible_download">Ingen storleksändrad bild tillgänglig. Hämta hela bilden?</string>
-    <string name="resized_images_download_full_image">Vill du ladda ner fullständig bild?</string>
 
     <string name="store_short_desc">Nextcloud Android-appen ger mobilåtkomst till alla filer på ditt Nextcloud.</string>
     <string name="drawer_current_account">Nuvarande konto</string>
@@ -640,7 +637,6 @@
     <string name="user_icon">Användare</string>
     <string name="favorite_icon">Favoritisera</string>
     <string name="synced_icon">Synkroniserad</string>
-    <string name="available_offline_icon">Tillgänglig offline</string>
     <string name="checkbox">Kryssruta</string>
     <string name="shared_icon_shared_via_link">delad via länk</string>
     <string name="shared_icon_shared">delad</string>
@@ -677,6 +673,8 @@
     <string name="notification_channel_media_description">Musikspelarens förlopp</string>
     <string name="notification_channel_file_sync_name">Filsynkronisering</string>
     <string name="notification_channel_file_sync_description">Visar filsynkroniserings förlopp och resultat</string>
+    <string name="notification_channel_file_observer_description">Övervakar filer för ändringar</string>
+
     <string name="account_not_found">Kontot hittades inte!</string>
 
     <string name="screenshot_01_gridView">Ett säkert hem för dina filer</string>
@@ -708,6 +706,8 @@
     <string name="end_to_end_encryption_storing_keys">Lagrar nycklar</string>
     <string name="copy_move_to_encrypted_folder_not_supported">Kopiera/flytta till krypterad mapp stöds för närvarande inte.</string>
     <string name="untrusted_domain">Åtkomst via opålitlig domän. Se dokumentation för ytterligare information.</string>
+    <string name="notification_channel_push_name">Push-meddelanden</string>
+    <string name="notification_channel_push_description">Visa push-meddelanden som skickas av servern: Omnämnanden i kommentarer, mottagning av nya fjärrandelar, meddelanden som publiceras av en administratör o.s.v.</string>
     <string name="hint_name">Namn</string>
     <string name="hint_password">Lösenord</string>
     <string name="upload_files">Ladda upp filer</string>

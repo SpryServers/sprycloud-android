@@ -24,8 +24,6 @@ package com.owncloud.android.utils;
 import android.accounts.Account;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
 import com.google.gson.Gson;
@@ -37,7 +35,7 @@ import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.GetMetadataOperation;
+import com.owncloud.android.lib.resources.e2ee.GetMetadataRemoteOperation;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -49,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -83,6 +82,9 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 /**
  * Utils for encryption
@@ -216,8 +218,8 @@ public final class EncryptionUtils {
     public static @Nullable
     DecryptedFolderMetadata downloadFolderMetadata(OCFile folder, OwnCloudClient client,
                                                    Context context, Account account) {
-        GetMetadataOperation getMetadataOperation = new GetMetadataOperation(folder.getLocalId());
-        RemoteOperationResult getMetadataOperationResult = getMetadataOperation.execute(client, true);
+        RemoteOperationResult getMetadataOperationResult = new GetMetadataRemoteOperation(folder.getLocalId())
+            .execute(client, true);
 
         if (!getMetadataOperationResult.isSuccess()) {
             return null;
@@ -374,14 +376,14 @@ public final class EncryptionUtils {
     public static String encryptStringAsymmetric(String string, String cert)
             throws NoSuchAlgorithmException,
             NoSuchPaddingException, InvalidKeyException,
-            BadPaddingException, IllegalBlockSizeException, IOException,
-            CertificateException {
+        BadPaddingException, IllegalBlockSizeException,
+        CertificateException {
 
         Cipher cipher = Cipher.getInstance(RSA_CIPHER);
 
         String trimmedCert = cert.replace("-----BEGIN CERTIFICATE-----\n", "")
                 .replace("-----END CERTIFICATE-----\n", "");
-        byte[] encodedCert = trimmedCert.getBytes("UTF-8");
+        byte[] encodedCert = trimmedCert.getBytes(StandardCharsets.UTF_8);
         byte[] decodedCert = org.apache.commons.codec.binary.Base64.decodeBase64(encodedCert);
 
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
@@ -478,7 +480,7 @@ public final class EncryptionUtils {
 
         int delimiterPosition = string.lastIndexOf(ivDelimiter);
         String cipherString = string.substring(0, delimiterPosition);
-        String ivString = string.substring(delimiterPosition + ivDelimiter.length(), string.length());
+        String ivString = string.substring(delimiterPosition + ivDelimiter.length());
 
         byte[] iv = new IvParameterSpec(decodeStringToBase64Bytes(ivString)).getIV();
 

@@ -58,30 +58,18 @@
             android:contentDescription="@string/favorite"
             android:src="@drawable/badge_favorite" />
 
-        <ImageView
-            android:id="@+id/keptOfflineIcon"
-            android:layout_width="@dimen/list_item_kept_offline_icon_layout_width"
-            android:layout_height="@dimen/list_item_kept_offline_icon_layout_height"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="@dimen/list_item_kept_offline_icon_layout_right_end_margin"
-            android:layout_marginRight="@dimen/list_item_kept_offline_icon_layout_right_end_margin"
-            android:contentDescription="@string/available_offline_icon"
-            android:src="@drawable/ic_available_offline" />
-
-        <ImageView
-            android:id="@+id/localFileIndicator"
-            android:layout_width="@dimen/list_item_local_file_indicator_layout_width"
-            android:layout_height="@dimen/list_item_local_file_indicator_layout_height"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="@dimen/standard_quarter_margin"
-            android:layout_marginRight="@dimen/standard_quarter_margin"
-            android:contentDescription="@string/downloader_download_succeeded_ticker"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_synced" />
+            <ImageView
+                android:id="@+id/localFileIndicator"
+                android:layout_width="@dimen/list_item_local_file_indicator_layout_width"
+                android:layout_height="@dimen/list_item_local_file_indicator_layout_height"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/standard_quarter_margin"
+                android:layout_marginRight="@dimen/standard_quarter_margin"
+                android:contentDescription="@string/downloader_download_succeeded_ticker"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_synced" />
 
     </RelativeLayout>
 
@@ -153,10 +141,27 @@
         android:paddingStart="@dimen/standard_half_padding">
 
         <ImageView
+            android:id="@+id/unreadComments"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:contentDescription="@string/unread_comments"
+            android:focusable="true"
+            android:paddingEnd="@dimen/list_item_share_right_margin"
+            android:paddingLeft="@dimen/standard_half_padding"
+            android:paddingRight="@dimen/list_item_share_right_margin"
+            android:paddingStart="@dimen/standard_half_padding"
+            android:src="@drawable/ic_comment"
+            android:visibility="gone"/>
+
+        <ImageView
             android:id="@+id/sharedIcon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/unreadComments"
+            android:layout_toRightOf="@id/unreadComments"
             android:clickable="true"
             android:contentDescription="@string/shared_icon_share"
             android:focusable="true"

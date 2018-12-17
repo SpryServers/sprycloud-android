@@ -35,18 +35,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -59,6 +47,8 @@ import android.widget.AbsListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
@@ -74,9 +64,9 @@ import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.SearchOperation;
-import com.owncloud.android.lib.resources.files.ToggleEncryptionOperation;
-import com.owncloud.android.lib.resources.files.ToggleFavoriteOperation;
+import com.owncloud.android.lib.resources.e2ee.ToggleEncryptionRemoteOperation;
+import com.owncloud.android.lib.resources.files.SearchRemoteOperation;
+import com.owncloud.android.lib.resources.files.ToggleFavoriteRemoteOperation;
 import com.owncloud.android.lib.resources.shares.GetRemoteSharesOperation;
 import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.ui.activity.FileActivity;
@@ -94,6 +84,7 @@ import com.owncloud.android.ui.dialog.RemoveFilesDialogFragment;
 import com.owncloud.android.ui.dialog.RenameFileDialogFragment;
 import com.owncloud.android.ui.dialog.SetupEncryptionDialogFragment;
 import com.owncloud.android.ui.events.ChangeMenuEvent;
+import com.owncloud.android.ui.events.CommentsEvent;
 import com.owncloud.android.ui.events.DummyDrawerEvent;
 import com.owncloud.android.ui.events.EncryptionEvent;
 import com.owncloud.android.ui.events.FavoriteEvent;
@@ -121,6 +112,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * A Fragment that lists all files and folders in a given path.
@@ -362,22 +364,22 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
     private void prepareCurrentSearch(SearchEvent event) {
         if (isSearchEventSet(event)) {
-            if (SearchOperation.SearchType.FILE_SEARCH.equals(event.getSearchType())) {
+            if (SearchRemoteOperation.SearchType.FILE_SEARCH.equals(event.getSearchType())) {
                 currentSearchType = SearchType.FILE_SEARCH;
 
-            } else if (SearchOperation.SearchType.CONTENT_TYPE_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.CONTENT_TYPE_SEARCH.equals(event.getSearchType())) {
                 if ("image/%".equals(event.getSearchQuery())) {
                     currentSearchType = SearchType.PHOTO_SEARCH;
                 } else if ("video/%".equals(event.getSearchQuery())) {
                     currentSearchType = SearchType.VIDEO_SEARCH;
                 }
-            } else if (SearchOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
                 currentSearchType = SearchType.FAVORITE_SEARCH;
-            } else if (SearchOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
                 currentSearchType = SearchType.RECENTLY_ADDED_SEARCH;
-            } else if (SearchOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
                 currentSearchType = SearchType.RECENTLY_MODIFIED_SEARCH;
-            } else if (SearchOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
                 currentSearchType = SearchType.SHARED_FILTER;
             }
 
@@ -389,9 +391,9 @@ public class OCFileListFragment extends ExtendedListFragment implements
      * register listener on FAB.
      */
     private void registerFabListener() {
-        OCCapability capability = ((FileActivity) getActivity()).getCapabilities();
+        FileActivity activity = ((FileActivity) getActivity());
         getFabMain().setOnClickListener(v -> {
-            new OCFileListBottomSheetDialog(getContext(), capability, this).show();
+            new OCFileListBottomSheetDialog(activity, this).show();
         });
     }
 
@@ -433,6 +435,16 @@ public class OCFileListFragment extends ExtendedListFragment implements
         }
     }
 
+    @Override
+    public void showShareDetailView(OCFile file) {
+        mContainerActivity.showDetails(file, 1);
+    }
+
+    @Override
+    public void showActivityDetailView(OCFile file) {
+        mContainerActivity.showDetails(file, 0);
+    }
+    
     @Override
     public void onOverflowIconClicked(OCFile file, View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
@@ -905,9 +917,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
                                 .isMediaStreamingSupported()) {
                             // stream media preview on >= NC14
                             ((FileDisplayActivity) mContainerActivity).startMediaPreview(file, 0, true, true, true);
-                        }
-
-                        if (capability.getRichDocumentsMimeTypeList().contains(file.getMimeType()) &&
+                        } else if (capability.getRichDocumentsMimeTypeList().contains(file.getMimeType()) &&
                             android.os.Build.VERSION.SDK_INT >= RichDocumentsWebView.MINIMUM_API &&
                             capability.getRichDocumentsDirectEditing().isTrue()) {
                             mContainerActivity.getFileOperationsHelper().openFileAsRichDocument(file, getContext());
@@ -1018,16 +1028,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
             }
             case R.id.action_cancel_sync: {
                 ((FileDisplayActivity) mContainerActivity).cancelTransference(checkedFiles);
-                return true;
-            }
-            case R.id.action_keep_files_offline: {
-                mContainerActivity.getFileOperationsHelper().toggleOfflineFiles(checkedFiles, true);
-                exitSelectionMode();
-                return true;
-            }
-            case R.id.action_unset_keep_files_offline: {
-                mContainerActivity.getFileOperationsHelper().toggleOfflineFiles(checkedFiles, false);
-                exitSelectionMode();
                 return true;
             }
             case R.id.action_favorite: {
@@ -1316,19 +1316,19 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
     private void prepareActionBarItems(SearchEvent event) {
         if (event != null) {
-            if (SearchOperation.SearchType.CONTENT_TYPE_SEARCH.equals(event.getSearchType())) {
+            if (SearchRemoteOperation.SearchType.CONTENT_TYPE_SEARCH.equals(event.getSearchType())) {
                 if ("image/%".equals(event.getSearchQuery())) {
                     menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_GRID_AND_SORT;
                 } else if ("video/%".equals(event.getSearchQuery())) {
                     menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_SEARCH;
                 }
-            } else if (SearchOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
                 menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_SORT;
-            } else if (SearchOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
                 menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_SORT;
-            } else if (SearchOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
                 menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_SORT;
-            } else if (SearchOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
                 menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_SEARCH;
             }
         }
@@ -1341,21 +1341,21 @@ public class OCFileListFragment extends ExtendedListFragment implements
     private void setEmptyView(SearchEvent event) {
 
         if (event != null) {
-            if (SearchOperation.SearchType.FILE_SEARCH.equals(event.getSearchType())) {
+            if (SearchRemoteOperation.SearchType.FILE_SEARCH.equals(event.getSearchType())) {
                 setEmptyListMessage(SearchType.FILE_SEARCH);
-            } else if (event.getSearchType().equals(SearchOperation.SearchType.CONTENT_TYPE_SEARCH)) {
+            } else if (event.getSearchType().equals(SearchRemoteOperation.SearchType.CONTENT_TYPE_SEARCH)) {
                 if ("image/%".equals(event.getSearchQuery())) {
                     setEmptyListMessage(SearchType.PHOTO_SEARCH);
                 } else if ("video/%".equals(event.getSearchQuery())) {
                     setEmptyListMessage(SearchType.VIDEO_SEARCH);
                 }
-            } else if (SearchOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.FAVORITE_SEARCH.equals(event.getSearchType())) {
                 setEmptyListMessage(SearchType.FAVORITE_SEARCH);
-            } else if (SearchOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_ADDED_SEARCH.equals(event.getSearchType())) {
                 setEmptyListMessage(SearchType.RECENTLY_ADDED_SEARCH);
-            } else if (SearchOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.RECENTLY_MODIFIED_SEARCH.equals(event.getSearchType())) {
                 setEmptyListMessage(SearchType.RECENTLY_MODIFIED_SEARCH);
-            } else if (SearchOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
+            } else if (SearchRemoteOperation.SearchType.SHARED_SEARCH.equals(event.getSearchType())) {
                 setEmptyListMessage(SearchType.SHARED_FILTER);
             }
         }
@@ -1379,6 +1379,11 @@ public class OCFileListFragment extends ExtendedListFragment implements
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(CommentsEvent event) {
+        mAdapter.refreshCommentsCount(event.remoteId);
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(FavoriteEvent event) {
         Account currentAccount = AccountUtils.getCurrentOwnCloudAccount(MainApp.getAppContext());
 
@@ -1398,8 +1403,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 userId = mClient.getCredentials().getUsername();
             }
 
-            ToggleFavoriteOperation toggleFavoriteOperation = new ToggleFavoriteOperation(event.shouldFavorite,
-                    event.remotePath, userId);
+            ToggleFavoriteRemoteOperation toggleFavoriteOperation = new ToggleFavoriteRemoteOperation(
+                event.shouldFavorite, event.remotePath, userId);
             RemoteOperationResult remoteOperationResult = toggleFavoriteOperation.execute(mClient);
 
             if (remoteOperationResult.isSuccess()) {
@@ -1472,8 +1477,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
             String userId = AccountManager.get(MainApp.getAppContext()).getUserData(currentAccount,
                     com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
 
-            remoteOperation = new SearchOperation(event.getSearchQuery(), event.getSearchType(), searchOnlyFolders,
-                    userId);
+            remoteOperation = new SearchRemoteOperation(event.getSearchQuery(), event.getSearchType(),
+                searchOnlyFolders, userId);
         } else {
             remoteOperation = new GetRemoteSharesOperation();
         }
@@ -1540,8 +1545,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
             OwnCloudClient mClient = OwnCloudClientManagerFactory.getDefaultSingleton().
                     getClientFor(ocAccount, MainApp.getAppContext());
 
-            ToggleEncryptionOperation toggleEncryptionOperation = new ToggleEncryptionOperation(event.localId,
-                    event.remotePath, event.shouldBeEncrypted);
+            ToggleEncryptionRemoteOperation toggleEncryptionOperation = new ToggleEncryptionRemoteOperation(
+                event.localId, event.remotePath, event.shouldBeEncrypted);
             RemoteOperationResult remoteOperationResult = toggleEncryptionOperation.execute(mClient, true);
 
             if (remoteOperationResult.isSuccess()) {

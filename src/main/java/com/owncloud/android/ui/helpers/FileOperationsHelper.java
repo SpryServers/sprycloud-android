@@ -32,11 +32,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -53,8 +48,8 @@ import com.owncloud.android.files.services.FileDownloader.FileDownloaderBinder;
 import com.owncloud.android.files.services.FileUploader.FileUploaderBinder;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.CheckEtagOperation;
-import com.owncloud.android.lib.resources.files.FileVersion;
+import com.owncloud.android.lib.resources.files.CheckEtagRemoteOperation;
+import com.owncloud.android.lib.resources.files.model.FileVersion;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.OCCapability;
@@ -81,12 +76,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Helper implementation for file operations locally and remote.
@@ -114,7 +116,7 @@ public class FileOperationsHelper {
         InputStreamReader fr = null;
         BufferedReader br = null;
         try {
-            fr = new InputStreamReader(new FileInputStream(storagePath), "UTF8");
+            fr = new InputStreamReader(new FileInputStream(storagePath), Charset.forName("UTF-8"));
             br = new BufferedReader(fr);
 
             String line;
@@ -201,7 +203,8 @@ public class FileOperationsHelper {
             }
 
             // check for changed eTag
-            CheckEtagOperation checkEtagOperation = new CheckEtagOperation(file.getRemotePath(), file.getEtag());
+            CheckEtagRemoteOperation checkEtagOperation = new CheckEtagRemoteOperation(file.getRemotePath(),
+                file.getEtag());
             RemoteOperationResult result = checkEtagOperation.execute(account, mFileActivity);
 
             // eTag changed, sync file
@@ -828,34 +831,6 @@ public class FileOperationsHelper {
         if (file.isEncrypted() != shouldBeEncrypted) {
             EventBus.getDefault().post(new EncryptionEvent(file.getLocalId(), file.getRemoteId(), file.getRemotePath(),
                     shouldBeEncrypted));
-        }
-    }
-
-    public void toggleOfflineFiles(Collection<OCFile> files, boolean isAvailableOffline) {
-        List<OCFile> alreadyRightStateList = new ArrayList<>();
-        for (OCFile file : files) {
-            if (file.isAvailableOffline() == isAvailableOffline) {
-                alreadyRightStateList.add(file);
-            }
-        }
-
-        files.removeAll(alreadyRightStateList);
-
-        for (OCFile file : files) {
-            toggleOfflineFile(file, isAvailableOffline);
-        }
-    }
-
-
-    public void toggleOfflineFile(OCFile file, boolean isAvailableOffline) {
-        if (file.isAvailableOffline() != isAvailableOffline) {
-            file.setAvailableOffline(isAvailableOffline);
-            mFileActivity.getStorageManager().saveFile(file);
-
-            /// immediate content synchronization
-            if (file.isAvailableOffline()) {
-                syncFile(file);
-            }
         }
     }
 

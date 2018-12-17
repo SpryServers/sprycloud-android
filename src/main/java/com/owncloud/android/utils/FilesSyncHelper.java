@@ -30,7 +30,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -62,6 +61,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Various utilities that make auto upload tick
@@ -260,10 +261,10 @@ public final class FilesSyncHelper {
         Set<JobRequest> jobRequests = JobManager.instance().getAllJobRequestsForTag(OfflineSyncJob.TAG);
         if (jobRequests.isEmpty()) {
             new JobRequest.Builder(OfflineSyncJob.TAG)
-                    .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
-                    .setUpdateCurrent(false)
-                    .build()
-                    .schedule();
+                .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
+                .setUpdateCurrent(false)
+                .build()
+                .schedule();
         }
     }
 

@@ -22,8 +22,6 @@ package com.owncloud.android.operations;
 import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.owncloud.android.datamodel.DecryptedFolderMetadata;
@@ -34,9 +32,9 @@ import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult.ResultCode;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.ReadRemoteFileOperation;
-import com.owncloud.android.lib.resources.files.ReadRemoteFolderOperation;
-import com.owncloud.android.lib.resources.files.RemoteFile;
+import com.owncloud.android.lib.resources.files.ReadFileRemoteOperation;
+import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation;
+import com.owncloud.android.lib.resources.files.model.RemoteFile;
 import com.owncloud.android.lib.resources.shares.GetRemoteSharesForFileOperation;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
@@ -51,6 +49,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 
 /**
@@ -195,7 +196,6 @@ public class RefreshFolderOperation extends RemoteOperation {
             if (mRemoteFolderChanged) {
                 result = fetchAndSyncRemoteFolder(client);
             } else {
-                fetchKeptInSyncFilesToSyncFromLocalData();
                 mChildren = mStorageManager.getFolderContent(mLocalFolder, false);
             }
 
@@ -263,8 +263,8 @@ public class RefreshFolderOperation extends RemoteOperation {
         Log_OC.d(TAG, "Checking changes in " + mAccount.name + remotePath);
 
         // remote request
-        ReadRemoteFileOperation operation = new ReadRemoteFileOperation(remotePath);
-        result = operation.execute(client, true);
+        result = new ReadFileRemoteOperation(remotePath).execute(client, true);
+
         if (result.isSuccess()) {
             OCFile remoteFolder = FileStorageUtils.fillOCFile((RemoteFile) result.getData().get(0));
 
@@ -305,8 +305,7 @@ public class RefreshFolderOperation extends RemoteOperation {
 
     private RemoteOperationResult fetchAndSyncRemoteFolder(OwnCloudClient client) {
         String remotePath = mLocalFolder.getRemotePath();
-        ReadRemoteFolderOperation operation = new ReadRemoteFolderOperation(remotePath);
-        RemoteOperationResult result = operation.execute(client, true);
+        RemoteOperationResult result = new ReadFolderRemoteOperation(remotePath).execute(client, true);
         Log_OC.d(TAG, "Synchronizing " + mAccount.name + remotePath);
 
         if (result.isSuccess()) {
@@ -399,13 +398,6 @@ public class RefreshFolderOperation extends RemoteOperation {
             // check and fix, if needed, local storage path
             FileStorageUtils.searchForLocalFileInDefaultPath(updatedFile, mAccount);
 
-            // prepare content synchronization for kept-in-sync files
-            if (updatedFile.isAvailableOffline()) {
-                mFilesToSyncContents.add(
-                        new SynchronizeFileOperation(localFile, remoteFile, mAccount, true, mContext)
-                );
-            }
-
             // update file name for encrypted files
             if (metadata != null) {
                 updateFileNameForEncryptedFile(metadata, updatedFile);
@@ -456,7 +448,6 @@ public class RefreshFolderOperation extends RemoteOperation {
     private void setLocalFileDataOnUpdatedFile(OCFile remoteFile, OCFile localFile, OCFile updatedFile, boolean remoteFolderChanged) {
         if (localFile != null) {
             updatedFile.setFileId(localFile.getFileId());
-            updatedFile.setAvailableOffline(localFile.isAvailableOffline());
             updatedFile.setLastSyncDateForData(localFile.getLastSyncDateForData());
             updatedFile.setModificationTimestampAtLastSyncForData(
                     localFile.getModificationTimestampAtLastSyncForData()
@@ -488,6 +479,9 @@ public class RefreshFolderOperation extends RemoteOperation {
             // remote eTag will not be updated unless file CONTENTS are synchronized
             updatedFile.setEtag("");
         }
+
+        // eTag on Server is used for thumbnail validation
+        updatedFile.setEtagOnServer(remoteFile.getEtag());
     }
 
     @NonNull
@@ -592,24 +586,5 @@ public class RefreshFolderOperation extends RemoteOperation {
 
         intent.setPackage(mContext.getPackageName());
         mContext.sendStickyBroadcast(intent);
-        //LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
-
-
-    private void fetchKeptInSyncFilesToSyncFromLocalData() {
-        List<OCFile> children = mStorageManager.getFolderContent(mLocalFolder, false);
-        for (OCFile child : children) {
-            if (!child.isFolder() && child.isAvailableOffline() && !child.isInConflict()) {
-                SynchronizeFileOperation operation = new SynchronizeFileOperation(
-                        child,
-                        child,  // cheating with the remote file to get an update to server; to refactor
-                        mAccount,
-                        true,
-                        mContext
-                );
-                mFilesToSyncContents.add(operation);
-            }
-        }
-    }
-
 }
