@@ -165,7 +165,7 @@ public class FileMenuFilter {
     private void filter(List<Integer> toShow, List<Integer> toHide, boolean inSingleFileFragment) {
         boolean synchronizing = anyFileSynchronizing();
         OCCapability capability = mComponentsGetter.getStorageManager().getCapability(mAccount.name);
-        boolean endToEndEncryptionEnabled = capability != null && capability.getEndToEndEncryption().isTrue();
+        boolean endToEndEncryptionEnabled = capability.getEndToEndEncryption().isTrue();
 
         filterDownload(toShow, toHide, synchronizing);
         filterRename(toShow, toHide, synchronizing);
@@ -248,8 +248,10 @@ public class FileMenuFilter {
     }
 
     private void filterOpenAsRichDocument(List<Integer> toShow, List<Integer> toHide, OCCapability capability) {
+        String mimeType = mFiles.iterator().next().getMimeType();
         if (isSingleFile() && android.os.Build.VERSION.SDK_INT >= RichDocumentsWebView.MINIMUM_API &&
-            capability.getRichDocumentsMimeTypeList().contains(mFiles.iterator().next().getMimeType()) &&
+            (capability.getRichDocumentsMimeTypeList().contains(mimeType) ||
+                capability.getRichDocumentsOptionalMimeTypeList().contains(mimeType)) &&
             capability.getRichDocumentsDirectEditing().isTrue()) {
             toShow.add(R.id.action_open_file_as_richdocument);
         } else {
@@ -437,10 +439,6 @@ public class FileMenuFilter {
     private boolean isSingleMedia() {
         OCFile file = mFiles.iterator().next();
         return isSingleSelection() && (MimeTypeUtil.isVideo(file) || MimeTypeUtil.isAudio(file));
-    }
-
-    private boolean allFiles() {
-        return mFiles != null && !containsFolder();
     }
 
     private boolean containsEncryptedFile() {

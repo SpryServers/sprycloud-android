@@ -2,6 +2,7 @@
  * Nextcloud SingleSignOn
  *
  * @author David Luhmer
+ * Copyright (C) 2019 David Luhmer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
@@ -42,13 +44,21 @@ import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.utils.EncryptionUtils;
 
+import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.jackrabbit.webdav.DavConstants;
+import org.apache.jackrabbit.webdav.client.methods.MkColMethod;
+import org.apache.jackrabbit.webdav.client.methods.PropFindMethod;
+import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -62,6 +72,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import static com.nextcloud.android.sso.Constants.DELIMITER;
 import static com.nextcloud.android.sso.Constants.EXCEPTION_ACCOUNT_NOT_FOUND;
 import static com.nextcloud.android.sso.Constants.EXCEPTION_HTTP_REQUEST_FAILED;
 import static com.nextcloud.android.sso.Constants.EXCEPTION_INVALID_REQUEST_URL;
@@ -100,9 +111,17 @@ public class InputStreamBinder extends IInputStreamService.Stub {
     }
 
     public ParcelFileDescriptor performNextcloudRequest(ParcelFileDescriptor input) {
+        return performNextcloudRequestAndBodyStream(input, null);
+    }
+
+    public ParcelFileDescriptor performNextcloudRequestAndBodyStream(
+        ParcelFileDescriptor input,
+        ParcelFileDescriptor requestBodyParcelFileDescriptor) {
         // read the input
         final InputStream is = new ParcelFileDescriptor.AutoCloseInputStream(input);
 
+        final InputStream requestBodyInputStream = requestBodyParcelFileDescriptor != null ?
+            new ParcelFileDescriptor.AutoCloseInputStream(requestBodyParcelFileDescriptor) : null;
         Exception exception = null;
         InputStream httpStream = new InputStream() {
             @Override
@@ -110,10 +129,11 @@ public class InputStreamBinder extends IInputStreamService.Stub {
                 return 0;
             }
         };
+
         try {
             // Start request and catch exceptions
             NextcloudRequest request = deserializeObjectAndCloseStream(is);
-            httpStream = processRequest(request);
+            httpStream = processRequest(request, requestBodyInputStream);
         } catch (Exception e) {
             Log_OC.e(TAG, "Error during Nextcloud request", e);
             exception = e;
@@ -122,7 +142,12 @@ public class InputStreamBinder extends IInputStreamService.Stub {
         try {
             // Write exception to the stream followed by the actual network stream
             InputStream exceptionStream = serializeObjectToInputStream(exception);
-            InputStream resultStream = new java.io.SequenceInputStream(exceptionStream, httpStream);
+            InputStream resultStream;
+            if (httpStream != null) {
+                resultStream = new java.io.SequenceInputStream(exceptionStream, httpStream);
+            } else {
+                resultStream = exceptionStream;
+            }
             return ParcelFileDescriptorUtil.pipeFrom(resultStream, thread -> Log.d(TAG, "Done sending result"));
         } catch (IOException e) {
             Log_OC.e(TAG, "Error while sending response back to client app", e);
@@ -139,7 +164,8 @@ public class InputStreamBinder extends IInputStreamService.Stub {
         return new ByteArrayInputStream(baos.toByteArray());
     }
 
-    private <T extends Serializable> T deserializeObjectAndCloseStream(InputStream is) throws IOException, ClassNotFoundException {
+    private <T extends Serializable> T deserializeObjectAndCloseStream(InputStream is) throws IOException,
+        ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(is);
         T result = (T) ois.readObject();
         is.close();
@@ -147,10 +173,87 @@ public class InputStreamBinder extends IInputStreamService.Stub {
         return result;
     }
 
+    public class NCPropFindMethod extends PropFindMethod {
+        NCPropFindMethod(String uri, int propfindType, int depth) throws IOException {
+            super(uri, propfindType, new DavPropertyNameSet(), depth);
+        }
 
-    private InputStream processRequest(final NextcloudRequest request) throws UnsupportedOperationException, com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException, OperationCanceledException, AuthenticatorException, IOException {
-        Account account = AccountUtils.getOwnCloudAccountByName(context, request.getAccountName()); // TODO handle case that account is not found!
-        if(account == null) {
+        @Override
+        protected void processResponseBody(HttpState httpState, HttpConnection httpConnection) {
+            // Do not process the response body here. Instead pass it on to client app.
+        }
+    }
+
+    private HttpMethodBase buildMethod(NextcloudRequest request, Uri baseUri, InputStream requestBodyInputStream)
+        throws IOException {
+        String requestUrl = baseUri + request.getUrl();
+        HttpMethodBase method;
+        switch (request.getMethod()) {
+            case "GET":
+                method = new GetMethod(requestUrl);
+                break;
+
+            case "POST":
+                method = new PostMethod(requestUrl);
+                if (requestBodyInputStream != null) {
+                    RequestEntity requestEntity = new InputStreamRequestEntity(requestBodyInputStream);
+                    ((PostMethod) method).setRequestEntity(requestEntity);
+                } else if (request.getRequestBody() != null) {
+                    StringRequestEntity requestEntity = new StringRequestEntity(
+                        request.getRequestBody(),
+                        CONTENT_TYPE_APPLICATION_JSON,
+                        CHARSET_UTF8);
+                    ((PostMethod) method).setRequestEntity(requestEntity);
+                }
+                break;
+
+            case "PUT":
+                method = new PutMethod(requestUrl);
+                if (requestBodyInputStream != null) {
+                    RequestEntity requestEntity = new InputStreamRequestEntity(requestBodyInputStream);
+                    ((PutMethod) method).setRequestEntity(requestEntity);
+                } else if (request.getRequestBody() != null) {
+                    StringRequestEntity requestEntity = new StringRequestEntity(
+                        request.getRequestBody(),
+                        CONTENT_TYPE_APPLICATION_JSON,
+                        CHARSET_UTF8);
+                    ((PutMethod) method).setRequestEntity(requestEntity);
+                }
+                break;
+
+            case "DELETE":
+                method = new DeleteMethod(requestUrl);
+                break;
+
+            case "PROPFIND":
+                method = new NCPropFindMethod(requestUrl, DavConstants.PROPFIND_ALL_PROP, DavConstants.DEPTH_1);
+                if (request.getRequestBody() != null) {
+                    //text/xml; charset=UTF-8 is taken from XmlRequestEntity... Should be application/xml
+                    StringRequestEntity requestEntity = new StringRequestEntity(
+                        request.getRequestBody(),
+                        "text/xml; charset=UTF-8",
+                        CHARSET_UTF8);
+                    ((PropFindMethod) method).setRequestEntity(requestEntity);
+                }
+                break;
+
+            case "MKCOL":
+                method = new MkColMethod(requestUrl);
+                break;
+
+            default:
+                throw new UnsupportedOperationException(EXCEPTION_UNSUPPORTED_METHOD);
+
+        }
+        return method;
+    }
+
+    private InputStream processRequest(final NextcloudRequest request, final InputStream requestBodyInputStream)
+        throws UnsupportedOperationException,
+        com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException,
+        OperationCanceledException, AuthenticatorException, IOException {
+        Account account = AccountUtils.getOwnCloudAccountByName(context, request.getAccountName());
+        if (account == null) {
             throw new IllegalStateException(EXCEPTION_ACCOUNT_NOT_FOUND);
         }
 
@@ -160,59 +263,29 @@ public class InputStreamBinder extends IInputStreamService.Stub {
         }
 
         // Validate URL
-        if(request.getUrl().length() == 0 || request.getUrl().charAt(0) != PATH_SEPARATOR) {
-            throw new IllegalStateException(EXCEPTION_INVALID_REQUEST_URL, new IllegalStateException("URL need to start with a /"));
+        if (request.getUrl().length() == 0 || request.getUrl().charAt(0) != PATH_SEPARATOR) {
+            throw new IllegalStateException(EXCEPTION_INVALID_REQUEST_URL,
+                                            new IllegalStateException("URL need to start with a /"));
         }
 
         OwnCloudClientManager ownCloudClientManager = OwnCloudClientManagerFactory.getDefaultSingleton();
         OwnCloudAccount ocAccount = new OwnCloudAccount(account, context);
         OwnCloudClient client = ownCloudClientManager.getClientFor(ocAccount, context);
 
-        String requestUrl = client.getBaseUri() + request.getUrl();
-        HttpMethodBase method;
-
-        switch (request.getMethod()) {
-            case "GET":
-                method = new GetMethod(requestUrl);
-                break;
-
-            case "POST":
-                method = new PostMethod(requestUrl);
-                if (request.getRequestBody() != null) {
-                    StringRequestEntity requestEntity = new StringRequestEntity(
-                            request.getRequestBody(),
-                            CONTENT_TYPE_APPLICATION_JSON,
-                            CHARSET_UTF8);
-                    ((PostMethod) method).setRequestEntity(requestEntity);
-                }
-                break;
-
-            case "PUT":
-                method = new PutMethod(requestUrl);
-                if (request.getRequestBody() != null) {
-                    StringRequestEntity requestEntity = new StringRequestEntity(
-                            request.getRequestBody(),
-                            CONTENT_TYPE_APPLICATION_JSON,
-                            CHARSET_UTF8);
-                    ((PutMethod) method).setRequestEntity(requestEntity);
-                }
-                break;
-
-            case "DELETE":
-                method = new DeleteMethod(requestUrl);
-                break;
-
-            default:
-                throw new UnsupportedOperationException(EXCEPTION_UNSUPPORTED_METHOD);
-
-        }
+        HttpMethodBase method = buildMethod(request, client.getBaseUri(), requestBodyInputStream);
 
         method.setQueryString(convertMapToNVP(request.getParameter()));
         method.addRequestHeader("OCS-APIREQUEST", "true");
 
-        for(Map.Entry<String, List<String>> header : request.getHeader().entrySet()) {
+        for (Map.Entry<String, List<String>> header : request.getHeader().entrySet()) {
             // https://stackoverflow.com/a/3097052
             method.addRequestHeader(header.getKey(), TextUtils.join(",", header.getValue()));
+
+            if ("OCS-APIREQUEST".equalsIgnoreCase(header.getKey())) {
+                throw new IllegalStateException(
+                    "The 'OCS-APIREQUEST' header will be automatically added by the Nextcloud SSO Library. " +
+                        "Please remove the header before making a request");
+            }
         }
 
         client.setFollowRedirects(request.isFollowRedirects());
@@ -235,7 +308,8 @@ public class InputStreamBinder extends IInputStreamService.Stub {
                 Log_OC.e(TAG, total.toString());
             }
             throw new IllegalStateException(EXCEPTION_HTTP_REQUEST_FAILED,
-                new IllegalStateException(String.valueOf(status), new Throwable(total.toString())));
+                                            new IllegalStateException(String.valueOf(status),
+                                                                      new Throwable(total.toString())));
         }
     }
 
@@ -243,8 +317,8 @@ public class InputStreamBinder extends IInputStreamService.Stub {
         String callingPackageName = context.getPackageManager().getNameForUid(Binder.getCallingUid());
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(SSO_SHARED_PREFERENCE,
-                Context.MODE_PRIVATE);
-        String hash = sharedPreferences.getString(callingPackageName, "");
+                                                                           Context.MODE_PRIVATE);
+        String hash = sharedPreferences.getString(callingPackageName + DELIMITER + request.getAccountName(), "");
         return validateToken(hash, request.getToken());
     }
 

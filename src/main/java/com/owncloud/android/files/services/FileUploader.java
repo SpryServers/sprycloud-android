@@ -5,9 +5,11 @@
  *  @author masensio
  *  @author LukeOwnCloud
  *  @author David A. Velasco
+ *  @author Chris Narkiewicz
  *
  *  Copyright (C) 2012 Bartek Przybylski
  *  Copyright (C) 2012-2016 ownCloud Inc.
+ *  Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2,
@@ -46,6 +48,7 @@ import android.util.Pair;
 
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.Device;
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
@@ -74,6 +77,8 @@ import com.owncloud.android.utils.ErrorMessageAdapter;
 import com.owncloud.android.utils.PowerUtils;
 import com.owncloud.android.utils.ThemeUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.util.AbstractList;
 import java.util.HashMap;
@@ -82,8 +87,11 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import dagger.android.AndroidInjection;
 
 /**
  * Service for uploading files. Invoke using context.startService(...).
@@ -120,6 +128,9 @@ public class FileUploader extends Service
     public static final String KEY_MIME_TYPE = "MIME_TYPE";
 
     private Notification mNotification;
+
+    @Inject
+    protected UserAccountManager accountManager;
 
     /**
      * Call this Service with only this Intent key if all pending uploads are to be retried.
@@ -174,7 +185,7 @@ public class FileUploader extends Service
     private Account mCurrentAccount;
     private FileDataStorageManager mStorageManager;
     //since there can be only one instance of an Android service, there also just one db connection.
-    private UploadsStorageManager mUploadsStorageManager;
+    @Inject UploadsStorageManager mUploadsStorageManager;
 
     private IndexedForest<UploadFileOperation> mPendingUploads = new IndexedForest<>();
 
@@ -386,8 +397,12 @@ public class FileUploader extends Service
          * @param uploadResult      If not null, only failed uploads with the result specified will be retried;
          *                          otherwise, failed uploads due to any result will be retried.
          */
-        public void retryFailedUploads(Context context, Account account, UploadResult uploadResult) {
-            UploadsStorageManager uploadsStorageManager = new UploadsStorageManager(context.getContentResolver(), context);
+        public void retryFailedUploads(
+            @NonNull final Context context,
+            @Nullable Account account,
+            @NotNull final UploadsStorageManager uploadsStorageManager,
+            @Nullable final UploadResult uploadResult
+        ) {
             OCUpload[] failedUploads = uploadsStorageManager.getFailedUploads();
             Account currentAccount = null;
             boolean resultMatch;
@@ -451,6 +466,7 @@ public class FileUploader extends Service
     @Override
     public void onCreate() {
         super.onCreate();
+        AndroidInjection.inject(this);
         Log_OC.d(TAG, "Creating service");
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         HandlerThread thread = new HandlerThread("FileUploaderThread",
@@ -459,8 +475,6 @@ public class FileUploader extends Service
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper, this);
         mBinder = new FileUploaderBinder();
-
-        mUploadsStorageManager = new UploadsStorageManager(getContentResolver(), getApplicationContext());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setContentTitle(
                 getApplicationContext().getResources().getString(R.string.app_name))
@@ -627,6 +641,7 @@ public class FileUploader extends Service
 
 
                     newUpload = new UploadFileOperation(
+                        mUploadsStorageManager,
                             account,
                             file,
                             ocUpload,
@@ -685,6 +700,7 @@ public class FileUploader extends Service
             whileChargingOnly = upload.isWhileChargingOnly();
 
             UploadFileOperation newUpload = new UploadFileOperation(
+                    mUploadsStorageManager,
                     account,
                     null,
                     upload,
@@ -1207,16 +1223,16 @@ public class FileUploader extends Service
 
         mNotificationManager.cancel(R.string.uploader_upload_in_progress_ticker);
 
-        // Show the result: success or fail notification
+        // Only notify if the upload fails
         if (!uploadResult.isCancelled() &&
+            !uploadResult.isSuccess() &&
             !ResultCode.LOCAL_FILE_NOT_FOUND.equals(uploadResult.getCode()) &&
             !uploadResult.getCode().equals(ResultCode.DELAYED_FOR_WIFI) &&
             !uploadResult.getCode().equals(ResultCode.DELAYED_FOR_CHARGING) &&
             !uploadResult.getCode().equals(ResultCode.DELAYED_IN_POWER_SAVE_MODE) &&
             !uploadResult.getCode().equals(ResultCode.LOCK_FAILED)    ) {
 
-            int tickerId = uploadResult.isSuccess() ? R.string.uploader_upload_succeeded_ticker :
-                    R.string.uploader_upload_failed_ticker;
+            int tickerId = R.string.uploader_upload_failed_ticker;
 
             String content;
 
@@ -1255,10 +1271,6 @@ public class FileUploader extends Service
                 ));
 
             } else {
-                mNotificationBuilder.setContentText(content);
-            }
-
-            if (!uploadResult.isSuccess() && !needsToUpdateCredentials ) {
                 //in case of failure, do not show details file view (because there is no file!)
                 Intent showUploadListIntent = new Intent(this, UploadListActivity.class);
                 showUploadListIntent.putExtra(FileActivity.EXTRA_FILE, upload.getFile());
@@ -1270,15 +1282,6 @@ public class FileUploader extends Service
 
             mNotificationBuilder.setContentText(content);
             mNotificationManager.notify(tickerId, mNotificationBuilder.build());
-
-            if (uploadResult.isSuccess()) {
-                mPendingUploads.remove(upload.getAccount().name, upload.getFile().getRemotePath());
-                // remove success notification, with a delay of 2 seconds
-                NotificationUtils.cancelWithDelay(
-                        mNotificationManager,
-                        R.string.uploader_upload_succeeded_ticker,
-                        2000);
-            }
         }
     }
 

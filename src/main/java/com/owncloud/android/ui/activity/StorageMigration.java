@@ -22,7 +22,6 @@ package com.owncloud.android.ui.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -38,6 +37,8 @@ import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.utils.FileStorageUtils;
 
 import java.io.File;
+
+import androidx.appcompat.app.AlertDialog;
 
 /**
  * @author Bartosz Przybylski
@@ -323,6 +324,11 @@ public class StorageMigration {
                 this.mResId = resId;
             }
 
+            MigrationException(int resId, Throwable t) {
+                super(t);
+                this.mResId = resId;
+            }
+
             private int getResId() { return mResId; }
         }
 
@@ -432,7 +438,7 @@ public class StorageMigration {
                 manager.migrateStoredFiles(mStorageSource, mStorageTarget);
             } catch (Exception e) {
                 Log_OC.e(TAG,e.getMessage(),e);
-                throw new MigrationException(R.string.file_migration_failed_while_updating_index);
+                throw new MigrationException(R.string.file_migration_failed_while_updating_index, e);
             }
         }
 

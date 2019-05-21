@@ -1,9 +1,11 @@
-/**
+/*
  *   ownCloud Android client application
  *
  *   @author David A. Velasco
+ *   @author Chris Narkiewicz
  *   Copyright (C) 2011  Bartek Przybylski
  *   Copyright (C) 2016 ownCloud Inc.
+ *   Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -37,6 +39,7 @@ import android.os.IBinder;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AuthenticatorActivity;
@@ -68,13 +71,18 @@ import com.owncloud.android.services.OperationsService.OperationsServiceBinder;
 import com.owncloud.android.ui.asynctasks.LoadingVersionNumberTask;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment;
 import com.owncloud.android.ui.dialog.LoadingDialog;
+import com.owncloud.android.ui.dialog.ShareLinkToDialog;
 import com.owncloud.android.ui.dialog.SslUntrustedCertDialog;
 import com.owncloud.android.ui.helpers.FileOperationsHelper;
+import com.owncloud.android.utils.ClipboardUtil;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.ErrorMessageAdapter;
 import com.owncloud.android.utils.FilesSyncHelper;
 import com.owncloud.android.utils.ThemeUtils;
 
+import javax.inject.Inject;
+
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -132,7 +140,8 @@ public abstract class FileActivity extends DrawerActivity
     private ServiceConnection mDownloadServiceConnection;
     private ServiceConnection mUploadServiceConnection;
 
-
+    @Inject
+    protected UserAccountManager accountManager;
 
     @Override
     public void showFiles(boolean onDeviceOnly) {
@@ -151,9 +160,10 @@ public abstract class FileActivity extends DrawerActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
-        mFileOperationsHelper = new FileOperationsHelper(this);
+        mFileOperationsHelper = new FileOperationsHelper(this, getUserAccountManager());
         Account account = null;
-        if(savedInstanceState != null) {
+
+        if (savedInstanceState != null) {
             mFile = savedInstanceState.getParcelable(FileActivity.EXTRA_FILE);
             mFromNotification = savedInstanceState.getBoolean(FileActivity.EXTRA_FROM_NOTIFICATION);
             mFileOperationsHelper.setOpIdWaitingFor(
@@ -560,7 +570,7 @@ public abstract class FileActivity extends DrawerActivity
         fetchExternalLinks(false);
     }
 
-    protected OCFile getCurrentDir() {
+    public OCFile getCurrentDir() {
         OCFile file = getFile();
         if (file != null) {
             if (file.isFolder()) {
@@ -586,11 +596,6 @@ public abstract class FileActivity extends DrawerActivity
             R.string.ssl_validator_not_saved, new String[]{}, 0, R.string.common_ok, -1, -1
         );
         dialog.show(getSupportFragmentManager(), DIALOG_CERT_NOT_SAVED);
-    }
-
-    @Override
-    public void onCancelCertificate() {
-        // nothing to do
     }
 
     public void checkForNewDevVersionNecessary(View view, Context context) {
@@ -645,5 +650,50 @@ public abstract class FileActivity extends DrawerActivity
         } else {
             DisplayUtils.showSnackMessage(activity, R.string.dev_version_no_new_version_available, Snackbar.LENGTH_LONG);
         }
+    }
+
+    public static void copyAndShareFileLink(FileActivity activity, String link) {
+        ClipboardUtil.copyToClipboard(activity, link, false);
+        Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), R.string.clipboard_text_copied,
+                                          Snackbar.LENGTH_LONG)
+            .setAction(R.string.share, v -> showShareLinkDialog(activity, link));
+        ThemeUtils.colorSnackbar(activity, snackbar);
+        snackbar.show();
+    }
+
+    public static void showShareLinkDialog(FileActivity activity, String link) {
+        // Create dialog to allow the user choose an app to send the link
+        Intent intentToShareLink = new Intent(Intent.ACTION_SEND);
+
+        intentToShareLink.putExtra(Intent.EXTRA_TEXT, link);
+        intentToShareLink.setType("text/plain");
+
+        String username;
+        try {
+            OwnCloudAccount oca = new OwnCloudAccount(activity.getAccount(), activity);
+            if (oca.getDisplayName() != null && !oca.getDisplayName().isEmpty()) {
+                username = oca.getDisplayName();
+            } else {
+                username = com.owncloud.android.lib.common.accounts.AccountUtils
+                    .getUsernameForAccount(activity.getAccount());
+            }
+        } catch (Exception e) {
+            username = com.owncloud.android.lib.common.accounts.AccountUtils
+                .getUsernameForAccount(activity.getAccount());
+        }
+
+        if (username != null) {
+            intentToShareLink.putExtra(Intent.EXTRA_SUBJECT,
+                                       activity.getString(R.string.subject_user_shared_with_you, username,
+                                                          activity.getFile().getFileName()));
+        } else {
+            intentToShareLink.putExtra(Intent.EXTRA_SUBJECT,
+                                       activity.getString(R.string.subject_shared_with_you,
+                                                          activity.getFile().getFileName()));
+        }
+
+        String[] packagesToExclude = new String[]{activity.getPackageName()};
+        DialogFragment chooserDialog = ShareLinkToDialog.newInstance(intentToShareLink, packagesToExclude);
+        chooserDialog.show(activity.getSupportFragmentManager(), FileDisplayActivity.FTAG_CHOOSER_DIALOG);
     }
 }

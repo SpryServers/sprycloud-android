@@ -31,6 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.ui.activity.FileActivity;
+import com.owncloud.android.ui.activity.RichDocumentsWebView;
 import com.owncloud.android.utils.ThemeUtils;
 
 import butterknife.BindView;
@@ -47,7 +48,8 @@ public class OCFileListBottomSheetDialog extends BottomSheetDialog {
 
     @BindView(R.id.menu_icon_upload_from_app)
     public ImageView iconUploadFromApp;
-
+    @BindView(R.id.menu_icon_direct_camera_upload)
+    public ImageView iconDirectCameraUpload;
     @BindView(R.id.menu_icon_mkdir)
     public ImageView iconMakeDir;
 
@@ -82,13 +84,16 @@ public class OCFileListBottomSheetDialog extends BottomSheetDialog {
         int primaryColor = ThemeUtils.primaryColor(getContext(), true);
         ThemeUtils.tintDrawable(iconUploadFiles.getDrawable(), primaryColor);
         ThemeUtils.tintDrawable(iconUploadFromApp.getDrawable(), primaryColor);
+        ThemeUtils.tintDrawable(iconDirectCameraUpload.getDrawable(), primaryColor);
         ThemeUtils.tintDrawable(iconMakeDir.getDrawable(), primaryColor);
 
         headline.setText(getContext().getResources().getString(R.string.add_to_cloud,
                 ThemeUtils.getDefaultDisplayNameForRootFolder(getContext())));
 
         OCCapability capability = fileActivity.getCapabilities();
-        if (capability.getRichDocuments().isTrue() && capability.getRichDocumentsDirectEditing().isTrue()) {
+        if (capability.getRichDocuments().isTrue() && capability.getRichDocumentsDirectEditing().isTrue() &&
+            android.os.Build.VERSION.SDK_INT >= RichDocumentsWebView.MINIMUM_API &&
+            capability.getRichDocumentsTemplatesAvailable().isTrue()) {
             templates.setVisibility(View.VISIBLE);
         }
 
@@ -106,6 +111,12 @@ public class OCFileListBottomSheetDialog extends BottomSheetDialog {
     @OnClick(R.id.menu_upload_from_app)
     public void uploadFromApp() {
         actions.uploadFromApp();
+        dismiss();
+    }
+
+    @OnClick(R.id.menu_direct_camera_upload)
+    public void directCameraUpload() {
+        actions.directCameraUpload();
         dismiss();
     }
 

@@ -23,11 +23,10 @@
 package com.owncloud.android.ui.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,15 +38,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
+import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.utils.ThemeUtils;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-public class    PassCodeActivity extends AppCompatActivity {
+public class PassCodeActivity extends AppCompatActivity implements Injectable {
 
     private static final String TAG = PassCodeActivity.class.getSimpleName();
 
@@ -64,6 +68,7 @@ public class    PassCodeActivity extends AppCompatActivity {
     public final static String PREFERENCE_PASSCODE_D3 = "PrefPinCode3";
     public final static String PREFERENCE_PASSCODE_D4 = "PrefPinCode4";
 
+    @Inject AppPreferences preferences;
     private Button mBCancel;
     private TextView mPassCodeHdr;
     private TextView mPassCodeHdrExplanation;
@@ -99,16 +104,20 @@ public class    PassCodeActivity extends AppCompatActivity {
 
         mPassCodeEditTexts[0] = findViewById(R.id.txt0);
         ThemeUtils.colorEditText(mPassCodeEditTexts[0], elementColor);
+        ThemeUtils.themeEditText(this, mPassCodeEditTexts[0], false);
         mPassCodeEditTexts[0].requestFocus();
 
         mPassCodeEditTexts[1] = findViewById(R.id.txt1);
         ThemeUtils.colorEditText(mPassCodeEditTexts[1], elementColor);
+        ThemeUtils.themeEditText(this, mPassCodeEditTexts[1], false);
 
         mPassCodeEditTexts[2] = findViewById(R.id.txt2);
         ThemeUtils.colorEditText(mPassCodeEditTexts[2], elementColor);
+        ThemeUtils.themeEditText(this, mPassCodeEditTexts[2], false);
 
         mPassCodeEditTexts[3] = findViewById(R.id.txt3);
         ThemeUtils.colorEditText(mPassCodeEditTexts[3], elementColor);
+        ThemeUtils.themeEditText(this, mPassCodeEditTexts[3], false);
 
         Window window = getWindow();
         if (window != null) {
@@ -127,10 +136,10 @@ public class    PassCodeActivity extends AppCompatActivity {
                 mPassCodeDigits = savedInstanceState.getStringArray(PassCodeActivity.KEY_PASSCODE_DIGITS);
             }
             if(mConfirmingPassCode){
-                //the app was in the passcodeconfirmation
+                // the app was in the passcodeconfirmation
                 requestPassCodeConfirmation();
             }else{
-                /// pass code preference has just been activated in Preferences;
+                // pass code preference has just been activated in SettingsActivity;
                 // will receive and confirm pass code value
                 mPassCodeHdr.setText(R.string.pass_code_configure_your_pass_code);
 
@@ -139,7 +148,7 @@ public class    PassCodeActivity extends AppCompatActivity {
             }
 
         } else if (ACTION_CHECK_WITH_RESULT.equals(getIntent().getAction())) {
-            /// pass code preference has just been disabled in Preferences;
+            // pass code preference has just been disabled in SettingsActivity;
             // will confirm user knows pass code, then remove it
             mPassCodeHdr.setText(R.string.pass_code_remove_your_pass_code);
             mPassCodeHdrExplanation.setVisibility(View.INVISIBLE);
@@ -197,7 +206,7 @@ public class    PassCodeActivity extends AppCompatActivity {
 
     private void onPassCodeEditTextFocusChange(final int passCodeIndex) {
         for (int i = 0; i < passCodeIndex; i++) {
-            if (mPassCodeEditTexts[i].getText().toString().equals("")) {
+            if (TextUtils.isEmpty(mPassCodeEditTexts[i].getText())) {
                 mPassCodeEditTexts[i].requestFocus();
                 break;
             }
@@ -231,6 +240,7 @@ public class    PassCodeActivity extends AppCompatActivity {
         if (ACTION_CHECK.equals(getIntent().getAction())) {
             if (checkPassCode()) {
                 /// pass code accepted in request, user is allowed to access the app
+                AppPreferencesImpl.fromContext(this).setLockTimestamp(System.currentTimeMillis());
                 hideSoftKeyboard();
                 finish();
 
@@ -240,6 +250,7 @@ public class    PassCodeActivity extends AppCompatActivity {
 
         } else if (ACTION_CHECK_WITH_RESULT.equals(getIntent().getAction())) {
             if (checkPassCode()) {
+                AppPreferencesImpl.fromContext(this).setLockTimestamp(System.currentTimeMillis());
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(KEY_CHECK_RESULT, true);
                 setResult(RESULT_OK, resultIntent);
@@ -304,15 +315,10 @@ public class    PassCodeActivity extends AppCompatActivity {
      *
      * @return     'True' if entered pass code equals to the saved one.
      */
-    protected boolean checkPassCode(){
-        SharedPreferences appPrefs = PreferenceManager
-            .getDefaultSharedPreferences(getApplicationContext());
+    protected boolean checkPassCode() {
 
-        String savedPassCodeDigits[] = new String[4];
-        savedPassCodeDigits[0] = appPrefs.getString(PREFERENCE_PASSCODE_D1, null);
-        savedPassCodeDigits[1] = appPrefs.getString(PREFERENCE_PASSCODE_D2, null);
-        savedPassCodeDigits[2] = appPrefs.getString(PREFERENCE_PASSCODE_D3, null);
-        savedPassCodeDigits[3] = appPrefs.getString(PREFERENCE_PASSCODE_D4, null);
+
+        String savedPassCodeDigits[] = preferences.getPassCode();
 
         boolean result = true;
         for (int i = 0; i < mPassCodeDigits.length && result; i++) {

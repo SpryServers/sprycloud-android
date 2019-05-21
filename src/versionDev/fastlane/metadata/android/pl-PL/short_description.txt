@@ -1,2 +1,2 @@
 
-Wersja spryCloud Dev jest wersją rozwojową, można ją zainstalować równolegle.
+Aplikacja Nextcloud Dev jest wersją developerską i można ją zainstalować równol

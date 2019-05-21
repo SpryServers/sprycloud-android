@@ -3,7 +3,9 @@
  *
  *   @author Tobias Kaminsky
  *   @author David A. Velasco
+ *   @author Chris Narkiewicz
  *   Copyright (C) 2015 ownCloud Inc.
+ *   Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -64,6 +66,7 @@ import com.owncloud.android.utils.MimeTypeUtil;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,7 +75,6 @@ import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.List;
 
-import androidx.annotation.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -115,19 +117,29 @@ public final class ThumbnailsCacheManager {
 
                 if (mThumbnailCache == null) {
                     try {
-                        // Check if media is mounted or storage is built-in, if so,
-                        // try and use external cache dir; otherwise use internal cache dir
-                        File cacheDir = MainApp.getAppContext().getExternalCacheDir();
+                        File cacheDir = MainApp.getAppContext().getCacheDir();
 
-                        if (cacheDir != null) {
-                            String cachePath = cacheDir.getPath() + File.separator + CACHE_FOLDER;
-                            Log_OC.d(TAG, "create dir: " + cachePath);
-                            File diskCacheDir = new File(cachePath);
-                            mThumbnailCache = new DiskLruImageCache(diskCacheDir, DISK_CACHE_SIZE, mCompressFormat,
-                                    mCompressQuality);
-                        } else {
+                        if (cacheDir == null) {
                             throw new FileNotFoundException("Thumbnail cache could not be opened");
                         }
+
+                        String cachePath = cacheDir.getPath() + File.separator + CACHE_FOLDER;
+                        Log_OC.d(TAG, "thumbnail cache dir: " + cachePath);
+                        File diskCacheDir = new File(cachePath);
+
+                        // migrate from external cache to internal cache
+                        File oldCacheDir = MainApp.getAppContext().getExternalCacheDir();
+
+                        if (oldCacheDir != null && oldCacheDir.exists()) {
+                            String cacheOldPath = oldCacheDir.getPath() + File.separator + CACHE_FOLDER;
+                            File diskOldCacheDir = new File(cacheOldPath);
+
+                            FileStorageUtils.copyDirs(diskOldCacheDir, diskCacheDir);
+                            FileStorageUtils.deleteRecursive(diskOldCacheDir);
+                        }
+
+                        mThumbnailCache = new DiskLruImageCache(diskCacheDir, DISK_CACHE_SIZE, mCompressFormat,
+                                                                mCompressQuality);
                     } catch (Exception e) {
                         Log_OC.d(TAG, e.getMessage());
                         mThumbnailCache = null;
@@ -191,6 +203,10 @@ public final class ThumbnailsCacheManager {
                 mThumbnailCache.put(key, bitmap);
             }
         }
+    }
+
+    public static boolean containsBitmap(String key) {
+        return mThumbnailCache.containsKey(key);
     }
 
     public static Bitmap getBitmapFromDiskCache(String key) {
@@ -259,7 +275,7 @@ public final class ThumbnailsCacheManager {
         private Bitmap doResizedImageInBackground() {
             Bitmap thumbnail;
 
-            String imageKey = PREFIX_RESIZED_IMAGE + String.valueOf(file.getRemoteId());
+            String imageKey = PREFIX_RESIZED_IMAGE + file.getRemoteId();
 
             // Check disk cache in background thread
             thumbnail = getBitmapFromDiskCache(imageKey);
@@ -275,7 +291,7 @@ public final class ThumbnailsCacheManager {
 
                     if (bitmap != null) {
                         // Handle PNG
-                        if (file.getMimeType().equalsIgnoreCase(PNG_MIMETYPE)) {
+                        if (PNG_MIMETYPE.equalsIgnoreCase(file.getMimeType())) {
                             bitmap = handlePNG(bitmap, pxW, pxH);
                         }
 
@@ -304,7 +320,7 @@ public final class ThumbnailsCacheManager {
                             }
 
                                 // Handle PNG
-                                if (thumbnail != null && file.getMimeType().equalsIgnoreCase(PNG_MIMETYPE)) {
+                                if (thumbnail != null && PNG_MIMETYPE.equalsIgnoreCase(file.getMimeType())) {
                                     thumbnail = handlePNG(thumbnail, thumbnail.getWidth(), thumbnail.getHeight());
                                 }
 
@@ -498,7 +514,7 @@ public final class ThumbnailsCacheManager {
         private Bitmap doThumbnailFromOCFileInBackground() {
             Bitmap thumbnail;
             ServerFileInterface file = (ServerFileInterface) mFile;
-            String imageKey = PREFIX_THUMBNAIL + String.valueOf(file.getRemoteId());
+            String imageKey = PREFIX_THUMBNAIL + file.getRemoteId();
 
             // Check disk cache in background thread
             thumbnail = getBitmapFromDiskCache(imageKey);
@@ -522,7 +538,7 @@ public final class ThumbnailsCacheManager {
 
                         if (bitmap != null) {
                             // Handle PNG
-                            if (ocFile.getMimeType().equalsIgnoreCase(PNG_MIMETYPE)) {
+                            if (PNG_MIMETYPE.equalsIgnoreCase(ocFile.getMimeType())) {
                                 bitmap = handlePNG(bitmap, pxW, pxH);
                             }
 
@@ -536,7 +552,7 @@ public final class ThumbnailsCacheManager {
 
                 if (thumbnail == null) {
                     // check if resized version is available
-                    String resizedImageKey = PREFIX_RESIZED_IMAGE + String.valueOf(file.getRemoteId());
+                    String resizedImageKey = PREFIX_RESIZED_IMAGE + file.getRemoteId();
                     Bitmap resizedImage = getBitmapFromDiskCache(resizedImageKey);
 
                     if (resizedImage != null) {
@@ -574,7 +590,7 @@ public final class ThumbnailsCacheManager {
                                 }
 
                                 // Handle PNG
-                                if (file.getMimeType().equalsIgnoreCase(PNG_MIMETYPE)) {
+                                if (PNG_MIMETYPE.equalsIgnoreCase(file.getMimeType())) {
                                     thumbnail = handlePNG(thumbnail, pxW, pxH);
                                 }
                             } catch (Exception e) {
@@ -650,7 +666,7 @@ public final class ThumbnailsCacheManager {
         private enum Type {IMAGE, VIDEO}
         private final WeakReference<ImageView> mImageViewReference;
         private File mFile;
-        private String mImageKey = null;
+        private String mImageKey;
         private Context mContext;
 
         public MediaThumbnailGenerationTask(ImageView imageView, Context context) {
@@ -825,10 +841,11 @@ public final class ThumbnailsCacheManager {
         protected void onPostExecute(Drawable drawable) {
             if (drawable != null) {
                 AvatarGenerationListener listener = mAvatarGenerationListener.get();
-                AvatarGenerationTask avatarWorkerTask = getAvatarWorkerTask(mCallContext);
-
-                if (this == avatarWorkerTask && listener.shouldCallGeneratedCallback(mUserId, mCallContext)) {
-                    listener.avatarGenerated(drawable, mCallContext);
+                if (listener != null) {
+                    AvatarGenerationTask avatarWorkerTask = getAvatarWorkerTask(mCallContext);
+                    if (this == avatarWorkerTask && listener.shouldCallGeneratedCallback(mUserId, mCallContext)) {
+                        listener.avatarGenerated(drawable, mCallContext);
+                    }
                 }
             }
         }
@@ -844,7 +861,7 @@ public final class ThumbnailsCacheManager {
             return Math.round(r.getDimension(R.dimen.file_avatar_size));
         }
 
-        private @Nullable
+        private @NotNull
         Drawable doAvatarInBackground() {
             Bitmap avatar = null;
 
@@ -895,7 +912,7 @@ public final class ThumbnailsCacheManager {
                                 String newImageKey = "a_" + mUserId + "_" + mServerName + "_" + newETag;
                                 addBitmapToCache(newImageKey, avatar);
                             } else {
-                                return TextDrawable.createAvatar(mAccount.name, mAvatarRadius);
+                                return TextDrawable.createAvatar(mAccount, mAvatarRadius);
                             }
                             break;
 
@@ -909,11 +926,10 @@ public final class ThumbnailsCacheManager {
                             // everything else
                             mClient.exhaustResponse(get.getResponseBodyAsStream());
                             break;
-
                     }
                 } catch (Exception e) {
                     try {
-                        return TextDrawable.createAvatar(mAccount.name, mAvatarRadius);
+                        return TextDrawable.createAvatar(mAccount, mAvatarRadius);
                     } catch (Exception e1) {
                         Log_OC.e(TAG, "Error generating fallback avatar");
                     }
@@ -922,15 +938,17 @@ public final class ThumbnailsCacheManager {
                         get.releaseConnection();
                     }
                 }
-
-                try {
-                    return TextDrawable.createAvatar(mAccount.name, mAvatarRadius);
-                } catch (Exception e) {
-                    Log_OC.e(TAG, "Error generating fallback avatar");
-                }
             }
 
-            return BitmapUtils.bitmapToCircularBitmapDrawable(mResources, avatar);
+            if (avatar == null) {
+                try {
+                    return TextDrawable.createAvatar(mAccount, mAvatarRadius);
+                } catch (Exception e1) {
+                    return mResources.getDrawable(R.drawable.ic_user);
+                }
+            } else {
+                return BitmapUtils.bitmapToCircularBitmapDrawable(mResources, avatar);
+            }
         }
     }
 
@@ -1153,17 +1171,66 @@ public final class ThumbnailsCacheManager {
         Point p = getScreenDimension();
         int pxW = p.x;
         int pxH = p.y;
-        String imageKey = PREFIX_RESIZED_IMAGE + String.valueOf(file.getRemoteId());
+        String imageKey = PREFIX_RESIZED_IMAGE + file.getRemoteId();
 
         Bitmap bitmap = BitmapUtils.decodeSampledBitmapFromFile(file.getStoragePath(), pxW, pxH);
 
         if (bitmap != null) {
             // Handle PNG
-            if (file.getMimeType().equalsIgnoreCase(PNG_MIMETYPE)) {
+            if (PNG_MIMETYPE.equalsIgnoreCase(file.getMimeType())) {
                 bitmap = handlePNG(bitmap, pxW, pxH);
             }
 
             addThumbnailToCache(imageKey, bitmap, file.getStoragePath(), pxW, pxH);
+        }
+    }
+
+    public static void generateThumbnailFromOCFile(OCFile file) {
+        int pxW;
+        int pxH;
+        pxW = pxH = getThumbnailDimension();
+        String imageKey = PREFIX_THUMBNAIL + file.getRemoteId();
+
+        GetMethod getMethod = null;
+
+        try {
+            Bitmap thumbnail = null;
+
+            String uri = mClient.getBaseUri() + "/index.php/apps/files/api/v1/thumbnail/" +
+                pxW + "/" + pxH + Uri.encode(file.getRemotePath(), "/");
+
+            Log_OC.d(TAG, "generate thumbnail: " + file.getFileName() + " URI: " + uri);
+            getMethod = new GetMethod(uri);
+            getMethod.setRequestHeader("Cookie", "nc_sameSiteCookielax=true;nc_sameSiteCookiestrict=true");
+
+            getMethod.setRequestHeader(RemoteOperation.OCS_API_HEADER,
+                                       RemoteOperation.OCS_API_HEADER_VALUE);
+
+            int status = mClient.executeMethod(getMethod);
+            if (status == HttpStatus.SC_OK) {
+                InputStream inputStream = getMethod.getResponseBodyAsStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                thumbnail = ThumbnailUtils.extractThumbnail(bitmap, pxW, pxH);
+            } else {
+                mClient.exhaustResponse(getMethod.getResponseBodyAsStream());
+            }
+
+            // Add thumbnail to cache
+            if (thumbnail != null) {
+                // Handle PNG
+                if (PNG_MIMETYPE.equalsIgnoreCase(file.getMimeType())) {
+                    thumbnail = handlePNG(thumbnail, pxW, pxH);
+                }
+
+                Log_OC.d(TAG, "add thumbnail to cache: " + file.getFileName());
+                addBitmapToCache(imageKey, thumbnail);
+            }
+        } catch (Exception e) {
+            Log_OC.d(TAG, e.getMessage(), e);
+        } finally {
+            if (getMethod != null) {
+                getMethod.releaseConnection();
+            }
         }
     }
 }

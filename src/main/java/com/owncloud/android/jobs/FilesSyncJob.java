@@ -2,8 +2,10 @@
  * Nextcloud Android client application
  *
  * @author Mario Danic
+ * @author Chris Narkiewicz
  * Copyright (C) 2017 Mario Danic
  * Copyright (C) 2017 Nextcloud
+ * Copyright (C) 2919 Chris Narkiewicz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -31,6 +33,8 @@ import android.text.TextUtils;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
@@ -39,10 +43,11 @@ import com.owncloud.android.datamodel.FilesystemDataProvider;
 import com.owncloud.android.datamodel.MediaFolderType;
 import com.owncloud.android.datamodel.SyncedFolder;
 import com.owncloud.android.datamodel.SyncedFolderProvider;
+import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.files.services.FileUploader;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.operations.UploadFileOperation;
-import com.owncloud.android.ui.activity.Preferences;
+import com.owncloud.android.ui.activity.SettingsActivity;
 import com.owncloud.android.utils.FileStorageUtils;
 import com.owncloud.android.utils.FilesSyncHelper;
 import com.owncloud.android.utils.MimeType;
@@ -59,6 +64,8 @@ import java.util.TimeZone;
 import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+
 /*
     Job that:
         - restarts existing jobs if required
@@ -70,6 +77,20 @@ public class FilesSyncJob extends Job {
     public static final String SKIP_CUSTOM = "skipCustom";
     public static final String OVERRIDE_POWER_SAVING = "overridePowerSaving";
     private static final String WAKELOCK_TAG_SEPARATION = ":";
+
+    private UserAccountManager userAccountManager;
+    private AppPreferences preferences;
+    private UploadsStorageManager uploadsStorageManager;
+
+    public FilesSyncJob(
+        final UserAccountManager userAccountManager,
+        final AppPreferences preferences,
+        final UploadsStorageManager uploadsStorageManager
+    ) {
+        this.userAccountManager = userAccountManager;
+        this.preferences = preferences;
+        this.uploadsStorageManager = uploadsStorageManager;
+    }
 
     @NonNull
     @Override
@@ -97,13 +118,14 @@ public class FilesSyncJob extends Job {
         boolean lightVersion = resources.getBoolean(R.bool.syncedFolder_light);
 
         final boolean skipCustom = bundle.getBoolean(SKIP_CUSTOM, false);
-        FilesSyncHelper.restartJobsIfNeeded();
-        FilesSyncHelper.insertAllDBEntries(skipCustom);
+        FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, userAccountManager);
+        FilesSyncHelper.insertAllDBEntries(preferences, skipCustom);
 
         // Create all the providers we'll need
         final ContentResolver contentResolver = context.getContentResolver();
         final FilesystemDataProvider filesystemDataProvider = new FilesystemDataProvider(contentResolver);
-        SyncedFolderProvider syncedFolderProvider = new SyncedFolderProvider(contentResolver);
+        SyncedFolderProvider syncedFolderProvider = new SyncedFolderProvider(contentResolver,
+                                                                             preferences);
 
         Locale currentLocale = context.getResources().getConfiguration().locale;
         SimpleDateFormat sFormatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", currentLocale);
@@ -152,7 +174,7 @@ public class FilesSyncJob extends Job {
             if (lightVersion) {
                 needsCharging = resources.getBoolean(R.bool.syncedFolder_light_on_charging);
                 needsWifi = account == null || arbitraryDataProvider.getBooleanValue(account.name,
-                        Preferences.SYNCED_FOLDER_LIGHT_UPLOAD_ON_WIFI);
+                                                                                     SettingsActivity.SYNCED_FOLDER_LIGHT_UPLOAD_ON_WIFI);
                 String uploadActionString = resources.getString(R.string.syncedFolder_light_upload_behaviour);
                 uploadAction = getUploadAction(uploadActionString);
 
@@ -170,7 +192,7 @@ public class FilesSyncJob extends Job {
             if (!subfolderByDate) {
                 String adaptedPath = file.getAbsolutePath()
                         .replace(syncedFolder.getLocalPath(), "")
-                        .replace("/" + file.getName(), "");
+                        .replace(PATH_SEPARATOR + file.getName(), "");
                 remotePath += adaptedPath;
             }
 

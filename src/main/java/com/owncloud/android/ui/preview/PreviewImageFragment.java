@@ -145,7 +145,7 @@ public class PreviewImageFragment extends FileFragment {
     /**
      * Creates an empty fragment for image previews.
      *
-     * MUST BE KEPT: the system uses it when tries to reinstantiate a fragment automatically
+     * MUST BE KEPT: the system uses it when tries to re-instantiate a fragment automatically
      * (for instance, when the device is turned a aside).
      *
      * DO NOT CALL IT: an {@link OCFile} and {@link Account} must be provided for a successful
@@ -159,6 +159,11 @@ public class PreviewImageFragment extends FileFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
+
+        if (args == null) {
+            throw new IllegalArgumentException("Arguments may not be null!");
+        }
+
         setFile(args.getParcelable(ARG_FILE));
         // TODO better in super, but needs to check ALL the class extending FileFragment;
         // not right now
@@ -246,12 +251,12 @@ public class PreviewImageFragment extends FileFragment {
 
                     // generate new resized image
                     if (ThumbnailsCacheManager.cancelPotentialThumbnailWork(getFile(), mImageView) &&
-                            mContainerActivity.getStorageManager() != null) {
+                            containerActivity.getStorageManager() != null) {
                         final ThumbnailsCacheManager.ResizedImageGenerationTask task =
                                 new ThumbnailsCacheManager.ResizedImageGenerationTask(this,
                                         mImageView,
-                                        mContainerActivity.getStorageManager(),
-                                        mContainerActivity.getStorageManager().getAccount());
+                                        containerActivity.getStorageManager(),
+                                        containerActivity.getStorageManager().getAccount());
                         if (resizedImage == null) {
                             resizedImage = thumbnail;
                         }
@@ -266,9 +271,7 @@ public class PreviewImageFragment extends FileFragment {
                     }
                 }
                 mMultiView.setVisibility(View.GONE);
-                if (getResources() != null) {
-                    mImageView.setBackgroundColor(getResources().getColor(R.color.black));
-                }
+                mImageView.setBackgroundColor(getResources().getColor(R.color.black));
                 mImageView.setVisibility(View.VISIBLE);
 
             } else {
@@ -306,14 +309,14 @@ public class PreviewImageFragment extends FileFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        if (mContainerActivity.getStorageManager() != null && getFile() != null) {
+        if (containerActivity.getStorageManager() != null && getFile() != null) {
             // Update the file
-            setFile(mContainerActivity.getStorageManager().getFileById(getFile().getFileId()));
+            setFile(containerActivity.getStorageManager().getFileById(getFile().getFileId()));
 
             FileMenuFilter mf = new FileMenuFilter(
                     getFile(),
-                    mContainerActivity.getStorageManager().getAccount(),
-                    mContainerActivity,
+                    containerActivity.getStorageManager().getAccount(),
+                containerActivity,
                     getActivity(),
                     false
             );
@@ -353,7 +356,7 @@ public class PreviewImageFragment extends FileFragment {
                     )
                             .show();
                 } else {
-                    mContainerActivity.getFileOperationsHelper().sendShareFile(getFile());
+                    containerActivity.getFileOperationsHelper().sendShareFile(getFile());
                 }
                 return true;
 
@@ -372,11 +375,11 @@ public class PreviewImageFragment extends FileFragment {
 
             case R.id.action_download_file:
             case R.id.action_sync_file:
-                mContainerActivity.getFileOperationsHelper().syncFile(getFile());
+                containerActivity.getFileOperationsHelper().syncFile(getFile());
                 return true;
 
             case R.id.action_set_as_wallpaper:
-                mContainerActivity.getFileOperationsHelper().setPictureAs(getFile(), getImageView());
+                containerActivity.getFileOperationsHelper().setPictureAs(getFile(), getImageView());
                 return true;
 
             default:
@@ -386,7 +389,7 @@ public class PreviewImageFragment extends FileFragment {
 
 
     private void seeDetails() {
-        mContainerActivity.showDetails(getFile());
+        containerActivity.showDetails(getFile());
     }
 
     @SuppressFBWarnings("Dm")
@@ -406,7 +409,7 @@ public class PreviewImageFragment extends FileFragment {
      * Opens the previewed image with an external application.
      */
     private void openFile() {
-        mContainerActivity.getFileOperationsHelper().openFile(getFile());
+        containerActivity.getFileOperationsHelper().openFile(getFile());
         finish();
     }
 
@@ -713,7 +716,11 @@ public class PreviewImageFragment extends FileFragment {
     }
 
     private void togglePreviewImageFullScreen() {
-        ((PreviewImageActivity) getActivity()).toggleFullScreen();
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            ((PreviewImageActivity) activity).toggleFullScreen();
+        }
         toggleImageBackground();
     }
 
@@ -721,7 +728,7 @@ public class PreviewImageFragment extends FileFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getFile() != null
                 && (MIME_TYPE_PNG.equalsIgnoreCase(getFile().getMimeType()) ||
                 MIME_TYPE_SVG.equalsIgnoreCase(getFile().getMimeType())) && getActivity() != null
-                && getActivity() instanceof PreviewImageActivity && getResources() != null) {
+            && getActivity() instanceof PreviewImageActivity) {
             PreviewImageActivity previewImageActivity = (PreviewImageActivity) getActivity();
 
             if (mImageView.getDrawable() instanceof LayerDrawable) {

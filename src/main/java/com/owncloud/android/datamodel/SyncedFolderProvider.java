@@ -27,7 +27,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.owncloud.android.db.PreferenceManager;
+import com.nextcloud.client.preferences.AppPreferences;
+import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.owncloud.android.db.ProviderMeta;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
@@ -38,6 +39,8 @@ import java.util.Observable;
 
 import androidx.annotation.NonNull;
 
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+
 /**
  * Database provider for handling the persistence aspects of {@link SyncedFolder}s.
  */
@@ -45,17 +48,19 @@ public class SyncedFolderProvider extends Observable {
     static private final String TAG = SyncedFolderProvider.class.getSimpleName();
 
     private ContentResolver mContentResolver;
+    private AppPreferences preferences;
 
     /**
      * constructor.
      *
      * @param contentResolver the ContentResolver to work with.
      */
-    public SyncedFolderProvider(ContentResolver contentResolver) {
+    public SyncedFolderProvider(ContentResolver contentResolver, AppPreferences preferences) {
         if (contentResolver == null) {
             throw new IllegalArgumentException("Cannot create an instance with a NULL contentResolver");
         }
         mContentResolver = contentResolver;
+        this.preferences = preferences;
     }
 
     /**
@@ -248,7 +253,7 @@ public class SyncedFolderProvider extends Observable {
         for (SyncedFolder syncedFolder : syncedFolders) {
             if (!new File(syncedFolder.getLocalPath()).exists()) {
                 String localPath = syncedFolder.getLocalPath();
-                if (localPath.endsWith("/")) {
+                if (localPath.endsWith(PATH_SEPARATOR)) {
                     localPath = localPath.substring(0, localPath.lastIndexOf('/'));
                 }
                 localPath = localPath.substring(0, localPath.lastIndexOf('/'));
@@ -262,26 +267,26 @@ public class SyncedFolderProvider extends Observable {
         }
 
         if (context != null) {
-            PreferenceManager.setAutoUploadPathsUpdate(context, true);
+            AppPreferences preferences = AppPreferencesImpl.fromContext(context);
+            preferences.setAutoUploadPathsUpdateEnabled(true);
         }
     }
 
     /**
      * delete any records of synchronized folders that are not within the given list of ids.
      *
-     * @param context the context.
-     * @param ids     the list of ids to be excluded from deletion.
+     * @param ids          the list of ids to be excluded from deletion.
      * @return number of deleted records.
      */
-    public int deleteSyncedFoldersNotInList(Context context, List<Long> ids) {
+    public int deleteSyncedFoldersNotInList(List<Long> ids) {
         int result = mContentResolver.delete(
                 ProviderMeta.ProviderTableMeta.CONTENT_URI_SYNCED_FOLDERS,
                 ProviderMeta.ProviderTableMeta._ID + " NOT IN (?)",
                 new String[]{String.valueOf(ids)}
         );
 
-        if (result > 0 && context != null) {
-            PreferenceManager.setLegacyClean(context, true);
+        if(result > 0) {
+            preferences.setLegacyClean(true);
         }
 
         return result;

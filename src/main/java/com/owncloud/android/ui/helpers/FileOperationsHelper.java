@@ -5,8 +5,11 @@
  * @author David A. Velasco
  * @author Juan Carlos González Cabrero
  * @author Andy Scherzinger
+ * @author Chris Narkiewicz
+ *
  * Copyright (C) 2015 ownCloud Inc.
  * Copyright (C) 2018 Andy Scherzinger
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -23,7 +26,9 @@
 
 package com.owncloud.android.ui.helpers;
 
+import android.Manifest;
 import android.accounts.Account;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -32,15 +37,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.Device;
+import com.nextcloud.client.account.CurrentAccountProvider;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.files.StreamMediaFileOperation;
@@ -67,6 +75,7 @@ import com.owncloud.android.ui.events.SyncEventFinished;
 import com.owncloud.android.utils.ConnectivityUtils;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.FileStorageUtils;
+import com.owncloud.android.utils.PermissionUtil;
 import com.owncloud.android.utils.UriUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,10 +86,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,11 +114,14 @@ public class FileOperationsHelper {
     private static final String FILE_EXTENSION_DESKTOP = "desktop";
     private static final String FILE_EXTENSION_WEBLOC = "webloc";
     private FileActivity mFileActivity;
+    private CurrentAccountProvider currentAccount;
     /// Identifier of operation in progress which result shouldn't be lost
     private long mWaitingForOpId = Long.MAX_VALUE;
 
-    public FileOperationsHelper(FileActivity fileActivity) {
+    public FileOperationsHelper(FileActivity fileActivity, CurrentAccountProvider currentAccount) {
         mFileActivity = fileActivity;
+        this.currentAccount = currentAccount;
+
     }
 
     @Nullable
@@ -272,7 +287,7 @@ public class FileOperationsHelper {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Account account = AccountUtils.getCurrentOwnCloudAccount(mFileActivity);
+                    Account account = currentAccount.getCurrentAccount();
                     FileDataStorageManager storageManager =
                             new FileDataStorageManager(account, mFileActivity.getContentResolver());
                     // a fresh object is needed; many things could have occurred to the file
@@ -383,9 +398,8 @@ public class FileOperationsHelper {
 
     public void streamMediaFile(OCFile file) {
         mFileActivity.showLoadingDialog(mFileActivity.getString(R.string.wait_a_moment));
-
+        final Account account = currentAccount.getCurrentAccount();
         new Thread(() -> {
-            Account account = AccountUtils.getCurrentOwnCloudAccount(mFileActivity);
             StreamMediaFileOperation sfo = new StreamMediaFileOperation(file.getLocalId());
             RemoteOperationResult result = sfo.execute(account, mFileActivity);
 
@@ -418,7 +432,7 @@ public class FileOperationsHelper {
             Intent service = new Intent(mFileActivity, OperationsService.class);
             service.setAction(OperationsService.ACTION_CREATE_SHARE_VIA_LINK);
             service.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
-            if (password != null && password.length() > 0) {
+            if (!TextUtils.isEmpty(password)) {
                 service.putExtra(OperationsService.EXTRA_SHARE_PASSWORD, password);
             }
             service.putExtra(OperationsService.EXTRA_REMOTE_PATH, file.getRemotePath());
@@ -478,9 +492,8 @@ public class FileOperationsHelper {
      * Helper method to revert to a file version. Starts a request to do it in {@link OperationsService}
      *
      * @param fileVersion The file version to restore
-     * @param userId      userId of current account
      */
-    public void restoreFileVersion(FileVersion fileVersion, String userId) {
+    public void restoreFileVersion(FileVersion fileVersion) {
         if (fileVersion != null) {
             mFileActivity.showLoadingDialog(mFileActivity.getApplicationContext().
                     getString(R.string.wait_a_moment));
@@ -489,7 +502,6 @@ public class FileOperationsHelper {
             service.setAction(OperationsService.ACTION_RESTORE_VERSION);
             service.putExtra(OperationsService.EXTRA_ACCOUNT, mFileActivity.getAccount());
             service.putExtra(OperationsService.EXTRA_FILE_VERSION, fileVersion);
-            service.putExtra(OperationsService.EXTRA_USER_ID, userId);
             mWaitingForOpId = mFileActivity.getOperationsServiceBinder().queueNewOperation(service);
         } else {
             Log_OC.e(TAG, "Trying to restore a NULL FileVersion");
@@ -705,13 +717,7 @@ public class FileOperationsHelper {
         ft.addToBackStack(null);
 
         OCCapability capability = mFileActivity.getStorageManager().getCapability(mFileActivity.getAccount().name);
-        SendShareDialog mSendShareDialog;
-        if (capability != null) {
-            mSendShareDialog = SendShareDialog.newInstance(file, hideNcSharingOptions,
-                    capability.getFilesSharingPublicPasswordEnforced().isTrue());
-        } else {
-            mSendShareDialog = SendShareDialog.newInstance(file, hideNcSharingOptions, false);
-        }
+        SendShareDialog mSendShareDialog = SendShareDialog.newInstance(file, hideNcSharingOptions, capability);
         mSendShareDialog.setFileOperationsHelper(this);
         mSendShareDialog.show(ft, "TAG_SEND_SHARE_DIALOG");
     }
@@ -737,6 +743,7 @@ public class FileOperationsHelper {
                     context.getResources().getString(R.string.image_cache_provider_authority) +
                     file.getRemotePath()));
             sendIntent.putExtra(Intent.ACTION_SEND, true);      // Send Action
+            sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             mFileActivity.startActivity(Intent.createChooser(sendIntent,
                     context.getString(R.string.actionbar_send_file)));
@@ -969,4 +976,50 @@ public class FileOperationsHelper {
 
         mFileActivity.showLoadingDialog(mFileActivity.getString(R.string.wait_checking_credentials));
     }
+
+    public void uploadFromCamera(Activity activity, int requestCode) {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        deleteOldFiles(activity);
+
+        File photoFile = createImageFile(activity);
+
+        Uri photoUri = FileProvider.getUriForFile(activity.getApplicationContext(),
+                                                  activity.getResources().getString(R.string.file_provider_authority), photoFile);
+        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+
+        if (pictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+            if (PermissionUtil.checkSelfPermission(activity, Manifest.permission.CAMERA)) {
+                activity.startActivityForResult(pictureIntent, requestCode);
+            } else {
+                PermissionUtil.requestCameraPermission(activity);
+            }
+        } else {
+            DisplayUtils.showSnackMessage(activity, "No Camera found");
+        }
+    }
+
+    private void deleteOldFiles(Activity activity) {
+        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        if (storageDir != null) {
+            for (File file : storageDir.listFiles()) {
+                if (!file.delete()) {
+                    Log_OC.d(this, "Failed to delete: " + file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    public static File createImageFile(Activity activity) {
+        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        return new File(storageDir + "/directCameraUpload.jpg");
+    }
+
+    public static String getCapturedImageName() {
+        return new SimpleDateFormat("yyyy-MM-dd_HHmmss", Locale.US).format(new Date()) + ".jpg";
+    }
+
+
 }

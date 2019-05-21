@@ -1,19 +1,24 @@
-Die Open Source spryCloud App erlaubt Dir Zugriff auf alle Dateien in Deiner spryCloud.
+Die selbst gehostete Produktivitätsplattform gibt Ihnen die volle Kontrolle.
+
+Funktionen:
+* Einfache, moderne Oberfläche. Angepasst an das Design Ihres Servers
+*
+.
 
 Eigenschaften:
-* Einfache, moderne Oberfläche
-* Lade Deine Dateien auf Deinen spryCloud Server
-* Teile Deine Dateien mit anderen
-* Wichtige Dateien und Verzeichnisse können aktuell gehalten werden
+* Einfache, moderne an Ihr Design angepasste Oberfläche
+* Laden Sie Ihre Dateien auf Ihren Nextcloud Server
+* Teilen Sie Ihre Dateien mit anderen
+* Halten Sie Ihre favorisierten Dateien und Ordner synchron
 * Suche über alle Ordner auf Ihrem Server
-* Automatisches Hochladen von Photos und Videos von Ihrem Gerät
+* Automatisches Hochladen von Fotos und Videos von Ihrem Gerät
 * Bleiben Sie auf dem Laufenden durch Benachrichtigungen
 * Mehrere Konten gleichzeitig
 * Geschützter Zugriff durch Fingerabdruck oder PIN
-* Integration mit DAVdroid für einfaches Konfigurieren von Kalender & Kontakte Synchronisierung
+* Integration mit DAVx5 (ehemals DAVdroid) für einfaches Konfigurieren der Kalender- & Kontakte-Synchronisation
 
 Bitte melden Sie alle Probleme unter https://github.com/nextcloud/android/issues oder diskutieren Sie über die App auf https://help.nextcloud.com/c/clients/android
 
 Was ist die spryCloud? Die spryCloud ist ein privater Dateiaustausch & -synchronisierungs Server. spryCloud ist Open Source und kann auf einem eigenen Server installiert werden. So behältst Du die Kontrolle über Deine Fotos, Deine Kalender und Kontakte, Deine Dokumente und alle anderen Daten.
 
-Schau Dir spryCloud unter https://nextcloud.com an.
+Schauen Sie sich Nextcloud an unter https://nextcloud.com.

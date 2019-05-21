@@ -2,9 +2,12 @@
  * ownCloud Android client application
  *
  * @author Mario Danic
+ * @author Chris Narkiewicz
+ *
  * Copyright (C) 2017 Mario Danic
  * Copyright (C) 2012 Bartek Przybylski
  * Copyright (C) 2012-2016 ownCloud Inc.
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -23,6 +26,7 @@ package com.owncloud.android.ui.fragment;
 
 import android.animation.LayoutTransition;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -51,10 +55,12 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.files.SearchRemoteOperation;
 import com.owncloud.android.ui.EmptyRecyclerView;
@@ -72,6 +78,8 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -83,9 +91,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class ExtendedListFragment extends Fragment
-        implements OnItemClickListener, OnEnforceableRefreshListener, SearchView.OnQueryTextListener,
-        SearchView.OnCloseListener {
+public class ExtendedListFragment extends Fragment implements
+        OnItemClickListener,
+        OnEnforceableRefreshListener,
+        SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener,
+        Injectable {
 
     protected static final String TAG = ExtendedListFragment.class.getSimpleName();
 
@@ -103,6 +114,8 @@ public class ExtendedListFragment extends Fragment
     private int maxColumnSizePortrait = 5;
     private int maxColumnSizeLandscape = 10;
 
+    @Inject AppPreferences preferences;
+    @Inject UserAccountManager accountManager;
     private ScaleGestureDetector mScaleGestureDetector;
     protected SwipeRefreshLayout mRefreshListLayout;
     protected LinearLayout mEmptyListContainer;
@@ -161,7 +174,7 @@ public class ExtendedListFragment extends Fragment
 
     public void switchToGridView() {
         if (!isGridEnabled()) {
-            getRecyclerView().setLayoutManager(new GridLayoutManager(getContext(), getColumnSize()));
+            getRecyclerView().setLayoutManager(new GridLayoutManager(getContext(), getColumnsCount()));
         }
     }
 
@@ -181,6 +194,7 @@ public class ExtendedListFragment extends Fragment
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(this);
+        ThemeUtils.themeSearchView(getContext(), searchView, true);
 
         final Handler handler = new Handler();
 
@@ -213,8 +227,7 @@ public class ExtendedListFragment extends Fragment
                                 setFabVisible(!hasFocus);
                             }
 
-                            boolean searchSupported = AccountUtils.hasSearchSupport(AccountUtils.
-                                    getCurrentOwnCloudAccount(MainApp.getAppContext()));
+                            boolean searchSupported = AccountUtils.hasSearchSupport(accountManager.getCurrentAccount());
 
                             if (getResources().getBoolean(R.bool.bottom_toolbar_enabled) && searchSupported) {
                                 BottomNavigationView bottomNavigationView = getActivity().
@@ -304,8 +317,7 @@ public class ExtendedListFragment extends Fragment
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (AccountUtils.hasSearchSupport(AccountUtils.
-                                getCurrentOwnCloudAccount(MainApp.getAppContext()))) {
+                        if (AccountUtils.hasSearchSupport(accountManager.getCurrentAccount())) {
                             EventBus.getDefault().post(new SearchEvent(query,
                                 SearchRemoteOperation.SearchType.FILE_SEARCH, SearchEvent.UnsetType.NO_UNSET));
                         } else {
@@ -352,6 +364,11 @@ public class ExtendedListFragment extends Fragment
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log_OC.d(TAG, "onCreateView");
 
@@ -364,7 +381,7 @@ public class ExtendedListFragment extends Fragment
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mScale = PreferenceManager.getGridColumns(getContext());
+        mScale = preferences.getGridColumns();
         setGridViewColumns(1f);
 
         mScaleGestureDetector = new ScaleGestureDetector(MainApp.getAppContext(),new ScaleListener());
@@ -386,8 +403,7 @@ public class ExtendedListFragment extends Fragment
         mFabMain = v.findViewById(R.id.fab_main);
         ThemeUtils.tintFloatingActionButton(mFabMain, R.drawable.ic_plus, getContext());
 
-        boolean searchSupported = AccountUtils.hasSearchSupport(AccountUtils.
-                getCurrentOwnCloudAccount(MainApp.getAppContext()));
+        boolean searchSupported = AccountUtils.hasSearchSupport(accountManager.getCurrentAccount());
 
         if (getResources().getBoolean(R.bool.bottom_toolbar_enabled) && searchSupported) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFabMain.getLayoutParams();
@@ -408,7 +424,7 @@ public class ExtendedListFragment extends Fragment
         public boolean onScale(ScaleGestureDetector detector) {
             setGridViewColumns(detector.getScaleFactor());
 
-            PreferenceManager.setGridColumns(getContext(), mScale);
+            preferences.setGridColumns(mScale);
 
             getRecyclerView().getAdapter().notifyDataSetChanged();
 
@@ -469,7 +485,7 @@ public class ExtendedListFragment extends Fragment
             mHeightCell = 0;
         }
 
-        mScale = PreferenceManager.getGridColumns(getContext());
+        mScale = preferences.getGridColumns();
     }
 
 
@@ -484,10 +500,10 @@ public class ExtendedListFragment extends Fragment
         savedInstanceState.putInt(KEY_HEIGHT_CELL, mHeightCell);
         savedInstanceState.putString(KEY_EMPTY_LIST_MESSAGE, getEmptyViewText());
 
-        PreferenceManager.setGridColumns(getContext(), mScale);
+        preferences.setGridColumns(mScale);
     }
 
-    public int getColumnSize() {
+    public int getColumnsCount() {
         return Math.round(mScale);
     }
 
@@ -797,7 +813,7 @@ public class ExtendedListFragment extends Fragment
             maxColumnSize = maxColumnSizePortrait;
         }
 
-        if (isGridEnabled() && getColumnSize() > maxColumnSize) {
+        if (isGridEnabled() && getColumnsCount() > maxColumnSize) {
             ((GridLayoutManager) getRecyclerView().getLayoutManager()).setSpanCount(maxColumnSize);
         }
     }

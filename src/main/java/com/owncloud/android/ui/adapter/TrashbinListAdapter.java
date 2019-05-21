@@ -31,11 +31,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.trashbin.model.TrashbinFile;
 import com.owncloud.android.ui.interfaces.TrashbinActivityInterface;
@@ -51,6 +50,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
+
 /**
  * Adapter for the trashbin view
  */
@@ -60,20 +62,27 @@ public class TrashbinListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int TRASHBIN_FOOTER = 101;
     private static final String TAG = TrashbinListAdapter.class.getSimpleName();
 
-    private TrashbinActivityInterface trashbinActivityInterface;
+    private final TrashbinActivityInterface trashbinActivityInterface;
     private List<TrashbinFile> files;
-    private Context context;
-    private Account account;
-    private FileDataStorageManager storageManager;
+    private final Context context;
+    private final Account account;
+    private final FileDataStorageManager storageManager;
+    private final AppPreferences preferences;
 
-    private List<ThumbnailsCacheManager.ThumbnailGenerationTask> asyncTasks = new ArrayList<>();
+    private final List<ThumbnailsCacheManager.ThumbnailGenerationTask> asyncTasks = new ArrayList<>();
 
-    public TrashbinListAdapter(TrashbinActivityInterface trashbinActivityInterface,
-                               FileDataStorageManager storageManager, Context context) {
+    public TrashbinListAdapter(
+        TrashbinActivityInterface trashbinActivityInterface,
+        FileDataStorageManager storageManager,
+        AppPreferences preferences,
+        Context context,
+        Account account
+    ) {
         this.files = new ArrayList<>();
         this.trashbinActivityInterface = trashbinActivityInterface;
-        this.account = AccountUtils.getCurrentOwnCloudAccount(context);
+        this.account = account;
         this.storageManager = storageManager;
+        this.preferences = preferences;
         this.context = context;
     }
 
@@ -86,7 +95,7 @@ public class TrashbinListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             files.add((TrashbinFile) file);
         }
 
-        files = PreferenceManager.getSortOrderByType(context, FileSortOrder.Type.trashBinView,
+        files = preferences.getSortOrderByType(FileSortOrder.Type.trashBinView,
             FileSortOrder.sort_new_to_old).sortTrashbinFiles(files);
 
         notifyDataSetChanged();
@@ -127,9 +136,9 @@ public class TrashbinListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String location;
             int lastIndex = file.getOriginalLocation().lastIndexOf('/');
             if (lastIndex != -1) {
-                location = "/" + file.getOriginalLocation().substring(0, lastIndex) + "/";
+                location = ROOT_PATH + file.getOriginalLocation().substring(0, lastIndex) + PATH_SEPARATOR;
             } else {
-                location = "/";
+                location = ROOT_PATH;
             }
             trashbinFileViewHolder.originalLocation.setText(location);
 
@@ -282,7 +291,7 @@ public class TrashbinListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setSortOrder(FileSortOrder sortOrder) {
-        PreferenceManager.setSortOrder(context, FileSortOrder.Type.trashBinView, sortOrder);
+        preferences.setSortOrder(FileSortOrder.Type.trashBinView, sortOrder);
         files = sortOrder.sortTrashbinFiles(files);
         notifyDataSetChanged();
     }

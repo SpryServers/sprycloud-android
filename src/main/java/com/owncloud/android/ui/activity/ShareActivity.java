@@ -25,6 +25,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.owncloud.android.R;
@@ -50,6 +51,7 @@ import com.owncloud.android.utils.ErrorMessageAdapter;
 import com.owncloud.android.utils.GetShareWithUsersAsyncTask;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -124,7 +126,7 @@ public class ShareActivity extends FileActivity implements ShareFragmentListener
             }
 
         } else {
-            Log_OC.e(TAG, "Unexpected intent " + intent.toString());
+            Log_OC.e(TAG, String.format(Locale.US, "Unexpected intent %s", intent));
         }
     }
 
@@ -347,16 +349,17 @@ public class ShareActivity extends FileActivity implements ShareFragmentListener
             // Detect Failure (403) --> maybe needs password
             String password = operation.getPassword();
             if (result.getCode() == RemoteOperationResult.ResultCode.SHARE_FORBIDDEN    &&
-                    (password == null || password.length() == 0)                        &&
+                    TextUtils.isEmpty(password)                                         &&
                     getCapabilities().getFilesSharingPublicEnabled().isUnknown()) {
                     // Was tried without password, but not sure that it's optional.
 
                 // Try with password before giving up; see also ShareFileFragment#OnShareViaLinkListener
                 ShareFileFragment shareFileFragment = getShareFileFragment();
-                if (shareFileFragment != null
-                    && shareFileFragment.isAdded()) {   // only if added to the view hierarchy!!
+                if (shareFileFragment != null && shareFileFragment.isAdded()) { // only if added to the view hierarchy!!
 
-                    shareFileFragment.requestPasswordForShareViaLink(true);
+                    boolean askForPassword = getCapabilities().getFilesSharingPublicAskForOptionalPassword().isTrue();
+
+                    shareFileFragment.requestPasswordForShareViaLink(true, askForPassword);
                 }
 
             } else {

@@ -58,9 +58,8 @@
 			    android:orientation="vertical"
 			    android:padding="@dimen/standard_half_padding" >
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
 					android:id="@+id/centeredRefreshButton"
-					style="@style/ownCloud.Button"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_horizontal"
@@ -68,7 +67,8 @@
 					android:theme="@style/Button"
 					android:text="@string/auth_check_server"
 					android:visibility="gone"
-					android:contentDescription="@string/auth_check_server"/>
+					android:contentDescription="@string/auth_check_server"
+                    app:cornerRadius="@dimen/button_corner_radius"/>
 
 				<TextView
                     android:id="@+id/instructions_message"
@@ -149,8 +149,8 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="@dimen/alternate_half_margin"
-					android:drawableLeft="@android:drawable/stat_notify_sync"
-					android:drawableStart="@android:drawable/stat_notify_sync"
+                    android:drawableLeft="@android:drawable/stat_notify_sync"
+                    android:drawableStart="@android:drawable/stat_notify_sync"
 					android:drawablePadding="@dimen/alternate_half_padding"
 					android:gravity="center_vertical"
 					android:textColor="@color/login_text_color"
@@ -158,69 +158,13 @@
 					android:minHeight="@dimen/display_text_min_height"
                     android:contentDescription="@string/auth_testing_connection"/>
 
-				<CheckBox
-					android:id="@+id/oauth_onOff_check"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:checked="false"
-					android:onClick="onCheckClick"
-					android:text="@string/oauth_check_onoff"
-					android:textColor="@color/primary"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:contentDescription="@string/oauth_check_onoff"
-					/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_oAuthEntryPoint_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-					<EditText
-                        android:id="@+id/oAuthEntryPoint_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/oauth_2_0_auth_end_point_address_hint"
-                        android:inputType="textUri"
-                        android:maxLines="1"
-                        android:text="@string/oauth2_url_endpoint_auth"
-                        android:textColor="@color/login_text_color"
-                        android:textColorHint="@color/login_text_hint_color"
-                        android:importantForAutofill="no"
-                        android:visibility="gone" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_oAuthEntryPoint_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-					<EditText
-                        android:id="@+id/oAuthEntryPoint_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/oauth_2_0_access_end_point_address_hint"
-                        android:inputType="textUri"
-                        android:maxLines="1"
-                        android:text="@string/oauth2_url_endpoint_access"
-                        android:textColor="@color/login_text_color"
-                        android:textColorHint="@color/login_text_hint_color"
-                        android:importantForAutofill="no"
-                        android:visibility="gone" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <com.google.android.material.textfield.TextInputLayout
 					android:id="@+id/input_layout_account_username"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:visibility="gone">
 
-				<EditText
+				<com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/account_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,7 +185,7 @@
 					app:passwordToggleDrawable="@drawable/password_visibility_selector"
 					app:passwordToggleTint="@color/white">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/account_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -261,8 +205,8 @@
 					android:layout_height="wrap_content"
 					android:gravity="center_vertical"
 					android:text="@string/auth_unauthorized"
-					android:drawableLeft="@android:drawable/stat_notify_sync"
-					android:drawableStart="@android:drawable/stat_notify_sync"
+                    android:drawableLeft="@android:drawable/stat_notify_sync"
+                    android:drawableStart="@android:drawable/stat_notify_sync"
 					android:drawablePadding="@dimen/alternate_half_padding"
 					android:textColor="@color/login_text_color"
                     android:contentDescription="@string/auth_unauthorized"
@@ -281,7 +225,7 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/standard_half_padding">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
 			android:id="@+id/buttonOK"
 			android:theme="@style/Button.Login"
 			style="@style/Button.Login"
@@ -292,7 +236,17 @@
 			android:enabled="false"
 			android:text="@string/setup_btn_connect"
 			android:contentDescription="@string/setup_btn_connect"
-			android:visibility="gone"/>
+			android:visibility="visible"
+            app:cornerRadius="@dimen/button_corner_radius"/>
 	</LinearLayout>
+
+    <ImageButton
+        android:id="@+id/scanQR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/qrcode_scan"
+        android:theme="@style/Button.Login"
+        android:background="@color/transparent"
+        android:contentDescription="@string/scanQR_description" />
 
 </RelativeLayout>

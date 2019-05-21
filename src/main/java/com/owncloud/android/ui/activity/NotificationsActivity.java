@@ -3,8 +3,10 @@
  *
  * @author Andy Scherzinger
  * @author Mario Danic
+ * @author Chris Narkiewicz
  * Copyright (C) 2017 Andy Scherzinger
  * Copyright (C) 2017 Mario Danic
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +30,7 @@ import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,9 +50,11 @@ import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.notifications.GetRemoteNotificationsOperation;
+import com.owncloud.android.lib.resources.notifications.GetNotificationsRemoteOperation;
 import com.owncloud.android.lib.resources.notifications.models.Notification;
 import com.owncloud.android.ui.adapter.NotificationListAdapter;
+import com.owncloud.android.ui.asynctasks.DeleteAllNotificationsTask;
+import com.owncloud.android.ui.notifications.NotificationsContract;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.PushUtils;
 import com.owncloud.android.utils.ThemeUtils;
@@ -68,7 +73,7 @@ import butterknife.Unbinder;
 /**
  * Activity displaying all server side stored notification items.
  */
-public class NotificationsActivity extends FileActivity {
+public class NotificationsActivity extends FileActivity implements NotificationsContract.View {
 
     private static final String TAG = NotificationsActivity.class.getSimpleName();
 
@@ -123,7 +128,7 @@ public class NotificationsActivity extends FileActivity {
 
             if (account != null && (currentAccount == null || !account.equalsIgnoreCase(currentAccount.name))) {
                 AccountUtils.setCurrentOwnCloudAccount(this, account);
-                setAccount(AccountUtils.getCurrentOwnCloudAccount(this));
+                setAccount(getUserAccountManager().getCurrentAccount());
                 currentAccount = getAccount();
             }
         }
@@ -241,7 +246,12 @@ public class NotificationsActivity extends FileActivity {
 
         if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
             bottomNavigationView.setVisibility(View.VISIBLE);
-            DisplayUtils.setupBottomBar(bottomNavigationView, getResources(), this, -1);
+            DisplayUtils.setupBottomBar(
+                getUserAccountManager().getCurrentAccount(),
+                bottomNavigationView,
+                getResources(),
+                this,
+                -1);
         }
 
         fetchAndSetData();
@@ -269,7 +279,7 @@ public class NotificationsActivity extends FileActivity {
                 recyclerView.setAdapter(adapter);
             }
 
-            RemoteOperation getRemoteNotificationOperation = new GetRemoteNotificationsOperation();
+            RemoteOperation getRemoteNotificationOperation = new GetNotificationsRemoteOperation();
             final RemoteOperationResult result = getRemoteNotificationOperation.execute(client);
 
             if (result.isSuccess() && result.getNotificationData() != null) {
@@ -305,6 +315,11 @@ public class NotificationsActivity extends FileActivity {
         });
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.notifications_actions_menu, menu);
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -317,6 +332,10 @@ public class NotificationsActivity extends FileActivity {
                 } else {
                     openDrawer();
                 }
+                break;
+
+            case R.id.action_empty_notifications:
+                new DeleteAllNotificationsTask(client, this).execute();
                 break;
 
             default:
@@ -352,5 +371,46 @@ public class NotificationsActivity extends FileActivity {
         super.onResume();
 
         setDrawerMenuItemChecked(R.id.nav_notifications);
+    }
+
+    @Override
+    public void onRemovedNotification(boolean isSuccess) {
+        if (!isSuccess) {
+            DisplayUtils.showSnackMessage(this, getString(R.string.remove_notification_failed));
+            fetchAndSetData();
+        }
+    }
+
+    @Override
+    public void removeNotification(NotificationListAdapter.NotificationViewHolder holder) {
+        adapter.removeNotification(holder);
+
+        if (adapter.getItemCount() == 0) {
+            setEmptyContent(noResultsHeadline, noResultsMessage);
+            swipeListRefreshLayout.setVisibility(View.GONE);
+            swipeEmptyListRefreshLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onRemovedAllNotifications(boolean isSuccess) {
+        if (isSuccess) {
+            adapter.removeAllNotifications();
+            setEmptyContent(noResultsHeadline, noResultsMessage);
+            swipeListRefreshLayout.setVisibility(View.GONE);
+            swipeEmptyListRefreshLayout.setVisibility(View.VISIBLE);
+        } else {
+            DisplayUtils.showSnackMessage(this, getString(R.string.clear_notifications_failed));
+        }
+    }
+
+    @Override
+    public void onActionCallback(boolean isSuccess, NotificationListAdapter.NotificationViewHolder holder) {
+        if (isSuccess) {
+            adapter.removeNotification(holder);
+        } else {
+            adapter.setButtonEnabled(holder, true);
+            DisplayUtils.showSnackMessage(this, getString(R.string.notification_action_failed));
+        }
     }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *   nextCloud Android client application
  *
  *   @author Bartosz Przybylski
@@ -31,6 +31,8 @@ import com.owncloud.android.R;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 
+import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
+
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class RootCursor extends MatrixCursor {
@@ -46,16 +48,15 @@ public class RootCursor extends MatrixCursor {
     }
 
     public void addRoot(Account account, Context context) {
-        final FileDataStorageManager manager =
-                new FileDataStorageManager(account, context.getContentResolver());
-        final OCFile mainDir = manager.getFileByPath("/");
+        final FileDataStorageManager manager = new FileDataStorageManager(account, context.getContentResolver());
+        final OCFile mainDir = manager.getFileByPath(ROOT_PATH);
+
         newRow().add(Root.COLUMN_ROOT_ID, account.name)
-                .add(Root.COLUMN_DOCUMENT_ID, mainDir.getFileId())
-                .add(Root.COLUMN_SUMMARY, account.name)
-                .add(Root.COLUMN_TITLE, context.getString(R.string.app_name))
-                .add(Root.COLUMN_ICON, R.mipmap.ic_launcher)
-                .add(Root.COLUMN_FLAGS, Root.FLAG_SUPPORTS_SEARCH);
-
+            .add(Root.COLUMN_DOCUMENT_ID, mainDir.getFileId())
+            .add(Root.COLUMN_SUMMARY, account.name)
+            .add(Root.COLUMN_TITLE, context.getString(R.string.app_name))
+            .add(Root.COLUMN_ICON, R.mipmap.ic_launcher)
+            .add(Root.COLUMN_FLAGS, Root.FLAG_SUPPORTS_CREATE | Root.FLAG_SUPPORTS_RECENTS |
+                Root.FLAG_SUPPORTS_SEARCH);
     }
-
 }

@@ -27,11 +27,12 @@ import android.os.PowerManager;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.nextcloud.client.preferences.AppPreferences;
+import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.owncloud.android.MainApp;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.ui.activity.PassCodeActivity;
-import com.owncloud.android.ui.activity.Preferences;
 import com.owncloud.android.ui.activity.RequestCredentialsActivity;
+import com.owncloud.android.ui.activity.SettingsActivity;
 import com.owncloud.android.utils.DeviceCredentialUtils;
 
 import java.util.HashSet;
@@ -50,26 +51,24 @@ public final class PassCodeManager {
         // other activities may be exempted, if needed
     }
 
+    /**
+     *  Keeping a "low" positive value is the easiest way to prevent
+     *  the pass code being requested on screen rotations.
+     */
     private static final int PASS_CODE_TIMEOUT = 5000;
-        // keeping a "low" positive value is the easiest way to prevent the pass code is requested on rotations
 
-    private static PassCodeManager passCodeManagerInstance;
-
+    private AppPreferences preferences;
     private int visibleActivitiesCounter;
 
-    public static PassCodeManager getPassCodeManager() {
-        if (passCodeManagerInstance == null) {
-            passCodeManagerInstance = new PassCodeManager();
-        }
-        return passCodeManagerInstance;
-    }
 
-    private PassCodeManager() {}
+    public PassCodeManager(AppPreferences preferences) {
+        this.preferences = preferences;
+    }
 
     public void onActivityCreated(Activity activity) {
         Window window = activity.getWindow();
         if (window != null) {
-            if (passCodeIsEnabled() || deviceCredentialsAreEnabled(activity)) {
+            if (isPassCodeEnabled() || deviceCredentialsAreEnabled(activity)) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
             } else {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -77,50 +76,64 @@ public final class PassCodeManager {
         }
     }
 
-    public void onActivityStarted(Activity activity) {
-        Long timestamp = PreferenceManager.getLockTimestamp(activity);
+    public boolean onActivityStarted(Activity activity) {
+        boolean askedForPin = false;
+        Long timestamp = AppPreferencesImpl.fromContext(activity).getLockTimestamp();
+
         if (!exemptOfPasscodeActivities.contains(activity.getClass()) && passCodeShouldBeRequested(timestamp)) {
+            askedForPin = true;
+
+            preferences.setLockTimestamp(0);
 
             Intent i = new Intent(MainApp.getAppContext(), PassCodeActivity.class);
             i.setAction(PassCodeActivity.ACTION_CHECK);
-            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             activity.startActivityForResult(i, PASSCODE_ACTIVITY);
         }
 
         if (!exemptOfPasscodeActivities.contains(activity.getClass()) &&
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && deviceCredentialsShouldBeRequested(timestamp, activity)) {
+            askedForPin = true;
+
+            preferences.setLockTimestamp(0);
+
             Intent i = new Intent(MainApp.getAppContext(), RequestCredentialsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             activity.startActivityForResult(i, PASSCODE_ACTIVITY);
+        } else {
+            if (!askedForPin && preferences.getLockTimestamp() != 0) {
+                preferences.setLockTimestamp(System.currentTimeMillis());
+            }
         }
 
         visibleActivitiesCounter++;    // keep it AFTER passCodeShouldBeRequested was checked
+
+        return askedForPin;
     }
 
     public void onActivityStopped(Activity activity) {
         if (visibleActivitiesCounter > 0) {
             visibleActivitiesCounter--;
         }
-        setUnlockTimestamp(activity);
+
         PowerManager powerMgr = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
-        if ((passCodeIsEnabled() || deviceCredentialsAreEnabled(activity)) && powerMgr != null
+        if ((isPassCodeEnabled() || deviceCredentialsAreEnabled(activity)) && powerMgr != null
                 && !powerMgr.isScreenOn()) {
             activity.moveTaskToBack(true);
         }
     }
 
     private void setUnlockTimestamp(Activity activity) {
-        Long timestamp = System.currentTimeMillis();
-        PreferenceManager.setLockTimestamp(activity, timestamp);
+        AppPreferencesImpl.fromContext(activity).setLockTimestamp(System.currentTimeMillis());
     }
 
     private boolean passCodeShouldBeRequested(Long timestamp) {
         return (System.currentTimeMillis() - timestamp) > PASS_CODE_TIMEOUT &&
-            visibleActivitiesCounter <= 0 && passCodeIsEnabled();
+            visibleActivitiesCounter <= 0 && isPassCodeEnabled();
     }
 
-    private boolean passCodeIsEnabled() {
-        return PreferenceManager.getLockPreference(MainApp.getAppContext()).equals(Preferences.LOCK_PASSCODE);
+    private boolean isPassCodeEnabled() {
+        return SettingsActivity.LOCK_PASSCODE.equals(preferences.getLockPreference());
     }
 
     private boolean deviceCredentialsShouldBeRequested(Long timestamp, Activity activity) {
@@ -129,9 +142,9 @@ public final class PassCodeManager {
     }
 
     private boolean deviceCredentialsAreEnabled(Activity activity) {
-        return PreferenceManager.getLockPreference(MainApp.getAppContext()).equals(Preferences.LOCK_DEVICE_CREDENTIALS)
+        return SettingsActivity.LOCK_DEVICE_CREDENTIALS.equals(preferences.getLockPreference())
                 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        (PreferenceManager.isUseFingerprint(MainApp.getAppContext())
+                        (preferences.isFingerprintUnlockEnabled()
                                 && DeviceCredentialUtils.areCredentialsAvailable(activity));
     }
 }

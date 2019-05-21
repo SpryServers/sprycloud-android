@@ -21,6 +21,7 @@
 package com.owncloud.android.ui.dialog;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,13 +36,12 @@ import android.widget.TextView;
 
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
-import com.owncloud.android.lib.common.UserInfo;
+import com.owncloud.android.lib.common.accounts.AccountUtils;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.users.DeletePublicKeyOperation;
 import com.owncloud.android.lib.resources.users.GetPrivateKeyOperation;
 import com.owncloud.android.lib.resources.users.GetPublicKeyOperation;
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation;
 import com.owncloud.android.lib.resources.users.SendCSROperation;
 import com.owncloud.android.lib.resources.users.StorePrivateKeyOperation;
 import com.owncloud.android.utils.CsrHelper;
@@ -124,7 +124,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int accentColor = ThemeUtils.primaryAccentColor(getContext());
+        int primaryColor = ThemeUtils.primaryColor(getContext());
         account = getArguments().getParcelable(ARG_ACCOUNT);
 
         arbitraryDataProvider = new ArbitraryDataProvider(getContext().getContentResolver());
@@ -137,13 +137,13 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
         textView = v.findViewById(R.id.encryption_status);
         passphraseTextView = v.findViewById(R.id.encryption_passphrase);
         passwordField = v.findViewById(R.id.encryption_passwordInput);
-        passwordField.getBackground().setColorFilter(accentColor, PorterDuff.Mode.SRC_ATOP);
+        passwordField.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.SRC_ATOP);
 
         Drawable wrappedDrawable = DrawableCompat.wrap(passwordField.getBackground());
-        DrawableCompat.setTint(wrappedDrawable, accentColor);
+        DrawableCompat.setTint(wrappedDrawable, primaryColor);
         passwordField.setBackgroundDrawable(wrappedDrawable);
 
-        return createDialog(accentColor, v);
+        return createDialog(primaryColor, v);
     }
 
     @NonNull
@@ -253,21 +253,8 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
             //  - store public key
             //  - decrypt private key, store unencrypted private key in database
 
-            // get user id
-            String userID;
-            GetRemoteUserInfoOperation remoteUserNameOperation = new GetRemoteUserInfoOperation();
-            RemoteOperationResult remoteUserNameOperationResult = remoteUserNameOperation.execute(account,
-                    getContext(), true);
-
-            if (remoteUserNameOperationResult.isSuccess() && remoteUserNameOperationResult.getData() != null) {
-                UserInfo userInfo = (UserInfo) remoteUserNameOperationResult.getData().get(0);
-                userID = userInfo.getId();
-            } else {
-                userID = account.name;
-            }
-
-            GetPublicKeyOperation publicKeyOperation = new GetPublicKeyOperation(userID);
-            RemoteOperationResult publicKeyResult = publicKeyOperation.execute(account, getContext(), true);
+            GetPublicKeyOperation publicKeyOperation = new GetPublicKeyOperation();
+            RemoteOperationResult publicKeyResult = publicKeyOperation.execute(account, getContext());
 
             if (publicKeyResult.isSuccess()) {
                 Log_OC.d(TAG, "public key successful downloaded for " + account.name);
@@ -280,7 +267,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
             }
 
             GetPrivateKeyOperation privateKeyOperation = new GetPrivateKeyOperation();
-            RemoteOperationResult privateKeyResult = privateKeyOperation.execute(account, getContext(), true);
+            RemoteOperationResult privateKeyResult = privateKeyOperation.execute(account, getContext());
 
             if (privateKeyResult.isSuccess()) {
                 Log_OC.d(TAG, "private key successful downloaded for " + account.name);
@@ -348,25 +335,13 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
                 // Create public/private key pair
                 KeyPair keyPair = EncryptionUtils.generateKeyPair();
 
-                // get user id
-                String userID;
-                GetRemoteUserInfoOperation remoteUserNameOperation = new GetRemoteUserInfoOperation();
-                RemoteOperationResult remoteUserNameOperationResult = remoteUserNameOperation
-                        .execute(account, getContext(), true);
-
-                if (remoteUserNameOperationResult.isSuccess() &&
-                        remoteUserNameOperationResult.getData() != null) {
-                    UserInfo userInfo = (UserInfo) remoteUserNameOperationResult.getData().get(0);
-                    userID = userInfo.getId();
-                } else {
-                    userID = account.name;
-                }
-
                 // create CSR
-                String urlEncoded = CsrHelper.generateCsrPemEncodedString(keyPair, userID);
+                AccountManager accountManager = AccountManager.get(getContext());
+                String userId = accountManager.getUserData(account, AccountUtils.Constants.KEY_USER_ID);
+                String urlEncoded = CsrHelper.generateCsrPemEncodedString(keyPair, userId);
 
                 SendCSROperation operation = new SendCSROperation(urlEncoded);
-                RemoteOperationResult result = operation.execute(account, getContext(), true);
+                RemoteOperationResult result = operation.execute(account, getContext());
 
                 if (result.isSuccess()) {
                     Log_OC.d(TAG, "public key success");
@@ -384,8 +359,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
 
                 // upload encryptedPrivateKey
                 StorePrivateKeyOperation storePrivateKeyOperation = new StorePrivateKeyOperation(encryptedPrivateKey);
-                RemoteOperationResult storePrivateKeyResult = storePrivateKeyOperation.execute(account, getContext(),
-                        true);
+                RemoteOperationResult storePrivateKeyResult = storePrivateKeyOperation.execute(account, getContext());
 
                 if (storePrivateKeyResult.isSuccess()) {
                     Log_OC.d(TAG, "private key success");
@@ -400,7 +374,7 @@ public class SetupEncryptionDialogFragment extends DialogFragment {
                     return (String) storePrivateKeyResult.getData().get(0);
                 } else {
                     DeletePublicKeyOperation deletePublicKeyOperation = new DeletePublicKeyOperation();
-                    deletePublicKeyOperation.execute(account, getContext(), true);
+                    deletePublicKeyOperation.execute(account, getContext());
                 }
             } catch (Exception e) {
                 Log_OC.e(TAG, e.getMessage());

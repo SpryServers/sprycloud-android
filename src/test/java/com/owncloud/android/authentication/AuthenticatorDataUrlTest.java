@@ -1,5 +1,5 @@
-/**
- *   spryCloud Android client application
+/*
+ *   Nextcloud Android client application
  *
  *   @author Andy Scherzinger
  *   Copyright (C) 2016 Andy Scherzinger
@@ -33,7 +33,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class AuthenticatorDataUrlTest {
     private static final String URL_PARSING = " url parsing";
     private static final String INCORRECT_USER_VALUE_IN = "Incorrect user value in ";
-    private String schemeUrl = "nextcloud://login/";
+    private String schemeUrl = "nc://login/";
     private String plus = "&";
 
     private String userValue = "testuser123";
@@ -157,17 +157,24 @@ public class AuthenticatorDataUrlTest {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void noDataUrlElements() {
+        AuthenticatorActivity.parseLoginDataUrl(schemeUrl, "");
+    }
+
     @Test
-    public void tooLittleDataUrlElements() {
-        for (String urlStart : urlStarts) {
-            try {
-                System.out.println(urlStart);
-                AuthenticatorActivity.parseLoginDataUrl(urlStart, urlStart);
-                Assert.fail("Illegal Argument Exception expected!");
-            } catch (IllegalArgumentException e) {
-                // all well
-                System.out.println("Expected Illegal Argument Exception caught.");
-            }
-        }
+    public void onlyOneDataUrlElements() {
+        LoginUrlInfo loginUrlInfo = AuthenticatorActivity.parseLoginDataUrl(schemeUrl, schemeUrl + userUrlPart);
+
+        Assert.assertEquals(userValue, loginUrlInfo.username);
+    }
+
+    @Test
+    public void onlyTwoDataUrlElements() {
+        LoginUrlInfo loginUrlInfo = AuthenticatorActivity.parseLoginDataUrl(schemeUrl, schemeUrl + userUrlPart +
+            plus + addressUrlPart);
+
+        Assert.assertEquals(userValue, loginUrlInfo.username);
+        Assert.assertEquals(addressValue, loginUrlInfo.serverAddress);
     }
 }

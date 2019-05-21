@@ -2,8 +2,10 @@
  * Nextcloud Android client application
  *
  * @author Tobias Kaminsky
+ * @author Chris Narkiewicz
  * Copyright (C) 2018 Tobias Kaminsky
  * Copyright (C) 2018 Nextcloud
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -28,10 +30,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,9 +39,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.files.services.FileUploader;
@@ -58,14 +61,16 @@ import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.FilesSyncHelper;
 import com.owncloud.android.utils.ThemeUtils;
 
+import java.util.Set;
+
+import javax.inject.Inject;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static com.owncloud.android.ui.activity.Preferences.PREFERENCE_EXPERT_MODE;
 
 /**
  * Activity listing pending, active, and completed uploads. User can delete
@@ -76,13 +81,9 @@ public class UploadListActivity extends FileActivity {
 
     private static final String TAG = UploadListActivity.class.getSimpleName();
 
-    private UploadMessagesReceiver mUploadMessagesReceiver;
-
-    private Menu menu;
+    private UploadMessagesReceiver uploadMessagesReceiver;
 
     private UploadListAdapter uploadListAdapter;
-
-    private UploadsStorageManager uploadStorageManager;
 
     public SwipeRefreshLayout swipeListRefreshLayout;
 
@@ -106,6 +107,12 @@ public class UploadListActivity extends FileActivity {
 
     private Unbinder unbinder;
 
+    @Inject
+    protected UserAccountManager userAccountManager;
+
+    @Inject
+    protected UploadsStorageManager uploadsStorageManager;
+
     @Override
     public void showFiles(boolean onDeviceOnly) {
         super.showFiles(onDeviceOnly);
@@ -117,8 +124,6 @@ public class UploadListActivity extends FileActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        uploadStorageManager = new UploadsStorageManager(getContentResolver(), getApplicationContext());
 
         setContentView(R.layout.upload_list_layout);
         unbinder = ButterKnife.bind(this);
@@ -146,7 +151,13 @@ public class UploadListActivity extends FileActivity {
 
         if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
             bottomNavigationView.setVisibility(View.VISIBLE);
-            DisplayUtils.setupBottomBar(bottomNavigationView, getResources(), this, -1);
+            DisplayUtils.setupBottomBar(
+                getUserAccountManager().getCurrentAccount(),
+                bottomNavigationView,
+                getResources(),
+                this,
+                -1
+            );
         }
     }
 
@@ -154,12 +165,14 @@ public class UploadListActivity extends FileActivity {
         recyclerView = findViewById(android.R.id.list);
         recyclerView.setEmptyView(findViewById(R.id.empty_list_view));
         findViewById(R.id.empty_list_progress).setVisibility(View.GONE);
-        emptyContentIcon.setImageResource(R.drawable.ic_list_empty_upload);
+        emptyContentIcon.setImageResource(R.drawable.uploads);
+        emptyContentIcon.getDrawable().mutate();
+        emptyContentIcon.setAlpha(0.5f);
         emptyContentIcon.setVisibility(View.VISIBLE);
         emptyContentHeadline.setText(noResultsHeadline);
         emptyContentMessage.setText(noResultsMessage);
 
-        uploadListAdapter = new UploadListAdapter(this);
+        uploadListAdapter = new UploadListAdapter(this, uploadsStorageManager);
 
         final GridLayoutManager lm = new GridLayoutManager(this, 1);
         uploadListAdapter.setLayoutManager(lm);
@@ -187,6 +200,25 @@ public class UploadListActivity extends FileActivity {
     }
 
     private void refresh() {
+        // scan for missing auto uploads files
+        Set<Job> jobs = JobManager.instance().getAllJobsForTag(FilesSyncJob.TAG);
+
+        if (jobs.isEmpty()) {
+            PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
+            persistableBundleCompat.putBoolean(FilesSyncJob.OVERRIDE_POWER_SAVING, true);
+            new JobRequest.Builder(FilesSyncJob.TAG)
+                .setExact(1_000L)
+                .setUpdateCurrent(false)
+                .setExtras(persistableBundleCompat)
+                .build()
+                .schedule();
+        }
+
+        // retry failed uploads
+        FileUploader.UploadRequester requester = new FileUploader.UploadRequester();
+        new Thread(() -> requester.retryFailedUploads(this, null, uploadsStorageManager,null)).start();
+
+        // update UI
         uploadListAdapter.loadUploadItemsFromDb();
         swipeListRefreshLayout.setRefreshing(false);
     }
@@ -199,12 +231,12 @@ public class UploadListActivity extends FileActivity {
         setDrawerMenuItemChecked(R.id.nav_uploads);
 
         // Listen for upload messages
-        mUploadMessagesReceiver = new UploadMessagesReceiver();
+        uploadMessagesReceiver = new UploadMessagesReceiver();
         IntentFilter uploadIntentFilter = new IntentFilter();
         uploadIntentFilter.addAction(FileUploader.getUploadsAddedMessage());
         uploadIntentFilter.addAction(FileUploader.getUploadStartMessage());
         uploadIntentFilter.addAction(FileUploader.getUploadFinishMessage());
-        registerReceiver(mUploadMessagesReceiver, uploadIntentFilter);
+        registerReceiver(uploadMessagesReceiver, uploadIntentFilter);
 
         Log_OC.v(TAG, "onResume() end");
 
@@ -213,12 +245,20 @@ public class UploadListActivity extends FileActivity {
     @Override
     protected void onPause() {
         Log_OC.v(TAG, "onPause() start");
-        if (mUploadMessagesReceiver != null) {
-            unregisterReceiver(mUploadMessagesReceiver);
-            mUploadMessagesReceiver = null;
+        if (uploadMessagesReceiver != null) {
+            unregisterReceiver(uploadMessagesReceiver);
+            uploadMessagesReceiver = null;
         }
         super.onPause();
         Log_OC.v(TAG, "onPause() end");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.upload_list_menu, menu);
+
+        return true;
     }
 
     @Override
@@ -232,41 +272,9 @@ public class UploadListActivity extends FileActivity {
                     openDrawer();
                 }
                 break;
-
-            case R.id.action_retry_uploads:
-                FileUploader.UploadRequester requester = new FileUploader.UploadRequester();
-
-                new Thread(() -> requester.retryFailedUploads(this, null, null)).start();
-
-                if (menu != null) {
-                    menu.removeItem(R.id.action_retry_uploads);
-                }
-                break;
-
             case R.id.action_clear_failed_uploads:
-                uploadStorageManager.clearFailedButNotDelayedUploads();
+                uploadsStorageManager.clearFailedButNotDelayedUploads();
                 uploadListAdapter.loadUploadItemsFromDb();
-                break;
-
-            case R.id.action_clear_successfull_uploads:
-                uploadStorageManager.clearSuccessfulUploads();
-                uploadListAdapter.loadUploadItemsFromDb();
-                break;
-
-            case R.id.action_force_rescan:
-                PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
-                persistableBundleCompat.putBoolean(FilesSyncJob.OVERRIDE_POWER_SAVING, true);
-                new JobRequest.Builder(FilesSyncJob.TAG)
-                        .setExact(1_000L)
-                        .setUpdateCurrent(false)
-                        .setExtras(persistableBundleCompat)
-                        .build()
-                        .schedule();
-
-                if (menu != null) {
-                    menu.removeItem(R.id.action_force_rescan);
-                }
-
                 break;
 
             default:
@@ -277,22 +285,10 @@ public class UploadListActivity extends FileActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        SharedPreferences appPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (appPrefs.getBoolean(PREFERENCE_EXPERT_MODE, false)) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.upload_list_menu, menu);
-            this.menu = menu;
-        }
-
-        return true;
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FileActivity.REQUEST_CODE__UPDATE_CREDENTIALS && resultCode == RESULT_OK) {
-            FilesSyncHelper.restartJobsIfNeeded();
+            FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, userAccountManager);
         }
     }
 
@@ -312,7 +308,7 @@ public class UploadListActivity extends FileActivity {
 
             } else {
                 // already updated -> just retry!
-                FilesSyncHelper.restartJobsIfNeeded();
+                FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, userAccountManager);
             }
 
         } else {

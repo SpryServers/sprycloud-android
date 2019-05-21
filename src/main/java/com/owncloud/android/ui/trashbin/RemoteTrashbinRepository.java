@@ -2,8 +2,11 @@
  * Nextcloud Android client application
  *
  * @author Tobias Kaminsky
+ * @author Chris Narkiewicz
+ *
  * Copyright (C) 2018 Tobias Kaminsky
  * Copyright (C) 2018 Nextcloud GmbH.
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +29,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
@@ -46,22 +48,15 @@ public class RemoteTrashbinRepository implements TrashbinRepository {
 
     private static final String TAG = RemoteTrashbinRepository.class.getSimpleName();
 
-    private String userId;
     private OwnCloudClient client;
 
-    RemoteTrashbinRepository(Context context) {
-        AccountManager accountManager = AccountManager.get(context);
-        Account account = AccountUtils.getCurrentOwnCloudAccount(context);
-
+    RemoteTrashbinRepository(final Context context, final Account account) {
         try {
-            OwnCloudAccount ocAccount = new OwnCloudAccount(account, context);
-            client = OwnCloudClientManagerFactory.getDefaultSingleton().getClientFor(ocAccount, context);
+            OwnCloudAccount nextcloudAccount = new OwnCloudAccount(account, context);
+            client = OwnCloudClientManagerFactory.getDefaultSingleton().getClientFor(nextcloudAccount, context);
         } catch (Exception e) {
             Log_OC.e(TAG, e.getMessage());
         }
-
-        userId = accountManager.getUserData(account,
-                com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
     }
 
     public void removeTrashbinFile(TrashbinFile file, OperationCallback callback) {
@@ -97,24 +92,22 @@ public class RemoteTrashbinRepository implements TrashbinRepository {
     }
 
     public void emptyTrashbin(OperationCallback callback) {
-        new EmptyTrashbinTask(client, userId, callback).execute();
+        new EmptyTrashbinTask(client, callback).execute();
     }
 
     private static class EmptyTrashbinTask extends AsyncTask<Void, Void, Boolean> {
 
         private OwnCloudClient client;
-        private String userId;
         private OperationCallback callback;
 
-        private EmptyTrashbinTask(OwnCloudClient client, String userId, OperationCallback callback) {
+        private EmptyTrashbinTask(OwnCloudClient client, OperationCallback callback) {
             this.client = client;
-            this.userId = userId;
             this.callback = callback;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            EmptyTrashbinRemoteOperation emptyTrashbinFileOperation = new EmptyTrashbinRemoteOperation(userId);
+            EmptyTrashbinRemoteOperation emptyTrashbinFileOperation = new EmptyTrashbinRemoteOperation();
             RemoteOperationResult result = emptyTrashbinFileOperation.execute(client);
 
             return result.isSuccess();
@@ -130,28 +123,26 @@ public class RemoteTrashbinRepository implements TrashbinRepository {
 
     @Override
     public void restoreFile(TrashbinFile file, OperationCallback callback) {
-        new RestoreTrashbinFileTask(file, userId, client, callback).execute();
+        new RestoreTrashbinFileTask(file, client, callback).execute();
     }
 
     private static class RestoreTrashbinFileTask extends AsyncTask<Void, Void, Boolean> {
 
         private TrashbinFile file;
-        private String userId;
         private OwnCloudClient client;
         private TrashbinRepository.OperationCallback callback;
 
-        private RestoreTrashbinFileTask(TrashbinFile file, String userId, OwnCloudClient client,
+        private RestoreTrashbinFileTask(TrashbinFile file, OwnCloudClient client,
                                         TrashbinRepository.OperationCallback callback) {
             this.file = file;
-            this.userId = userId;
             this.client = client;
             this.callback = callback;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            RemoteOperationResult result = new RestoreTrashbinFileRemoteOperation(
-                file.getFullRemotePath(), file.getFileName(), userId).execute(client);
+            RemoteOperationResult result = new RestoreTrashbinFileRemoteOperation(file.getFullRemotePath(),
+                                                                                  file.getFileName()).execute(client);
 
             return result.isSuccess();
         }
@@ -166,28 +157,25 @@ public class RemoteTrashbinRepository implements TrashbinRepository {
 
     @Override
     public void getFolder(String remotePath, @NonNull LoadFolderCallback callback) {
-        new ReadRemoteTrashbinFolderTask(remotePath, userId, client, callback).execute();
+        new ReadRemoteTrashbinFolderTask(remotePath, client, callback).execute();
     }
 
     private static class ReadRemoteTrashbinFolderTask extends AsyncTask<Void, Void, Boolean> {
 
         private String remotePath;
-        private String userId;
         private OwnCloudClient client;
         private List<Object> trashbinFiles;
         private LoadFolderCallback callback;
 
-        private ReadRemoteTrashbinFolderTask(String remotePath, String userId, OwnCloudClient client,
-                                             LoadFolderCallback callback) {
+        private ReadRemoteTrashbinFolderTask(String remotePath, OwnCloudClient client, LoadFolderCallback callback) {
             this.remotePath = remotePath;
-            this.userId = userId;
             this.client = client;
             this.callback = callback;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            RemoteOperationResult result = new ReadTrashbinFolderRemoteOperation(remotePath, userId).execute(client);
+            RemoteOperationResult result = new ReadTrashbinFolderRemoteOperation(remotePath).execute(client);
 
             if (result.isSuccess()) {
                 trashbinFiles = result.getData();

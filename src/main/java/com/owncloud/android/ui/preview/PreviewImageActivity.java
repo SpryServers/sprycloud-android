@@ -1,8 +1,11 @@
-/**
+/*
  *   ownCloud Android client application
  *
  *   @author David A. Velasco
+ *   @author Chris Narkiewicz
+ *
  *   Copyright (C) 2016  ownCloud Inc.
+ *   Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -19,6 +22,7 @@
  */
 package com.owncloud.android.ui.preview;
 
+import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -28,12 +32,15 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.VirtualFolderType;
@@ -45,12 +52,19 @@ import com.owncloud.android.lib.common.operations.OnRemoteOperationListener;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
+import com.owncloud.android.lib.resources.shares.OCShare;
+import com.owncloud.android.operations.CreateShareViaLinkOperation;
 import com.owncloud.android.operations.RemoveFileOperation;
 import com.owncloud.android.operations.SynchronizeFileOperation;
 import com.owncloud.android.ui.activity.FileActivity;
 import com.owncloud.android.ui.activity.FileDisplayActivity;
 import com.owncloud.android.ui.fragment.FileFragment;
+import com.owncloud.android.utils.ClipboardUtil;
+import com.owncloud.android.utils.ErrorMessageAdapter;
 import com.owncloud.android.utils.MimeTypeUtil;
+import com.owncloud.android.utils.ThemeUtils;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -64,7 +78,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class PreviewImageActivity extends FileActivity implements
         FileFragment.ContainerActivity,
-        ViewPager.OnPageChangeListener, OnRemoteOperationListener {
+        ViewPager.OnPageChangeListener,
+        OnRemoteOperationListener,
+        Injectable {
 
     public static final String TAG = PreviewImageActivity.class.getSimpleName();
 
@@ -80,6 +96,7 @@ public class PreviewImageActivity extends FileActivity implements
     private boolean mRequestWaitingForBinder;
     private DownloadFinishReceiver mDownloadFinishReceiver;
     private View mFullScreenAnchorView;
+    @Inject AppPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +155,14 @@ public class PreviewImageActivity extends FileActivity implements
                 parentFolder = getStorageManager().getFileByPath(OCFile.ROOT_PATH);
             }
 
-            mPreviewImagePagerAdapter = new PreviewImagePagerAdapter(getSupportFragmentManager(),
-                    parentFolder, getAccount(), getStorageManager(), MainApp.isOnlyOnDevice(), this);
+            mPreviewImagePagerAdapter = new PreviewImagePagerAdapter(
+                getSupportFragmentManager(),
+                parentFolder,
+                getAccount(),
+                getStorageManager(),
+                MainApp.isOnlyOnDevice(),
+                preferences
+            );
         }
 
         mViewPager = findViewById(R.id.fragmentPager);
@@ -178,8 +201,51 @@ public class PreviewImageActivity extends FileActivity implements
             finish();
         } else if (operation instanceof SynchronizeFileOperation) {
             onSynchronizeFileOperationFinish(result);
+        } else if (operation instanceof CreateShareViaLinkOperation) {
+            CreateShareViaLinkOperation op = (CreateShareViaLinkOperation) operation;
 
+            if (result.isSuccess()) {
+                updateFileFromDB();
+
+                // if share to user and share via link multiple ocshares are returned,
+                // therefore filtering for public_link
+                String link = "";
+                for (Object object : result.getData()) {
+                    OCShare shareLink = (OCShare) object;
+                    if (FileDisplayActivity.TAG_PUBLIC_LINK.equalsIgnoreCase(shareLink.getShareType().name())) {
+                        link = shareLink.getShareLink();
+                        break;
+                    }
+                }
+
+                copyAndShareFileLink(link);
+            } else {
+                // Detect Failure (403) --> maybe needs password
+                String password = op.getPassword();
+                if (result.getCode() == RemoteOperationResult.ResultCode.SHARE_FORBIDDEN &&
+                    TextUtils.isEmpty(password) &&
+                    getCapabilities().getFilesSharingPublicEnabled().isUnknown()) {
+                    // Was tried without password, but not sure that it's optional.
+
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                                                      ErrorMessageAdapter.getErrorCauseMessage(result,
+                                                                                               operation,
+                                                                                               getResources()),
+                                                      Snackbar.LENGTH_LONG);
+                    ThemeUtils.colorSnackbar(this, snackbar);
+                    snackbar.show();
+                }
+            }
         }
+    }
+
+    private void copyAndShareFileLink(String link) {
+        ClipboardUtil.copyToClipboard(this, link, false);
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.clipboard_text_copied,
+                                          Snackbar.LENGTH_LONG)
+            .setAction(R.string.share, v -> showShareLinkDialog(this, link));
+        ThemeUtils.colorSnackbar(this, snackbar);
+        snackbar.show();
     }
 
     private void onSynchronizeFileOperationFinish(RemoteOperationResult result) {
@@ -299,11 +365,11 @@ public class PreviewImageActivity extends FileActivity implements
     @SuppressFBWarnings("DLS")
     @Override
     public void showDetails(OCFile file) {
+        final Account currentAccount = getUserAccountManager().getCurrentAccount();
         final Intent showDetailsIntent = new Intent(this, FileDisplayActivity.class);
         showDetailsIntent.setAction(FileDisplayActivity.ACTION_DETAILS);
         showDetailsIntent.putExtra(FileActivity.EXTRA_FILE, file);
-        showDetailsIntent.putExtra(FileActivity.EXTRA_ACCOUNT,
-                AccountUtils.getCurrentOwnCloudAccount(this));
+        showDetailsIntent.putExtra(FileActivity.EXTRA_ACCOUNT, currentAccount);
         showDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(showDetailsIntent);
         finish();

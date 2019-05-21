@@ -49,6 +49,7 @@
     <dimen name="list_item_avatar_icon_margin">20dp</dimen>
     <dimen name="list_item_avatar_text_margin">20dp</dimen>
     <dimen name="list_item_share_right_margin">12dp</dimen>
+    <dimen name="file_list_item_avatar_icon_radius">10dp</dimen>
     <dimen name="account_action_layout_height">72dp</dimen>
     <dimen name="zero">0dp</dimen>
     <dimen name="account_item_layout_height">72dp</dimen>
@@ -82,7 +83,7 @@
     <dimen name="scroll_view_height">180dp</dimen>
     <dimen name="upload_list_item_frame_layout_width">60dp</dimen>
     <dimen name="upload_list_item_text_size">12sp</dimen>
-    <dimen name="upload_list_item_image_size">35dp</dimen>
+    <dimen name="upload_list_item_image_size">24dp</dimen>
     <dimen name="uploader_list_item_layout_image_margin">12dp</dimen>
     <dimen name="media_grid_spacing">2dp</dimen>
     <dimen name="account_item_layout_user_image_left_start_margin">12dp</dimen>
@@ -132,13 +133,12 @@
     <dimen name="synced_folders_item_type_layout_width">32dp</dimen>
     <dimen name="synced_folders_item_type_layout_height">32dp</dimen>
     <dimen name="synced_folders_item_type_layout_right_end_margin">24dp</dimen>
-    <dimen name="collapsing_toolbar_layout_height">110dp</dimen>
     <dimen name="synced_folders_progress_bar_layout_width">72dp</dimen>
     <dimen name="synced_folders_progress_bar_layout_height">72dp</dimen>
     <dimen name="synced_folders_recycler_view_layout_margin">-3dp</dimen>
     <dimen name="toolbar_user_information_layout_margin">12dp</dimen>
     <dimen name="bottom_sheet_text_size">16sp</dimen>
     <dimen name="permission_dialog_text_size">18sp</dimen>
-    <dimen name="permission_dialog_text_padding">56dp</dimen>
+    <dimen name="button_corner_radius">24dp</dimen>
     <integer name="media_grid_width">4</integer>
 </resources>

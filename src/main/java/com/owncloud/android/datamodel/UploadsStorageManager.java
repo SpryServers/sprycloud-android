@@ -4,7 +4,10 @@
  * @author LukeOwncloud
  * @author David A. Velasco
  * @author masensio
+ * @author Chris Narkiewicz
+ *
  * Copyright (C) 2016 ownCloud Inc.
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
@@ -23,11 +26,10 @@ package com.owncloud.android.datamodel;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.owncloud.android.authentication.AccountUtils;
+import com.nextcloud.client.account.CurrentAccountProvider;
 import com.owncloud.android.db.OCUpload;
 import com.owncloud.android.db.ProviderMeta.ProviderTableMeta;
 import com.owncloud.android.db.UploadResult;
@@ -52,14 +54,17 @@ public class UploadsStorageManager extends Observable {
     private static final int SINGLE_RESULT = 1;
 
     private ContentResolver mContentResolver;
-    private Context mContext;
+    private CurrentAccountProvider currentAccountProvider;
 
-    public UploadsStorageManager(ContentResolver contentResolver, Context context) {
+    public UploadsStorageManager(
+        CurrentAccountProvider currentAccountProvider,
+        ContentResolver contentResolver
+    ) {
         if (contentResolver == null) {
             throw new IllegalArgumentException("Cannot create an instance with a NULL contentResolver");
         }
         mContentResolver = contentResolver;
-        mContext = context;
+        this.currentAccountProvider = currentAccountProvider;
     }
 
     /**
@@ -340,7 +345,7 @@ public class UploadsStorageManager extends Observable {
     }
 
     public OCUpload[] getCurrentAndPendingUploadsForCurrentAccount() {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(mContext);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         if (account != null) {
             return getUploads(
@@ -379,7 +384,7 @@ public class UploadsStorageManager extends Observable {
     }
 
     public OCUpload[] getFinishedUploadsForCurrentAccount() {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(mContext);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         if (account != null) {
             return getUploads(ProviderTableMeta.UPLOADS_STATUS + "==" + UploadStatus.UPLOAD_SUCCEEDED.value + AND +
@@ -398,7 +403,7 @@ public class UploadsStorageManager extends Observable {
     }
 
     public OCUpload[] getFailedButNotDelayedUploadsForCurrentAccount() {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(mContext);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         if (account != null) {
             return getUploads(ProviderTableMeta.UPLOADS_STATUS + "==" + UploadStatus.UPLOAD_FAILED.value +
@@ -441,7 +446,7 @@ public class UploadsStorageManager extends Observable {
     }
 
     public long clearFailedButNotDelayedUploads() {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(mContext);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         long result = 0;
         if (account != null) {
@@ -469,7 +474,7 @@ public class UploadsStorageManager extends Observable {
     }
 
     public long clearSuccessfulUploads() {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(mContext);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         long result = 0;
         if (account != null) {

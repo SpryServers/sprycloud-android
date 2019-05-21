@@ -23,6 +23,8 @@ package com.owncloud.android.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
@@ -42,6 +44,7 @@ import java.io.InputStream;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import lombok.Getter;
 
 /**
  * This activity shows an URL as a web view
@@ -55,11 +58,11 @@ public class ExternalSiteWebView extends FileActivity {
 
     private static final String TAG = ExternalSiteWebView.class.getSimpleName();
 
-    private boolean showSidebar;
     protected boolean showToolbar = true;
-    private int menuItemId;
-    protected WebView webview;
     protected int webViewLayout = R.layout.externalsite_webview;
+    private int menuItemId;
+    @Getter protected WebView webview;
+    private boolean showSidebar;
     String url;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -89,6 +92,15 @@ public class ExternalSiteWebView extends FileActivity {
         webview.setFocusable(true);
         webview.setFocusableInTouchMode(true);
         webview.setClickable(true);
+
+
+        // allow debugging (when building the debug version); see details in
+        // https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
+            (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+            Log_OC.d(this, "Enable debug for webView");
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
 
         // setup toolbar
         if (showToolbar) {

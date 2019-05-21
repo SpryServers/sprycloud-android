@@ -2,9 +2,11 @@
  * Nextcloud Android client application
  *
  * @author Bartosz Przybylski
+ * @author Chris Narkiewicz
  * Copyright (C) 2015 Bartosz Przybylski
  * Copyright (C) 2015 ownCloud Inc.
  * Copyright (C) 2016 Nextcloud.
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -35,28 +37,40 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.appinfo.AppInfo;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
+import com.nextcloud.client.whatsnew.WhatsNewService;
+import com.owncloud.android.BuildConfig;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.authentication.AuthenticatorActivity;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.features.FeatureItem;
 import com.owncloud.android.ui.adapter.FeaturesViewAdapter;
 import com.owncloud.android.ui.whatsnew.ProgressIndicator;
 import com.owncloud.android.utils.DisplayUtils;
 
-import androidx.viewpager.widget.ViewPager;
+import javax.inject.Inject;
 
 /**
  * Activity displaying general feature after a fresh install.
  */
-public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageChangeListener, Injectable {
 
     public static final String EXTRA_ALLOW_CLOSE = "ALLOW_CLOSE";
+    public static final String EXTRA_EXIT = "EXIT";
     public static final int FIRST_RUN_RESULT_CODE = 199;
 
     private ProgressIndicator progressIndicator;
+
+    @Inject UserAccountManager userAccountManager;
+    @Inject AppPreferences preferences;
+    @Inject AppInfo appInfo;
+    @Inject WhatsNewService whatsNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +83,7 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
 
         Button loginButton = findViewById(R.id.login);
         loginButton.setBackgroundColor(Color.WHITE);
-        loginButton.setTextColor(Color.BLACK);
+        loginButton.setTextColor(getResources().getColor(R.color.primary));
 
         loginButton.setOnClickListener(v -> {
             if (getIntent().getBooleanExtra(EXTRA_ALLOW_CLOSE, false)) {
@@ -105,17 +119,16 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
         ViewPager viewPager = findViewById(R.id.contentPanel);
 
         // Sometimes, accounts are not deleted when you uninstall the application so we'll do it now
-        if (isFirstRun(this)) {
+        if (whatsNew.isFirstRun()) {
             AccountManager am = (AccountManager) getSystemService(ACCOUNT_SERVICE);
             if (am != null) {
-                for (Account account : AccountUtils.getAccounts(this)) {
+                for (Account account : userAccountManager.getAccounts()) {
                     am.removeAccount(account, null, null);
                 }
             }
         }
 
-        FeaturesViewAdapter featuresViewAdapter = new FeaturesViewAdapter(getSupportFragmentManager(),
-                getFirstRun());
+        FeaturesViewAdapter featuresViewAdapter = new FeaturesViewAdapter(getSupportFragmentManager(), getFirstRun());
         progressIndicator.setNumberOfSteps(featuresViewAdapter.getCount());
         viewPager.setAdapter(featuresViewAdapter);
 
@@ -157,11 +170,17 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
 
         if (getIntent().getBooleanExtra(EXTRA_ALLOW_CLOSE, false)) {
             super.onBackPressed();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), AuthenticatorActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(EXTRA_EXIT, true);
+            startActivity(intent);
+            finish();
         }
     }
 
     private void onFinish() {
-        PreferenceManager.setLastSeenVersionCode(this, MainApp.getVersionCode());
+        preferences.setLastSeenVersionCode(BuildConfig.VERSION_CODE);
     }
 
     @Override
@@ -188,7 +207,8 @@ public class FirstRunActivity extends BaseActivity implements ViewPager.OnPageCh
         }
 
         if (isFirstRun(context) && context instanceof AuthenticatorActivity) {
-            context.startActivity(new Intent(context, FirstRunActivity.class));
+            ((AuthenticatorActivity) context).startActivityForResult(new Intent(context, FirstRunActivity.class),
+                                                                     AuthenticatorActivity.REQUEST_CODE_FIRST_RUN);
             return true;
         } else {
             return false;

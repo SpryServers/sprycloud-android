@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
@@ -48,11 +49,13 @@ import com.owncloud.android.jobs.ContactsBackupJob;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.operations.RefreshFolderOperation;
 import com.owncloud.android.ui.activity.ContactsPreferenceActivity;
-import com.owncloud.android.ui.activity.Preferences;
+import com.owncloud.android.ui.activity.SettingsActivity;
 import com.owncloud.android.ui.fragment.FileFragment;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.PermissionUtil;
 import com.owncloud.android.utils.ThemeUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -63,7 +66,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
@@ -81,13 +83,13 @@ public class ContactsBackupFragment extends FileFragment implements DatePickerDi
     public SwitchCompat backupSwitch;
 
     @BindView(R.id.contacts_datepicker)
-    public AppCompatButton contactsDatePickerBtn;
+    public MaterialButton contactsDatePickerBtn;
 
     @BindView(R.id.contacts_last_backup_timestamp)
     public TextView lastBackup;
 
     @BindView(R.id.contacts_backup_now)
-    public AppCompatButton backupNow;
+    public MaterialButton backupNow;
 
     private Date selectedDate;
     private boolean calendarPickerOpen;
@@ -106,7 +108,7 @@ public class ContactsBackupFragment extends FileFragment implements DatePickerDi
 
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // use grey as fallback for elements where custom theming is not available
         if (ThemeUtils.themingEnabled(getContext())) {
@@ -183,7 +185,7 @@ public class ContactsBackupFragment extends FileFragment implements DatePickerDi
         contactsDatePickerBtn.getBackground().setColorFilter(accentColor, PorterDuff.Mode.SRC_ATOP);
         contactsDatePickerBtn.setTextColor(fontColor);
 
-        AppCompatButton chooseDate = view.findViewById(R.id.contacts_datepicker);
+        MaterialButton chooseDate = view.findViewById(R.id.contacts_datepicker);
         chooseDate.getBackground().setColorFilter(accentColor, PorterDuff.Mode.SRC_ATOP);
         chooseDate.setTextColor(ThemeUtils.fontColor(getContext()));
 
@@ -271,7 +273,7 @@ public class ContactsBackupFragment extends FileFragment implements DatePickerDi
                         contactsPreferenceActivity.openDrawer();
                     }
                 } else {
-                    Intent settingsIntent = new Intent(getContext(), Preferences.class);
+                    Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
                     startActivity(settingsIntent);
                 }
                 retval = true;
@@ -463,7 +465,7 @@ public class ContactsBackupFragment extends FileFragment implements DatePickerDi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (datePickerDialog != null) {
             outState.putBoolean(KEY_CALENDAR_PICKER_OPEN, datePickerDialog.isShowing());

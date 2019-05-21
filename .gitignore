@@ -38,3 +38,9 @@ src/gplay/res/values/setup.xml
 *.iml
 build
 /gradle.properties
+<<<<<<< HEAD
+=======
+
+fastlane/Fastfile
+
+>>>>>>> nextcloud/master

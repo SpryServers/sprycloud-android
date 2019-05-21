@@ -52,6 +52,8 @@
     <!-- WRITE_EXTERNAL_STORAGE may be enabled or disabled by the user after installation in
         API >= 23; the app needs to handle this -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Next permissions are always approved in installation time, the apps needs to do nothing special in runtime -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -70,6 +72,7 @@
     must request the FOREGROUND_SERVICE permission -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
+    <uses-sdk tools:overrideLibrary="com.blikoon.qrcodescanner" />
 
     <application
         android:name=".MainApp"
@@ -83,6 +86,11 @@
         android:installLocation="internalOnly"
         android:manageSpaceActivity="com.owncloud.android.ui.activity.ManageSpaceActivity"
         tools:ignore="UnusedAttribute">
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity
             android:name=".ui.activity.FileDisplayActivity"
             android:launchMode="singleTop"
@@ -107,6 +115,8 @@
         <activity android:name=".ui.activities.ActivitiesActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".ui.activity.SyncedFoldersActivity"/>
+        <receiver android:name="com.owncloud.android.jobs.MediaFoldersDetectionJob$NotificationReceiver" />
+        <receiver android:name="com.owncloud.android.jobs.NotificationJob$NotificationReceiver" />
         <activity android:name=".ui.activity.UploadFilesActivity" />
         <activity android:name=".ui.activity.ExternalSiteWebView"
                   android:configChanges="orientation|screenSize|keyboardHidden" />
@@ -132,7 +142,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.Preferences"
+            android:name=".ui.activity.SettingsActivity"
             android:theme="@style/Theme.ownCloud" >
         </activity>
         <activity
@@ -178,7 +188,40 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/sync_string_files"
-            android:syncable="true" />
+            android:syncable="true">
+            <path-permission
+                android:pathPrefix="/shares"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/capabilities"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/uploads"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/synced_folders"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/external_links"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/arbitrary_data"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/virtual"
+                android:readPermission="false"
+                android:writePermission="false" />
+            <path-permission
+                android:pathPrefix="/filesystem"
+                android:readPermission="false"
+                android:writePermission="false" />
+        </provider>
 
         <provider
             android:name=".providers.UsersAndGroupsSearchProvider"
@@ -213,6 +256,8 @@
         <provider
             android:name=".providers.DiskLruImageCacheFileProvider"
             android:authorities="@string/image_cache_provider_authority"
+            android:grantUriPermissions="true"
+            android:readPermission="android.permission.MANAGE_DOCUMENTS"
             android:exported="true">
         </provider>
 
@@ -223,23 +268,28 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.ownCloud.noActionBar.Login">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/oauth2_redirect_scheme" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.owncloud.android.workaround.accounts.CREATE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".authentication.DeepLinkLoginActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true"
+            android:theme="@style/Theme.ownCloud.noActionBar.Login">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/login_data_own_scheme" android:host="login"/>
+
+                <data
+                    android:host="login"
+                    android:scheme="@string/login_data_own_scheme" />
             </intent-filter>
         </activity>
 
@@ -248,7 +298,9 @@
         <service android:name=".files.services.FileUploader" />
         <service android:name=".media.MediaService" />
 
-        <activity android:name=".ui.activity.PassCodeActivity" />
+        <activity
+            android:name=".ui.activity.PassCodeActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.activity.RequestCredentialsActivity"
             android:launchMode="singleTask" />
@@ -262,7 +314,7 @@
         <activity
             android:name=".ui.trashbin.TrashbinActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".ui.activity.WhatsNewActivity"
+        <activity android:name="com.nextcloud.client.whatsnew.WhatsNewActivity"
                   android:theme="@style/Theme.ownCloud.noActionBar.Login" />
         <activity
             android:name=".ui.activity.FirstRunActivity"
@@ -281,7 +333,7 @@
 
         <activity
             android:name=".ui.activity.CopyToClipboardActivity"
-            android:icon="@drawable/copy_link"
+            android:icon="@drawable/shared_via_link"
             android:label="@string/copy_link" />
         <activity
             android:name=".ui.activity.FolderPickerActivity"

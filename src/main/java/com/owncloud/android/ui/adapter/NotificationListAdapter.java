@@ -20,21 +20,22 @@
 package com.owncloud.android.ui.adapter;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,27 +46,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.StreamEncoder;
 import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.caverock.androidsvg.SVG;
+import com.google.android.material.button.MaterialButton;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.OwnCloudClient;
-import com.owncloud.android.lib.common.operations.RemoteOperation;
-import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.notifications.models.Action;
 import com.owncloud.android.lib.resources.notifications.models.Notification;
 import com.owncloud.android.lib.resources.notifications.models.RichObject;
 import com.owncloud.android.ui.activity.NotificationsActivity;
+import com.owncloud.android.ui.asynctasks.DeleteNotificationTask;
+import com.owncloud.android.ui.asynctasks.NotificationExecuteActionTask;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.ThemeUtils;
 import com.owncloud.android.utils.svg.SvgDecoder;
 import com.owncloud.android.utils.svg.SvgDrawableTranscoder;
 import com.owncloud.android.utils.svg.SvgSoftwareLayerSetter;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +74,6 @@ import butterknife.ButterKnife;
  * This Adapter populates a RecyclerView with all notifications for an account within the app.
  */
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
-    private static final String TAG = NotificationListAdapter.class.getSimpleName();
     private StyleSpan styleSpanBold = new StyleSpan(Typeface.BOLD);
     private ForegroundColorSpan foregroundColorSpanBlack = new ForegroundColorSpan(Color.BLACK);
 
@@ -135,27 +129,51 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
         // add action buttons
         holder.buttons.removeAllViews();
-        Button button;
+        MaterialButton button;
 
-
+        Resources resources = notificationsActivity.getResources();
+        NotificationExecuteActionTask task = new NotificationExecuteActionTask(client, holder, notificationsActivity);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(20, 0, 20, 0);
+        
         for (Action action : notification.getActions()) {
-            button = new Button(notificationsActivity);
-            button.setText(action.label);
+            button = new MaterialButton(notificationsActivity);
+
+            int primaryColor = ThemeUtils.primaryColor(notificationsActivity);
 
             if (action.primary) {
-                button.getBackground().setColorFilter(ThemeUtils.primaryColor(notificationsActivity, true),
-                        PorterDuff.Mode.SRC_ATOP);
+                button.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.SRC_ATOP);
                 button.setTextColor(ThemeUtils.fontColor(notificationsActivity));
+                button.setTypeface(button.getTypeface(), Typeface.BOLD);
+            } else {
+                button.setStrokeColor(ColorStateList.valueOf(resources.getColor(R.color.grey_200)));
+                button.setStrokeWidth(3);
+
+                button.getBackground().setColorFilter(resources.getColor(R.color.transparent),
+                                                      PorterDuff.Mode.SRC_ATOP);
+                button.setTextColor(primaryColor);
+                button.setTypeface(button.getTypeface(), Typeface.BOLD);
             }
+
+            button.setText(action.label);
+            button.setCornerRadiusResource(R.dimen.button_corner_radius);
+
+            button.setLayoutParams(params);
+            button.setGravity(Gravity.CENTER);
+
+            button.setPadding(40, 40, 40, 40);
 
             button.setOnClickListener(v -> {
                 setButtonEnabled(holder, false);
-
-                new ExecuteActionTask(holder).execute(action);
+                task.execute(action);
             });
 
             holder.buttons.addView(button);
         }
+
+        holder.dismiss.setOnClickListener(v -> new DeleteNotificationTask(client, notification, holder,
+                                                                          notificationsActivity).execute());
     }
 
     private SpannableStringBuilder makeSpecialPartsBold(Notification notification) {
@@ -186,67 +204,23 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         return ssb;
     }
 
-    private class ExecuteActionTask extends AsyncTask<Action, Void, Boolean> {
+    public void removeNotification(NotificationViewHolder holder) {
+        int position = holder.getAdapterPosition();
 
-        private NotificationViewHolder holder;
-
-        ExecuteActionTask(NotificationViewHolder holder) {
-            this.holder = holder;
-        }
-
-        @Override
-        protected Boolean doInBackground(Action... actions) {
-            HttpMethod method;
-            Action action = actions[0];
-
-            switch (action.type) {
-                case "GET":
-                    method = new GetMethod(action.link);
-                    break;
-
-                case "POST":
-                    method = new PostMethod(action.link);
-                    break;
-
-                case "DELETE":
-                    method = new DeleteMethod(action.link);
-                    break;
-
-                default:
-                    // do nothing
-                    return false;
-            }
-
-            method.setRequestHeader(RemoteOperation.OCS_API_HEADER, RemoteOperation.OCS_API_HEADER_VALUE);
-
-            int status;
-            try {
-                status = client.executeMethod(method);
-            } catch (IOException e) {
-                Log_OC.e(TAG, "Execution of notification action failed: " + e);
-                return false;
-            }
-
-            return status == HttpStatus.SC_OK || status == HttpStatus.SC_ACCEPTED;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success) {
-                int position = holder.getAdapterPosition();
-
-                if (position >= 0 && position < notificationsList.size()) {
-                    notificationsList.remove(position);
-                    notifyItemRemoved(position);
-                }
-            } else {
-                setButtonEnabled(holder, true);
-                DisplayUtils.showSnackMessage(notificationsActivity, "Failed to execute action!");
-            }
+        if (position >= 0 && position < notificationsList.size()) {
+            notificationsList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, notificationsList.size());
         }
     }
 
-    private void setButtonEnabled(NotificationViewHolder holder, boolean enabled) {
+    public void removeAllNotifications() {
+        notificationsList.clear();
+        notifyDataSetChanged();
+    }
+
+
+    public void setButtonEnabled(NotificationViewHolder holder, boolean enabled) {
         for (int i = 0; i < holder.buttons.getChildCount(); i++) {
             holder.buttons.getChildAt(i).setEnabled(enabled);
         }
@@ -285,7 +259,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         return notificationsList.size();
     }
 
-    static class NotificationViewHolder extends RecyclerView.ViewHolder {
+    public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.notification_icon)
         public ImageView icon;
         @BindView(R.id.notification_subject)
@@ -296,6 +270,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         public TextView dateTime;
         @BindView(R.id.notification_buttons)
         public LinearLayout buttons;
+        @BindView(R.id.notification_dismiss)
+        public ImageView dismiss;
 
         private NotificationViewHolder(View itemView) {
             super(itemView);

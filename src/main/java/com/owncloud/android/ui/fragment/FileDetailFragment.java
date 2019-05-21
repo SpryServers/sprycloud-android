@@ -4,7 +4,7 @@
  *   @author Bartek Przybylski
  *   @author David A. Velasco
  *   @author Andy Scherzinger
- *   Copyright (C) 2011  Bartek Przybylski
+ *   Copyright (C) 2011 Bartek Przybylski
  *   Copyright (C) 2016 ownCloud Inc.
  *   Copyright (C) 2018 Andy Scherzinger
  *
@@ -23,6 +23,7 @@
 package com.owncloud.android.ui.fragment;
 
 import android.accounts.Account;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -34,11 +35,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.FileDataStorageManager;
@@ -61,6 +65,8 @@ import com.owncloud.android.utils.ThemeUtils;
 
 import java.lang.ref.WeakReference;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -71,47 +77,62 @@ import butterknife.Unbinder;
 /**
  * This Fragment is used to display the details about a file.
  */
-public class FileDetailFragment extends FileFragment implements OnClickListener {
+public class FileDetailFragment extends FileFragment implements OnClickListener, Injectable {
     private static final String TAG = FileDetailFragment.class.getSimpleName();
-    public static final String FTAG_CONFIRMATION = "REMOVE_CONFIRMATION_FRAGMENT";
-    public static final String FTAG_RENAME_FILE = "RENAME_FILE_FRAGMENT";
+    private static final String FTAG_CONFIRMATION = "REMOVE_CONFIRMATION_FRAGMENT";
+    static final String FTAG_RENAME_FILE = "RENAME_FILE_FRAGMENT";
 
     private static final String ARG_FILE = "FILE";
     private static final String ARG_ACCOUNT = "ACCOUNT";
     private static final String ARG_ACTIVE_TAB = "TAB";
 
-    @Nullable @BindView(R.id.progressBlock)
+    @BindView(R.id.detail_container)
+    LinearLayout detailContainer;
+
+    @BindView(R.id.progressBlock)
     View downloadProgressContainer;
 
-    @Nullable @BindView(R.id.cancelBtn)
+    @BindView(R.id.cancelBtn)
     ImageButton cancelButton;
 
-    @Nullable @BindView(R.id.progressBar)
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @Nullable @BindView(R.id.progressText)
+    @BindView(R.id.progressText)
     TextView progressText;
 
-    @Nullable @BindView(R.id.filename)
+    @BindView(R.id.filename)
     TextView fileName;
 
-    @Nullable @BindView(R.id.size)
+    @BindView(R.id.size)
     TextView fileSize;
 
-    @Nullable @BindView(R.id.modified)
+    @BindView(R.id.last_modification_timestamp)
     TextView fileModifiedTimestamp;
 
-    @Nullable @BindView(R.id.favorite)
+    @BindView(R.id.favorite)
     ImageView favoriteIcon;
 
-    @Nullable @BindView(R.id.overflow_menu)
+    @BindView(R.id.overflow_menu)
     ImageView overflowMenu;
 
-    @Nullable @BindView(R.id.tab_layout)
+    @BindView(R.id.tab_layout)
     TabLayout tabLayout;
 
-    @Nullable @BindView(R.id.pager)
+    @BindView(R.id.pager)
     ViewPager viewPager;
+
+    @BindView(R.id.empty_list_view)
+    public LinearLayout emptyContentContainer;
+
+    @BindView(R.id.empty_list_view_headline)
+    public TextView emptyContentHeadline;
+
+    @BindView(R.id.empty_list_icon)
+    public ImageView emptyContentIcon;
+
+    @BindView(R.id.empty_list_progress)
+    public ProgressBar emptyContentProgressBar;
 
     private int layout;
     private View view;
@@ -119,9 +140,12 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     private Account account;
     private Unbinder unbinder;
 
-    public ProgressListener progressListener;
+    private ProgressListener progressListener;
     private ToolbarActivity activity;
     private int activeTab;
+
+    @Inject
+    AppPreferences preferences;
 
     /**
      * Public factory method to create new FileDetailFragment instances.
@@ -165,12 +189,12 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
      * Creates an empty details fragment.
      *
      * It's necessary to keep a public constructor without parameters; the system uses it when tries
-     * to reinstantiate a fragment automatically.
+     * to reinstate a fragment automatically.
      */
     public FileDetailFragment() {
         super();
         account = null;
-        layout = R.layout.empty_list;
+        layout = R.layout.file_details_fragment;
         progressListener = null;
     }
 
@@ -193,10 +217,15 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
-        if (getFile()!= null && MimeTypeUtil.isImage(getFile()) && previewLoaded) {
+        if (previewLoaded && getFile() != null && MimeTypeUtil.isImage(getFile())) {
             activatePreviewImage();
         }
     }
@@ -222,21 +251,29 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        setFile(getArguments().getParcelable(ARG_FILE));
-        account = getArguments().getParcelable(ARG_ACCOUNT);
-        activeTab = getArguments().getInt(ARG_ACTIVE_TAB, 0);
+        Bundle arguments = getArguments();
+
+        if (arguments == null) {
+            throw new IllegalArgumentException("Arguments may not be null");
+        }
+
+        setFile(arguments.getParcelable(ARG_FILE));
+        account = arguments.getParcelable(ARG_ACCOUNT);
+        activeTab = arguments.getInt(ARG_ACTIVE_TAB, 0);
 
         if (savedInstanceState != null) {
             setFile(savedInstanceState.getParcelable(FileActivity.EXTRA_FILE));
             account = savedInstanceState.getParcelable(FileActivity.EXTRA_ACCOUNT);
         }
 
-        if (getFile() != null && account != null) {
-            layout = R.layout.file_details_fragment;
-        }
-
         view = inflater.inflate(layout, null);
         unbinder = ButterKnife.bind(this, view);
+
+        if (getFile() == null || account == null) {
+            showEmptyContent();
+        } else {
+            emptyContentContainer.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -249,12 +286,13 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
             cancelButton.setOnClickListener(this);
             favoriteIcon.setOnClickListener(this);
             overflowMenu.setOnClickListener(this);
+            fileModifiedTimestamp.setOnClickListener(this);
 
             updateFileDetails(false, false);
         }
     }
 
-    public void onOverflowIconClicked(View view) {
+    private void onOverflowIconClicked(View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
         popup.inflate(R.menu.file_details_actions_menu);
         prepareOptionsMenu(popup.getMenu());
@@ -267,10 +305,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
         tabLayout.removeAllTabs();
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.drawer_item_activities));
-
-        if (getFile().canReshare()) {
-            tabLayout.addTab(tabLayout.newTab().setText(R.string.share_dialog_title));
-        }
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.share_dialog_title));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setSelectedTabIndicatorColor(ThemeUtils.primaryAccentColor(getContext()));
@@ -293,7 +328,11 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
                 viewPager.setCurrentItem(tab.getPosition());
 
                 if (tab.getPosition() == 0) {
-                    getFileDetailActivitiesFragment().markCommentsAsRead();
+                    FileDetailActivitiesFragment fragment = getFileDetailActivitiesFragment();
+
+                    if (fragment != null) {
+                        fragment.markCommentsAsRead();
+                    }
                 }
             }
 
@@ -366,11 +405,11 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     }
 
     private void prepareOptionsMenu(Menu menu) {
-        if (mContainerActivity.getStorageManager() != null) {
+        if (containerActivity.getStorageManager() != null) {
             FileMenuFilter mf = new FileMenuFilter(
                 getFile(),
-                mContainerActivity.getStorageManager().getAccount(),
-                mContainerActivity,
+                containerActivity.getStorageManager().getAccount(),
+                containerActivity,
                 getActivity(),
                 false
             );
@@ -393,11 +432,11 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     private boolean optionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_send_file: {
-                mContainerActivity.getFileOperationsHelper().sendShareFile(getFile(), true);
+                containerActivity.getFileOperationsHelper().sendShareFile(getFile(), true);
                 return true;
             }
             case R.id.action_open_file_with: {
-                mContainerActivity.getFileOperationsHelper().openFile(getFile());
+                containerActivity.getFileOperationsHelper().openFile(getFile());
                 return true;
             }
             case R.id.action_remove_file: {
@@ -411,12 +450,12 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
                 return true;
             }
             case R.id.action_cancel_sync: {
-                ((FileDisplayActivity)mContainerActivity).cancelTransference(getFile());
+                ((FileDisplayActivity) containerActivity).cancelTransference(getFile());
                 return true;
             }
             case R.id.action_download_file:
             case R.id.action_sync_file: {
-                mContainerActivity.getFileOperationsHelper().syncFile(getFile());
+                containerActivity.getFileOperationsHelper().syncFile(getFile());
                 return true;
             }
             case R.id.action_encrypted: {
@@ -436,14 +475,14 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cancelBtn: {
-                ((FileDisplayActivity) mContainerActivity).cancelTransference(getFile());
+                ((FileDisplayActivity) containerActivity).cancelTransference(getFile());
                 break;
             }
             case R.id.favorite: {
                 if (getFile().isFavorite()) {
-                    mContainerActivity.getFileOperationsHelper().toggleFavoriteFile(getFile(), false);
+                    containerActivity.getFileOperationsHelper().toggleFavoriteFile(getFile(), false);
                 } else {
-                    mContainerActivity.getFileOperationsHelper().toggleFavoriteFile(getFile(), true);
+                    containerActivity.getFileOperationsHelper().toggleFavoriteFile(getFile(), true);
                 }
                 setFavoriteIconStatus(!getFile().isFavorite());
                 break;
@@ -451,6 +490,11 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
             case R.id.overflow_menu: {
                 onOverflowIconClicked(v);
                 break;
+            }
+            case R.id.last_modification_timestamp: {
+                boolean showDetailedTimestamp = !preferences.isShowDetailedTimestampEnabled();
+                preferences.setShowDetailedTimestampEnabled(showDetailedTimestamp);
+                setFileModificationTimestamp(getFile(), showDetailedTimestamp);
             }
             default:
                 Log_OC.e(TAG, "Incorrect view clicked!");
@@ -490,7 +534,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
      */
     public void updateFileDetails(boolean transferring, boolean refresh) {
         if (readyToShow()) {
-            FileDataStorageManager storageManager = mContainerActivity.getStorageManager();
+            FileDataStorageManager storageManager = containerActivity.getStorageManager();
 
             if (storageManager == null) {
                 return;
@@ -508,13 +552,16 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
                 fileName.setVisibility(View.GONE);
             }
             fileSize.setText(DisplayUtils.bytesToHumanReadable(file.getFileLength()));
-            fileModifiedTimestamp.setText(DisplayUtils.getRelativeTimestamp(getContext(), file.getModificationTimestamp()));
+
+            boolean showDetailedTimestamp = preferences.isShowDetailedTimestampEnabled();
+            setFileModificationTimestamp(file, showDetailedTimestamp);
+
             setFilePreview(file);
             setFavoriteIconStatus(file.isFavorite());
 
             // configure UI for depending upon local state of the file
-            FileDownloaderBinder downloaderBinder = mContainerActivity.getFileDownloaderBinder();
-            FileUploaderBinder uploaderBinder = mContainerActivity.getFileUploaderBinder();
+            FileDownloaderBinder downloaderBinder = containerActivity.getFileDownloaderBinder();
+            FileUploaderBinder uploaderBinder = containerActivity.getFileUploaderBinder();
             if (transferring
                     || (downloaderBinder != null && downloaderBinder.isDownloading(account, file))
                     || (uploaderBinder != null && uploaderBinder.isUploading(account, file))) {
@@ -534,6 +581,15 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
         setupViewPager();
 
         getView().invalidate();
+    }
+
+    private void setFileModificationTimestamp(OCFile file, boolean showDetailedTimestamp) {
+        if (showDetailedTimestamp) {
+            fileModifiedTimestamp.setText(DisplayUtils.unixTimeToHumanReadable(file.getModificationTimestamp()));
+        } else {
+            fileModifiedTimestamp.setText(DisplayUtils.getRelativeTimestamp(getContext(),
+                                                                            file.getModificationTimestamp()));
+        }
     }
 
     private void setFavoriteIconStatus(boolean isFavorite) {
@@ -561,7 +617,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
     private void setFilePreview(OCFile file) {
         Bitmap resizedImage;
 
-        if (MimeTypeUtil.isImage(file) && activity != null) {
+        if (activity != null && MimeTypeUtil.isImage(file)) {
             String tagId = String.valueOf(ThumbnailsCacheManager.PREFIX_RESIZED_IMAGE + getFile().getRemoteId());
             resizedImage = ThumbnailsCacheManager.getBitmapFromDiskCache(tagId);
 
@@ -582,12 +638,12 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
 
                 // generate new resized image
                 if (ThumbnailsCacheManager.cancelPotentialThumbnailWork(getFile(), activity.getPreviewImageView()) &&
-                        mContainerActivity.getStorageManager() != null) {
+                        containerActivity.getStorageManager() != null) {
                     final ThumbnailsCacheManager.ResizedImageGenerationTask task =
                             new ThumbnailsCacheManager.ResizedImageGenerationTask(this,
                                     activity.getPreviewImageView(),
-                                    mContainerActivity.getStorageManager(),
-                                    mContainerActivity.getStorageManager().getAccount());
+                                    containerActivity.getStorageManager(),
+                                    containerActivity.getStorageManager().getAccount());
 
                     if (resizedImage == null) {
                         resizedImage = thumbnail;
@@ -617,8 +673,8 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
             // show the progress bar for the transfer
             downloadProgressContainer.setVisibility(View.VISIBLE);
             progressText.setVisibility(View.VISIBLE);
-            FileDownloaderBinder downloaderBinder = mContainerActivity.getFileDownloaderBinder();
-            FileUploaderBinder uploaderBinder = mContainerActivity.getFileUploaderBinder();
+            FileDownloaderBinder downloaderBinder = containerActivity.getFileDownloaderBinder();
+            FileUploaderBinder uploaderBinder = containerActivity.getFileUploaderBinder();
             //if (getFile().isDownloading()) {
             if (downloaderBinder != null && downloaderBinder.isDownloading(account, getFile())) {
                 progressText.setText(R.string.downloader_download_in_progress_ticker);
@@ -653,12 +709,12 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
 
     public void listenForTransferProgress() {
         if (progressListener != null) {
-            if (mContainerActivity.getFileDownloaderBinder() != null) {
-                mContainerActivity.getFileDownloaderBinder().
+            if (containerActivity.getFileDownloaderBinder() != null) {
+                containerActivity.getFileDownloaderBinder().
                         addDatatransferProgressListener(progressListener, account, getFile());
             }
-            if (mContainerActivity.getFileUploaderBinder() != null) {
-                mContainerActivity.getFileUploaderBinder().
+            if (containerActivity.getFileUploaderBinder() != null) {
+                containerActivity.getFileUploaderBinder().
                         addDatatransferProgressListener(progressListener, account, getFile());
             }
         } else {
@@ -666,16 +722,29 @@ public class FileDetailFragment extends FileFragment implements OnClickListener 
         }
     }
 
-    public void leaveTransferProgress() {
+    private void leaveTransferProgress() {
         if (progressListener != null) {
-            if (mContainerActivity.getFileDownloaderBinder() != null) {
-                mContainerActivity.getFileDownloaderBinder().
+            if (containerActivity.getFileDownloaderBinder() != null) {
+                containerActivity.getFileDownloaderBinder().
                         removeDatatransferProgressListener(progressListener, account, getFile());
             }
-            if (mContainerActivity.getFileUploaderBinder() != null) {
-                mContainerActivity.getFileUploaderBinder().
+            if (containerActivity.getFileUploaderBinder() != null) {
+                containerActivity.getFileUploaderBinder().
                         removeDatatransferProgressListener(progressListener, account, getFile());
             }
+        }
+    }
+
+    private void showEmptyContent() {
+        if (emptyContentContainer != null) {
+            emptyContentContainer.setVisibility(View.VISIBLE);
+            detailContainer.setVisibility(View.GONE);
+
+            emptyContentHeadline.setText(R.string.file_details_no_content);
+
+            emptyContentProgressBar.setVisibility(View.GONE);
+            emptyContentIcon.setImageResource(R.drawable.ic_list_empty_error);
+            emptyContentIcon.setVisibility(View.VISIBLE);
         }
     }
 

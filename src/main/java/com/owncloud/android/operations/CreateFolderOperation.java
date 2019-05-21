@@ -34,6 +34,9 @@ import com.owncloud.android.operations.common.SyncOperation;
 import com.owncloud.android.utils.FileStorageUtils;
 import com.owncloud.android.utils.MimeType;
 
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
+
 
 /**
  * Access to remote operation performing the creation of a new folder in the ownCloud server.
@@ -65,7 +68,7 @@ public class CreateFolderOperation extends SyncOperation implements OnRemoteOper
 
         if (result.isSuccess()) {
             RemoteOperationResult remoteFolderOperationResult = new ReadFolderRemoteOperation(mRemotePath)
-                .execute(client, true);
+                .execute(client);
 
             createdRemoteFolder = (RemoteFile) remoteFolderOperationResult.getData().get(0);
             saveFolderInDB();
@@ -99,13 +102,13 @@ public class CreateFolderOperation extends SyncOperation implements OnRemoteOper
                 getFileByPath(FileStorageUtils.getParentPath(mRemotePath)) == null){// When parent
                                                                                     // of remote path
                                                                                     // is not created
-            String[] subFolders = mRemotePath.split("/");
-            String composedRemotePath = "/";
+            String[] subFolders = mRemotePath.split(PATH_SEPARATOR);
+            String composedRemotePath = ROOT_PATH;
 
             // For each ancestor folders create them recursively
             for (String subFolder : subFolders) {
                 if (!subFolder.isEmpty()) {
-                    composedRemotePath = composedRemotePath + subFolder + "/";
+                    composedRemotePath = composedRemotePath + subFolder + PATH_SEPARATOR;
                     mRemotePath = composedRemotePath;
                     saveFolderInDB();
                 }
@@ -118,6 +121,7 @@ public class CreateFolderOperation extends SyncOperation implements OnRemoteOper
             newDir.setRemoteId(createdRemoteFolder.getRemoteId());
             newDir.setModificationTimestamp(System.currentTimeMillis());
             newDir.setEncrypted(FileStorageUtils.checkEncryptionStatus(newDir, getStorageManager()));
+            newDir.setPermissions(createdRemoteFolder.getPermissions());
             getStorageManager().saveFile(newDir);
 
             Log_OC.d(TAG, "Create directory " + mRemotePath + " in Database");

@@ -2,7 +2,9 @@
  * Nextcloud Android client application
  *
  * @author Mario Danic
+ * @author Chris Narkiewicz
  * Copyright (C) 2018 Mario Danic
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -28,8 +30,8 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.Device;
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
@@ -45,10 +47,18 @@ import java.util.Set;
 
 import androidx.annotation.NonNull;
 
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
+
 public class OfflineSyncJob extends Job {
     public static final String TAG = "OfflineSyncJob";
 
     private static final String WAKELOCK_TAG_SEPARATION = ":";
+    private UserAccountManager userAccountManager;
+
+    public OfflineSyncJob(UserAccountManager userAccountManager) {
+        this.userAccountManager = userAccountManager;
+    }
 
     @NonNull
     @Override
@@ -76,13 +86,13 @@ public class OfflineSyncJob extends Job {
                 }
             }
 
-            Account[] accounts = AccountUtils.getAccounts(context);
+            Account[] accounts = userAccountManager.getAccounts();
 
             for (Account account : accounts) {
                 FileDataStorageManager storageManager = new FileDataStorageManager(account,
                         getContext().getContentResolver());
 
-                OCFile ocRoot = storageManager.getFileByPath("/");
+                OCFile ocRoot = storageManager.getFileByPath(ROOT_PATH);
 
                 if (ocRoot.getStoragePath() == null) {
                     break;
@@ -101,7 +111,7 @@ public class OfflineSyncJob extends Job {
 
     private void recursive(File folder, FileDataStorageManager storageManager, Account account) {
         String downloadFolder = FileStorageUtils.getSavePath(account.name);
-        String folderName = folder.getAbsolutePath().replaceFirst(downloadFolder, "") + "/";
+        String folderName = folder.getAbsolutePath().replaceFirst(downloadFolder, "") + PATH_SEPARATOR;
         Log_OC.d(TAG, folderName + ": enter");
 
         // exit

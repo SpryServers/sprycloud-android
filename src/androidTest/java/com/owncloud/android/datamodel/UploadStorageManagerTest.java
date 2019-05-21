@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 
+import com.nextcloud.client.account.CurrentAccountProvider;
 import com.owncloud.android.db.OCUpload;
 
 import org.junit.After;
@@ -28,12 +29,13 @@ public class UploadStorageManagerTest {
 
     private Account[] Accounts;
     private UploadsStorageManager uploadsStorageManager;
+    private CurrentAccountProvider currentAccountProvider = () -> null;
 
     @Before
     public void setUp() {
         Context instrumentationCtx = InstrumentationRegistry.getTargetContext();
         ContentResolver contentResolver = instrumentationCtx.getContentResolver();
-        uploadsStorageManager = new UploadsStorageManager(contentResolver, instrumentationCtx);
+        uploadsStorageManager = new UploadsStorageManager(currentAccountProvider, contentResolver);
         Accounts = new Account[]{new Account("A", "A"), new Account("B", "B")};
     }
 

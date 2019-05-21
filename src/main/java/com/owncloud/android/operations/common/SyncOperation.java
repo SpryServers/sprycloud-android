@@ -1,4 +1,4 @@
-/**
+/*
  *   ownCloud Android client application
  *
  *   @author David A. Velasco
@@ -29,32 +29,26 @@ import com.owncloud.android.lib.common.operations.OnRemoteOperationListener;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 
+import lombok.Getter;
+
 
 /**
  * Operation which execution involves both interactions with an ownCloud server and
  * with local data in the device.
- * 
+ *
  * Provides methods to execute the operation both synchronously or asynchronously.
  */
 public abstract class SyncOperation extends RemoteOperation {
-	
-    //private static final String TAG = SyncOperation.class.getSimpleName();
-
-    private FileDataStorageManager mStorageManager;
-    
-    public FileDataStorageManager getStorageManager() {
-        return mStorageManager;
-    }
-	
+    @Getter private FileDataStorageManager storageManager;
 
     /**
      * Synchronously executes the operation on the received ownCloud account.
-     * 
+     *
      * Do not call this method from the main thread.
-     * 
+     *
      * This method should be used whenever an ownCloud account is available, instead of
      * {@link #execute(OwnCloudClient, com.owncloud.android.datamodel.FileDataStorageManager)}.
-     * 
+     *
      * @param storageManager
      * @param context   Android context for the component calling the method.
      * @return          Result of the operation.
@@ -68,16 +62,16 @@ public abstract class SyncOperation extends RemoteOperation {
             throw new IllegalArgumentException("Trying to execute a sync operation with a " +
                     "storage manager for a NULL account");
         }
-        mStorageManager = storageManager;
-        return super.execute(mStorageManager.getAccount(), context);
+        this.storageManager = storageManager;
+        return super.execute(this.storageManager.getAccount(), context);
     }
-    
-	
-	/**
+
+
+    /**
 	 * Synchronously executes the remote operation
-	 * 
+     *
      * Do not call this method from the main thread.
-     * 
+     *
 	 * @param client	Client object to reach an ownCloud server during the execution of the o
      *                  peration.
      * @param storageManager
@@ -89,17 +83,17 @@ public abstract class SyncOperation extends RemoteOperation {
             throw new IllegalArgumentException("Trying to execute a sync operation with a " +
                     "NULL storage manager");
         }
-        mStorageManager = storageManager;
+        this.storageManager = storageManager;
 		return super.execute(client);
 	}
 
-	
+
     /**
      * Asynchronously executes the remote operation
-     * 
+     *
      * This method should be used whenever an ownCloud account is available, instead of
      * {@link #execute(OwnCloudClient)}.
-     * 
+     *
      * @param account           ownCloud account in remote ownCloud server to reach during the
      *                          execution of the operation.
      * @param context           Android context for the component calling the method.
@@ -119,16 +113,16 @@ public abstract class SyncOperation extends RemoteOperation {
             throw new IllegalArgumentException("Trying to execute a sync operation with a
              storage manager for a NULL account");
         }
-        mStorageManager = storageManager;
+        storageManager = storageManager;
         return super.execute(storageManager.getAccount(), context, listener, listenerHandler,
          callerActivity);
     }
     */
 
-    
-	/**
+
+    /**
 	 * Asynchronously executes the remote operation
-	 * 
+     *
 	 * @param client			Client object to reach an ownCloud server during the
      *                          execution of the operation.
 	 * @param listener			Listener to be notified about the execution of the operation.
@@ -142,9 +136,7 @@ public abstract class SyncOperation extends RemoteOperation {
             throw new IllegalArgumentException("Trying to execute a sync operation " +
                     "with a NULL storage manager");
         }
-        mStorageManager = storageManager;
+        this.storageManager = storageManager;
         return super.execute(client, listener, listenerHandler);
 	}
-
-	
 }

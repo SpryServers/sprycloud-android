@@ -2,8 +2,11 @@
  * Nextcloud Android client application
  *
  * @author Mario Danic
+ * @author Chris Narkiewicz
+ *
  * Copyright (C) 2017 Mario Danic
  * Copyright (C) 2017 Nextcloud
+ * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -36,8 +39,9 @@ import android.util.Log;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.Device;
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.FilesystemDataProvider;
 import com.owncloud.android.datamodel.MediaFolderType;
@@ -63,6 +67,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.RequiresApi;
+
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
 
 /**
  * Various utilities that make auto upload tick
@@ -154,10 +160,11 @@ public final class FilesSyncHelper {
         }
     }
 
-    public static void insertAllDBEntries(boolean skipCustom) {
+    public static void insertAllDBEntries(AppPreferences preferences, boolean skipCustom) {
         final Context context = MainApp.getAppContext();
         final ContentResolver contentResolver = context.getContentResolver();
-        SyncedFolderProvider syncedFolderProvider = new SyncedFolderProvider(contentResolver);
+        SyncedFolderProvider syncedFolderProvider = new SyncedFolderProvider(contentResolver,
+                                                                             preferences);
 
         for (SyncedFolder syncedFolder : syncedFolderProvider.getSyncedFolders()) {
             if (syncedFolder.isEnabled() && (MediaFolderType.CUSTOM != syncedFolder.getType() || !skipCustom)) {
@@ -183,11 +190,10 @@ public final class FilesSyncHelper {
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DATE_MODIFIED};
 
         String path = syncedFolder.getLocalPath();
-        if (!path.endsWith("/")) {
-            path = path + "/%";
-        } else {
-            path = path + "%";
+        if (!path.endsWith(PATH_SEPARATOR)) {
+            path = path + PATH_SEPARATOR;
         }
+        path = path + "%";
 
         String syncedFolderInitiatedKey = SYNCEDFOLDERINITIATED + syncedFolder.getId();
         String dateInitiated = arbitraryDataProvider.getValue(GLOBAL, syncedFolderInitiatedKey);
@@ -210,21 +216,20 @@ public final class FilesSyncHelper {
         }
     }
 
-    public static void restartJobsIfNeeded() {
+    public static void restartJobsIfNeeded(UploadsStorageManager uploadsStorageManager, UserAccountManager accountManager) {
         final Context context = MainApp.getAppContext();
 
         FileUploader.UploadRequester uploadRequester = new FileUploader.UploadRequester();
 
         boolean accountExists;
 
-        UploadsStorageManager uploadsStorageManager = new UploadsStorageManager(context.getContentResolver(), context);
         OCUpload[] failedUploads = uploadsStorageManager.getFailedUploads();
 
         for (OCUpload failedUpload : failedUploads) {
             accountExists = false;
 
             // check if accounts still exists
-            for (Account account : AccountUtils.getAccounts(context)) {
+            for (Account account : accountManager.getAccounts()) {
                 if (account.name.equals(failedUpload.getAccountName())) {
                     accountExists = true;
                     break;
@@ -239,7 +244,7 @@ public final class FilesSyncHelper {
         new Thread(() -> {
             if (!Device.getNetworkType(context).equals(JobRequest.NetworkType.ANY) &&
                     !ConnectivityUtils.isInternetWalled(context)) {
-                uploadRequester.retryFailedUploads(context, null, null);
+                uploadRequester.retryFailedUploads(context, null, uploadsStorageManager, null);
             }
         }).start();
     }

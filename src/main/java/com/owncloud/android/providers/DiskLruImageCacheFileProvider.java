@@ -31,8 +31,8 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
@@ -43,18 +43,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
+import dagger.android.AndroidInjection;
 
 public class DiskLruImageCacheFileProvider extends ContentProvider {
     public static final String TAG = DiskLruImageCacheFileProvider.class.getSimpleName();
 
+    @Inject
+    protected UserAccountManager accountManager;
+
     @Override
     public boolean onCreate() {
+        AndroidInjection.inject(this);
         return true;
     }
 
     private OCFile getFile(Uri uri) {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(MainApp.getAppContext());
+        Account account = accountManager.getCurrentAccount();
         FileDataStorageManager fileDataStorageManager = new FileDataStorageManager(account,
                 MainApp.getAppContext().getContentResolver());
 
@@ -86,7 +93,7 @@ public class DiskLruImageCacheFileProvider extends ContentProvider {
 
             //Convert bitmap to byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            thumbnail.compress(Bitmap.CompressFormat.PNG, 90, bos);
             byte[] bitmapData = bos.toByteArray();
 
             //write the bytes in file

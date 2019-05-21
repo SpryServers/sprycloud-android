@@ -2,7 +2,9 @@
  * spryCloud Android client application
  *
  * @author Mario Danic
+ * @author Chris Narkiewicz
  * Copyright (C) 2017 Mario Danic
+ * Copyright (C) 2019 Chris Narkiewicz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,9 +24,10 @@ package com.owncloud.android.utils;
 
 import android.content.Context;
 
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.datamodel.SignatureVerification;
-import com.owncloud.android.db.PreferenceManager;
+import com.nextcloud.client.preferences.AppPreferencesImpl;
 
 import java.security.Key;
 
@@ -34,20 +37,25 @@ public final class PushUtils {
     private PushUtils() {
     }
 
-    public static void pushRegistrationToServer() {
+    public static void pushRegistrationToServer(final UserAccountManager accountManager, final String pushToken) {
         // do nothing
     }
 
-    public static void reinitKeys() {
+    public static void reinitKeys(UserAccountManager accountManager) {
         Context context = MainApp.getAppContext();
-        PreferenceManager.setKeysReInit(context);
+        AppPreferencesImpl.fromContext(context).setKeysReInitEnabled();
     }
 
     public static Key readKeyFromFile(boolean readPublicKey) {
         return null;
     }
 
-    public static SignatureVerification verifySignature(Context context, byte[] signatureBytes, byte[] subjectBytes) {
+    public static SignatureVerification verifySignature(
+        final Context context,
+        final UserAccountManager accountManager,
+        final byte[] signatureBytes,
+        final byte[] subjectBytes
+    ) {
         return null;
     }
 

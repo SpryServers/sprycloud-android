@@ -20,15 +20,14 @@
 package com.owncloud.android.ui.preview;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.graphics.Matrix;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.VirtualFolderType;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.ui.fragment.FileFragment;
 import com.owncloud.android.utils.FileSortOrder;
 import com.owncloud.android.utils.FileStorageUtils;
@@ -67,7 +66,7 @@ public class PreviewImagePagerAdapter extends FragmentStatePagerAdapter {
      */
     public PreviewImagePagerAdapter(FragmentManager fragmentManager, OCFile parentFolder,
                                     Account account, FileDataStorageManager storageManager,
-                                    boolean onlyOnDevice, Context context) {
+                                    boolean onlyOnDevice, AppPreferences preferences) {
         super(fragmentManager);
 
         if (fragmentManager == null) {
@@ -84,7 +83,7 @@ public class PreviewImagePagerAdapter extends FragmentStatePagerAdapter {
         mStorageManager = storageManager;
         mImageFiles = mStorageManager.getFolderImages(parentFolder, onlyOnDevice);
 
-        FileSortOrder sortOrder = PreferenceManager.getSortOrderByFolder(context, parentFolder);
+        FileSortOrder sortOrder = preferences.getSortOrderByFolder(parentFolder);
         mImageFiles = sortOrder.sortCloudFiles(mImageFiles);
 
         mObsoleteFragments = new HashSet<>();
@@ -154,10 +153,9 @@ public class PreviewImagePagerAdapter extends FragmentStatePagerAdapter {
         } else if (file.isDown()) {
             fragment = PreviewImageFragment.newInstance(file, mObsoletePositions.contains(i), false);
         } else {
-            if (mDownloadErrors.contains(i)) {
+            if (mDownloadErrors.remove(i)) {
                 fragment = FileDownloadFragment.newInstance(file, mAccount, true);
                 ((FileDownloadFragment) fragment).setError(true);
-                mDownloadErrors.remove(i);
             } else {
                 if (file.isEncrypted()) {
                     fragment = FileDownloadFragment.newInstance(file, mAccount, mObsoletePositions.contains(i));
@@ -212,8 +210,7 @@ public class PreviewImagePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        if (mObsoleteFragments.contains(object)) {
-            mObsoleteFragments.remove(object);
+        if (mObsoleteFragments.remove(object)) {
             return POSITION_NONE;
         }
         return super.getItemPosition(object);

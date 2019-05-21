@@ -30,6 +30,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -102,6 +103,7 @@ public class RenameFileDialogFragment
         String currentName = mTargetFile.getFileName();
         EditText inputText = v.findViewById(R.id.user_input);
         inputText.setText(currentName);
+        ThemeUtils.themeEditText(getContext(), inputText, false);
         int selectionStart = 0;
         int extensionStart = mTargetFile.isFolder() ? -1 : currentName.lastIndexOf('.');
         int selectionEnd = extensionStart >= 0 ? extensionStart : currentName.length();
@@ -138,7 +140,7 @@ public class RenameFileDialogFragment
                 ((TextView)(getDialog().findViewById(R.id.user_input)))
                     .getText().toString().trim();
 
-            if (newFileName.length() <= 0) {
+            if (TextUtils.isEmpty(newFileName)) {
                 DisplayUtils.showSnackMessage(getActivity(), R.string.filename_empty);
                 return;
             }

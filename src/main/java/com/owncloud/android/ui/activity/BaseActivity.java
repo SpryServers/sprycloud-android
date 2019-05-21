@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.di.Injectable;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
@@ -16,12 +18,14 @@ import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.status.OCCapability;
 
+import javax.inject.Inject;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Base activity with common behaviour for activities dealing with ownCloud {@link Account}s .
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements Injectable {
     private static final String TAG = BaseActivity.class.getSimpleName();
 
     /**
@@ -33,11 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Capabilities of the server where {@link #mCurrentAccount} lives.
      */
     private OCCapability mCapabilities;
-
-    /**
-     * Flag to signal that the activity will is finishing to enforce the creation of an ownCloud {@link Account}.
-     */
-    private boolean mRedirectingToSetupAccount;
 
     /**
      * Flag to signal when the value of mAccount was set.
@@ -54,10 +53,18 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private FileDataStorageManager mStorageManager;
 
+    @Inject UserAccountManager accountManager;
+
+    public UserAccountManager getUserAccountManager() {
+        return accountManager;
+    }
+
     @Override
-    protected void onNewIntent (Intent intent) {
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
         Log_OC.v(TAG, "onNewIntent() start");
-        Account current = AccountUtils.getCurrentOwnCloudAccount(this);
+        Account current = accountManager.getCurrentAccount();
         if (current != null && mCurrentAccount != null && !mCurrentAccount.name.equals(current.name)) {
             mCurrentAccount = current;
         }
@@ -113,11 +120,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void swapToDefaultAccount() {
         // default to the most recently used account
-        Account newAccount = AccountUtils.getCurrentOwnCloudAccount(getApplicationContext());
+        Account newAccount = accountManager.getCurrentAccount();
         if (newAccount == null) {
             /// no account available: force account creation
             createAccount(true);
-            mRedirectingToSetupAccount = true;
             mAccountWasSet = false;
             mAccountWasRestored = false;
 
@@ -193,13 +199,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * @return 'True' when the Activity is finishing to enforce the setup of a new account.
-     */
-    protected boolean isRedirectingToSetupAccount() {
-        return mRedirectingToSetupAccount;
-    }
-
     public FileDataStorageManager getStorageManager() {
         return mStorageManager;
     }
@@ -211,6 +210,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void onAccountCreationSuccessful(AccountManagerFuture<Bundle> future) {
         // no special handling in base activity
+        Log_OC.d(TAG,"onAccountCreationSuccessful");
     }
 
     /**
@@ -232,7 +232,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         @Override
         public void run(AccountManagerFuture<Bundle> future) {
-            BaseActivity.this.mRedirectingToSetupAccount = false;
             boolean accountWasSet = false;
             if (future != null) {
                 try {

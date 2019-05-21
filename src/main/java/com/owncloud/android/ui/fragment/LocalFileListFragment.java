@@ -21,6 +21,7 @@
 package com.owncloud.android.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.ui.adapter.LocalFileListAdapter;
@@ -36,6 +39,8 @@ import com.owncloud.android.ui.interfaces.LocalFileListFragmentInterface;
 import com.owncloud.android.utils.FileSortOrder;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,8 +50,13 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * A Fragment that lists all files and folders in a given LOCAL path.
  */
-public class LocalFileListFragment extends ExtendedListFragment implements LocalFileListFragmentInterface {
+public class LocalFileListFragment extends ExtendedListFragment implements
+        LocalFileListFragmentInterface,
+        Injectable {
+
     private static final String TAG = LocalFileListFragment.class.getSimpleName();
+
+    @Inject AppPreferences preferences;
 
     /** Reference to the Activity which this fragment is attached to. For callbacks */
     private LocalFileListFragment.ContainerActivity mContainerActivity;
@@ -56,6 +66,11 @@ public class LocalFileListFragment extends ExtendedListFragment implements Local
 
     /** Adapter to connect the data from the directory with the View object */
     private LocalFileListAdapter mAdapter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,8 +87,8 @@ public class LocalFileListFragment extends ExtendedListFragment implements Local
         try {
             mContainerActivity = (ContainerActivity) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " +
-                    LocalFileListFragment.ContainerActivity.class.getSimpleName());
+            throw new IllegalArgumentException(activity.toString() + " must implement " +
+                    LocalFileListFragment.ContainerActivity.class.getSimpleName(), e);
         }
     }
 
@@ -111,7 +126,7 @@ public class LocalFileListFragment extends ExtendedListFragment implements Local
         super.onActivityCreated(savedInstanceState);
 
         mAdapter = new LocalFileListAdapter(mContainerActivity.isFolderPickerMode(),
-                mContainerActivity.getInitialDirectory(), this, getActivity());
+                mContainerActivity.getInitialDirectory(), this, preferences, getActivity());
         setRecyclerViewAdapter(mAdapter);
 
         listDirectory(mContainerActivity.getInitialDirectory());
@@ -168,7 +183,6 @@ public class LocalFileListFragment extends ExtendedListFragment implements Local
             Log_OC.w(TAG, "Null object in ListAdapter!!");
         }
     }
-
 
     /**
      * Call this, when the user presses the up button
@@ -287,7 +301,7 @@ public class LocalFileListFragment extends ExtendedListFragment implements Local
 
         if (!isGridEnabled()) {
             RecyclerView.LayoutManager layoutManager;
-            layoutManager = new GridLayoutManager(getContext(), getColumnSize());
+            layoutManager = new GridLayoutManager(getContext(), getColumnsCount());
             ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {

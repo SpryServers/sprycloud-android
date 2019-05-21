@@ -1,4 +1,4 @@
-/**
+/*
  *   ownCloud Android client application
  *
  *   @author masensio
@@ -20,28 +20,32 @@
 
 package com.owncloud.android.ui.activity;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.R;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ManageSpaceActivity extends AppCompatActivity {
+public class ManageSpaceActivity extends AppCompatActivity implements Injectable {
 
     private static final String TAG = ManageSpaceActivity.class.getSimpleName();
     private static final String LIB_FOLDER = "lib";
+
+    @Inject AppPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class ManageSpaceActivity extends AppCompatActivity {
         clearDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClearDataAsynTask clearDataTask = new ClearDataAsynTask();
+                ClearDataAsyncTask clearDataTask = new ClearDataAsyncTask();
                 clearDataTask.execute();
             }
         });
@@ -83,46 +87,36 @@ public class ManageSpaceActivity extends AppCompatActivity {
     /**
      * AsyncTask for Clear Data, saving the passcode
      */
-    private class ClearDataAsynTask extends AsyncTask<Void, Void, Boolean>{
+    private class ClearDataAsyncTask extends AsyncTask<Void, Void, Boolean>{
+
+        private final AppPreferences preferences = ManageSpaceActivity.this.preferences;
 
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            // Save passcode from Share preferences
-            SharedPreferences appPrefs = PreferenceManager
-                    .getDefaultSharedPreferences(getApplicationContext());
-
-            String lockPref = appPrefs.getString(Preferences.PREFERENCE_LOCK, Preferences.LOCK_NONE);
-            boolean passCodeEnable = Preferences.LOCK_PASSCODE.equals(
-                    appPrefs.getString(Preferences.PREFERENCE_LOCK, ""));
+            String lockPref = preferences.getLockPreference();
+            boolean passCodeEnable = SettingsActivity.LOCK_PASSCODE.equals(lockPref);
 
             String passCodeDigits[] = new String[4];
             if (passCodeEnable) {
-                passCodeDigits[0] = appPrefs.getString(PassCodeActivity.PREFERENCE_PASSCODE_D1, null);
-                passCodeDigits[1] = appPrefs.getString(PassCodeActivity.PREFERENCE_PASSCODE_D2, null);
-                passCodeDigits[2] = appPrefs.getString(PassCodeActivity.PREFERENCE_PASSCODE_D3, null);
-                passCodeDigits[3] = appPrefs.getString(PassCodeActivity.PREFERENCE_PASSCODE_D4, null);
+                passCodeDigits = preferences.getPassCode();
             }
 
             // Clear data
+            preferences.clear();
             boolean result = clearApplicationData();
-
-            // Clear SharedPreferences
-            SharedPreferences.Editor appPrefsEditor = PreferenceManager
-                    .getDefaultSharedPreferences(getApplicationContext()).edit();
-            appPrefsEditor.clear();
-            result = result && appPrefsEditor.commit();
 
             // Recover passcode
             if (passCodeEnable) {
-                appPrefsEditor.putString(PassCodeActivity.PREFERENCE_PASSCODE_D1, passCodeDigits[0]);
-                appPrefsEditor.putString(PassCodeActivity.PREFERENCE_PASSCODE_D2, passCodeDigits[1]);
-                appPrefsEditor.putString(PassCodeActivity.PREFERENCE_PASSCODE_D3, passCodeDigits[2]);
-                appPrefsEditor.putString(PassCodeActivity.PREFERENCE_PASSCODE_D4, passCodeDigits[3]);
+                preferences.setPassCode(
+                    passCodeDigits[0],
+                    passCodeDigits[1],
+                    passCodeDigits[2],
+                    passCodeDigits[3]
+                );
             }
 
-            appPrefsEditor.putString(Preferences.PREFERENCE_LOCK, lockPref);
-            result = result && appPrefsEditor.commit();
+            preferences.setLockPreference(lockPref);
 
             return result;
         }
@@ -138,9 +132,7 @@ public class ManageSpaceActivity extends AppCompatActivity {
                 ).show();
             } else {
                 finish();
-                System.exit(0);
             }
-
         }
 
         public boolean clearApplicationData() {

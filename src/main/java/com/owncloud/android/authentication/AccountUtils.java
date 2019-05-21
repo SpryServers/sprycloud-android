@@ -24,9 +24,11 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.owncloud.android.MainApp;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
+import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.accounts.AccountUtils.Constants;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
 import com.owncloud.android.ui.activity.ManageAccountsActivity;
@@ -41,7 +43,7 @@ public final class AccountUtils {
     private static final String PREF_SELECT_OC_ACCOUNT = "select_oc_account";
 
     public static final int ACCOUNT_VERSION = 1;
-    //public static final int ACCOUNT_VERSION_WITH_PROPER_ID = 2;
+    public static final int ACCOUNT_VERSION_WITH_PROPER_ID = 2;
     public static final String ACCOUNT_USES_STANDARD_PASSWORD = "ACCOUNT_USES_STANDARD_PASSWORD";
 
     private AccountUtils() {
@@ -92,7 +94,7 @@ public final class AccountUtils {
         return defaultAccount;
     }
 
-    public static Account[] getAccounts(Context context) {
+    private static Account[] getAccounts(Context context) {
         AccountManager accountManager = AccountManager.get(context);
         return accountManager.getAccountsByType(MainApp.getAccountType(context));
     }
@@ -121,20 +123,6 @@ public final class AccountUtils {
     }
 
     /**
-     * returns the user's name based on the account name.
-     *
-     * @param accountName the account name
-     * @return the user's name
-     */
-    public static String getAccountUsername(String accountName) {
-        if (accountName != null) {
-            return accountName.substring(0, accountName.lastIndexOf('@'));
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Returns owncloud account identified by accountName or null if it does not exist.
      * @param context the context
      * @param accountName name of account to be returned
@@ -150,7 +138,6 @@ public final class AccountUtils {
         return null;
     }
 
-
     public static boolean setCurrentOwnCloudAccount(final Context context, String accountName) {
         boolean result = false;
         if (accountName != null) {
@@ -158,6 +145,22 @@ public final class AccountUtils {
                 if (accountName.equals(account.name)) {
                     SharedPreferences.Editor appPrefs = PreferenceManager.getDefaultSharedPreferences(context).edit();
                     appPrefs.putString(PREF_SELECT_OC_ACCOUNT, accountName);
+                    appPrefs.apply();
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean setCurrentOwnCloudAccount(final Context context, int hashCode) {
+        boolean result = false;
+        if (hashCode != 0) {
+            for (final Account account : getAccounts(context)) {
+                if (hashCode == account.hashCode()) {
+                    SharedPreferences.Editor appPrefs = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                    appPrefs.putString(PREF_SELECT_OC_ACCOUNT, account.name);
                     appPrefs.apply();
                     result = true;
                     break;
@@ -199,5 +202,15 @@ public final class AccountUtils {
 
     public static boolean hasSearchSupport(Account account) {
         return getServerVersion(account).isSearchSupported();
+    }
+
+    /**
+     * Checks if an account owns the file (file's ownerId is the same as account name)
+     * @param file File to check
+     * @param account account to compare
+     * @return false if ownerId is not set or owner is a different account
+     */
+    public static boolean accountOwnsFile(OCFile file, Account account) {
+        return !TextUtils.isEmpty(file.getOwnerId()) && account.name.split("@")[0].equals(file.getOwnerId());
     }
 }

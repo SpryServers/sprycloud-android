@@ -5,8 +5,10 @@
  *  @author masensio
  *  @author Juan Carlos González Cabrero
  *  @author David A. Velasco
+ *  @author Chris Narkiewicz
  *  Copyright (C) 2012  Bartek Przybylski
  *  Copyright (C) 2016 ownCloud Inc.
+ *  Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2,
@@ -33,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,6 +43,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,11 +62,26 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.OCFile;
-import com.owncloud.android.db.PreferenceManager;
 import com.owncloud.android.files.services.FileUploader;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
@@ -91,37 +110,29 @@ import com.owncloud.android.utils.ThemeUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
+import javax.inject.Inject;
+
+import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
+import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
 
 /**
  * This can be used to upload things to an ownCloud instance.
  */
 public class ReceiveExternalFilesActivity extends FileActivity
         implements OnItemClickListener, View.OnClickListener, CopyAndUploadContentUrisTask.OnCopyTmpFilesTaskListener,
-        SortingOrderDialogFragment.OnSortingOrderListener {
+        SortingOrderDialogFragment.OnSortingOrderListener, Injectable {
 
     private static final String TAG = ReceiveExternalFilesActivity.class.getSimpleName();
 
@@ -132,6 +143,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
     public static final String DESKTOP_FILE_SUFFIX = ".desktop";
     public static final int SINGLE_PARENT = 1;
 
+    @Inject AppPreferences preferences;
     private AccountManager mAccountManager;
     private Stack<String> mParents = new Stack<>();
     private List<Parcelable> mStreamsToUpload;
@@ -150,7 +162,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
     private String mSubjectText;
     private String mExtraText;
 
-    private final static String FILENAME_ENCODING = "UTF-8";
+    private final static Charset FILENAME_ENCODING = Charset.forName("UTF-8");
 
     private LinearLayout mEmptyListContainer;
     private TextView mEmptyListMessage;
@@ -166,7 +178,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
             String parentPath = savedInstanceState.getString(KEY_PARENTS);
 
             if (parentPath != null) {
-                mParents.addAll(Arrays.asList(parentPath.split("/")));
+                mParents.addAll(Arrays.asList(parentPath.split(PATH_SEPARATOR)));
             }
 
             mFile = savedInstanceState.getParcelable(KEY_FILE);
@@ -251,7 +263,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
 
     @Override
     public void onSortingOrderChosen(FileSortOrder newSortOrder) {
-        PreferenceManager.setSortOrder(getBaseContext(), mFile, newSortOrder);
+        preferences.setSortOrder(mFile, newSortOrder);
         populateDirectoryList();
     }
 
@@ -280,9 +292,11 @@ public class ReceiveExternalFilesActivity extends FileActivity
         }
     }
 
-    public static class DialogMultipleAccount extends DialogFragment {
+    public static class DialogMultipleAccount extends DialogFragment implements Injectable {
         private AccountListAdapter mAccountListAdapter;
         private Drawable mTintedCheck;
+
+        @Inject UserAccountManager accountManager;
 
         @NonNull
         @Override
@@ -294,14 +308,14 @@ public class ReceiveExternalFilesActivity extends FileActivity
             int tint = ThemeUtils.primaryColor(getContext());
             DrawableCompat.setTint(mTintedCheck, tint);
 
-            mAccountListAdapter = new AccountListAdapter(parent, getAccountListItems(parent), mTintedCheck);
+            mAccountListAdapter = new AccountListAdapter(parent, accountManager, getAccountListItems(parent), mTintedCheck);
 
             builder.setTitle(R.string.common_choose_account);
             builder.setAdapter(mAccountListAdapter, (dialog, which) -> {
-                final ReceiveExternalFilesActivity parent1 = (ReceiveExternalFilesActivity) getActivity();
-                parent1.setAccount(parent1.mAccountManager.getAccountsByType(
+                final ReceiveExternalFilesActivity parentActivity = (ReceiveExternalFilesActivity) getActivity();
+                parentActivity.setAccount(parentActivity.mAccountManager.getAccountsByType(
                         MainApp.getAccountType(getActivity()))[which], false);
-                parent1.onAccountSet(parent1.mAccountWasRestored);
+                parentActivity.onAccountSet(parentActivity.mAccountWasRestored);
                 dialog.dismiss();
             });
             builder.setCancelable(true);
@@ -324,7 +338,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         }
     }
 
-    public static class DialogInputUploadFilename extends DialogFragment {
+    public static class DialogInputUploadFilename extends DialogFragment implements Injectable {
         private static final String KEY_SUBJECT_TEXT = "SUBJECT_TEXT";
         private static final String KEY_EXTRA_TEXT = "EXTRA_TEXT";
 
@@ -339,6 +353,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         private int mFileCategory;
 
         private Spinner mSpinner;
+        @Inject AppPreferences preferences;
 
         public static DialogInputUploadFilename newInstance(String subjectText, String extraText) {
             DialogInputUploadFilename dialog = new DialogInputUploadFilename();
@@ -347,6 +362,11 @@ public class ReceiveExternalFilesActivity extends FileActivity
             args.putString(KEY_EXTRA_TEXT, extraText);
             dialog.setArguments(args);
             return dialog;
+        }
+
+        @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
         }
 
         @NonNull
@@ -400,7 +420,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
                 mFilenameSuffix.add(DESKTOP_FILE_SUFFIX);
                 adapter.add(String.format(str,DESKTOP_FILE_SUFFIX));
 
-                selectPos = PreferenceManager.getUploadUrlFileExtensionUrlSelectedPos(getActivity());
+                selectPos = preferences.getUploadUrlFileExtensionUrlSelectedPos();
                 mFileCategory = CATEGORY_URL;
             } else if (isIntentFromGoogleMap(subjectText, extraText)) {
                 String str = getString(R.string.upload_file_dialog_filetype_googlemap_shortcut);
@@ -420,7 +440,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
                 mFilenameSuffix.add(DESKTOP_FILE_SUFFIX);
                 adapter.add(String.format(str,DESKTOP_FILE_SUFFIX));
 
-                selectPos = PreferenceManager.getUploadMapFileExtensionUrlSelectedPos(getActivity());
+                selectPos = preferences.getUploadMapFileExtensionUrlSelectedPos();
                 mFileCategory = CATEGORY_MAPS_URL;
             }
 
@@ -500,10 +520,10 @@ public class ReceiveExternalFilesActivity extends FileActivity
         private void saveSelection(int selectPos) {
             switch (mFileCategory) {
                 case CATEGORY_URL:
-                    PreferenceManager.setUploadUrlFileExtensionUrlSelectedPos(getActivity(), selectPos);
+                    preferences.setUploadUrlFileExtensionUrlSelectedPos(selectPos);
                     break;
                 case CATEGORY_MAPS_URL:
-                    PreferenceManager.setUploadMapFileExtensionUrlSelectedPos(getActivity(), selectPos);
+                    preferences.setUploadMapFileExtensionUrlSelectedPos(selectPos);
                     break;
                 default:
                     Log_OC.d(TAG, "Simple text snippet only: no selection to be persisted");
@@ -566,14 +586,9 @@ public class ReceiveExternalFilesActivity extends FileActivity
             safeFilename = safeFilename.replaceAll("=", "_");
             safeFilename = safeFilename.replaceAll(",", "_");
 
-            try {
-                int maxLength = 128;
-                if (safeFilename.getBytes(FILENAME_ENCODING).length > maxLength) {
-                    safeFilename = new String(safeFilename.getBytes(FILENAME_ENCODING), 0, maxLength, FILENAME_ENCODING);
-                }
-            } catch (UnsupportedEncodingException e) {
-                Log_OC.e(TAG, "rename failed ", e);
-                return null;
+            int maxLength = 128;
+            if (safeFilename.getBytes(FILENAME_ENCODING).length > maxLength) {
+                safeFilename = new String(safeFilename.getBytes(FILENAME_ENCODING), 0, maxLength, FILENAME_ENCODING);
             }
             return safeFilename;
         }
@@ -736,7 +751,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         boolean notRoot = mParents.size() > 1;
 
         if (actionBar != null) {
-            if ("".equals(current_dir)) {
+            if (TextUtils.isEmpty(current_dir)) {
                 ThemeUtils.setColoredTitle(actionBar, R.string.uploader_top_message, this);
             } else {
                 ThemeUtils.setColoredTitle(actionBar, current_dir, this);
@@ -756,15 +771,15 @@ public class ReceiveExternalFilesActivity extends FileActivity
 
             if (files.isEmpty()) {
                 setMessageForEmptyList(R.string.file_list_empty_headline, R.string.empty,
-                        R.drawable.ic_list_empty_upload);
+                        R.drawable.uploads);
             } else {
                 mEmptyListContainer.setVisibility(View.GONE);
 
                 files = sortFileList(files);
 
-                List<HashMap<String, Object>> data = new LinkedList<>();
+                List<Map<String, Object>> data = new LinkedList<>();
                 for (OCFile f : files) {
-                    HashMap<String, Object> h = new HashMap<>();
+                    Map<String, Object> h = new HashMap<>();
                     h.put("dirname", f);
                     data.add(h);
                 }
@@ -784,12 +799,21 @@ public class ReceiveExternalFilesActivity extends FileActivity
                         PorterDuff.Mode.SRC_ATOP);
             btnChooseFolder.setTextColor(ThemeUtils.fontColor(this));
 
+            if (mFile.canWrite()) {
+                btnChooseFolder.setEnabled(true);
+                ThemeUtils.tintDrawable(btnChooseFolder.getBackground(),
+                                        ThemeUtils.primaryColor(getAccount(), true, this));
+            } else {
+                btnChooseFolder.setEnabled(false);
+                ThemeUtils.tintDrawable(btnChooseFolder.getBackground(), Color.GRAY);
+            }
+
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(
                         ThemeUtils.primaryColor(getAccount(), false, this)));
             }
 
-            ThemeUtils.colorStatusBar(this, ThemeUtils.primaryDarkColor(getAccount(), this));
+            ThemeUtils.colorStatusBar(this, ThemeUtils.primaryColor(getAccount(), false, this));
 
             ThemeUtils.colorToolbarProgressBar(this, ThemeUtils.primaryColor(getAccount(), false, this));
 
@@ -800,11 +824,12 @@ public class ReceiveExternalFilesActivity extends FileActivity
             }
 
             Button btnNewFolder = findViewById(R.id.uploader_cancel);
-                btnNewFolder.setOnClickListener(this);
+            btnNewFolder.setTextColor(ThemeUtils.primaryColor(this, true));
+            btnNewFolder.setOnClickListener(this);
 
-                mListView.setOnItemClickListener(this);
-            }
+            mListView.setOnItemClickListener(this);
         }
+    }
 
     protected void setupEmptyList() {
         mEmptyListContainer = findViewById(R.id.empty_list_view);
@@ -855,7 +880,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
     }
 
     private List<OCFile> sortFileList(List<OCFile> files) {
-        FileSortOrder sortOrder = PreferenceManager.getSortOrderByFolder(this, mFile);
+        FileSortOrder sortOrder = preferences.getSortOrderByFolder(mFile);
         return sortOrder.sortCloudFiles(files);
     }
 
@@ -863,7 +888,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         String full_path = "";
 
         for (String a : dirs) {
-            full_path += a + "/";
+            full_path += a + PATH_SEPARATOR;
         }
         return full_path;
     }
@@ -937,7 +962,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         UriUploader.UriUploaderResultCode resultCode = uploader.uploadUris();
 
         // Save the path to shared preferences; even if upload is not possible, user chose the folder
-        PreferenceManager.setLastUploadPath(this, mUploadPath);
+        preferences.setLastUploadPath(mUploadPath);
 
         if (resultCode == UriUploader.UriUploaderResultCode.OK) {
             finish();
@@ -1011,12 +1036,12 @@ public class ReceiveExternalFilesActivity extends FileActivity
         }
 
         if (mParents.empty()) {
-            String lastPath = PreferenceManager.getLastUploadPath(this);
+            String lastPath = preferences.getLastUploadPath();
             // "/" equals root-directory
-            if ("/".equals(lastPath)) {
+            if (ROOT_PATH.equals(lastPath)) {
                 mParents.add("");
             } else {
-                String[] dir_names = lastPath.split("/");
+                String[] dir_names = lastPath.split(PATH_SEPARATOR);
                 mParents.clear();
                 mParents.addAll(Arrays.asList(dir_names));
             }
@@ -1043,8 +1068,11 @@ public class ReceiveExternalFilesActivity extends FileActivity
         }
 
         // tint search event
-        final MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+
+        MenuItem newFolderMenuItem = menu.findItem(R.id.action_create_dir);
+        newFolderMenuItem.setEnabled(mFile.canWrite());
 
         // hacky as no default way is provided
         int fontColor = ThemeUtils.fontColor(this);
@@ -1077,7 +1105,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
                 break;
             case R.id.action_sort:
                 SortingOrderDialogFragment mSortingOrderDialogFragment = SortingOrderDialogFragment.newInstance(
-                    PreferenceManager.getSortOrderByFolder(this, mFile));
+                    preferences.getSortOrderByFolder(mFile));
                 mSortingOrderDialogFragment.show(getSupportFragmentManager(),
                         SortingOrderDialogFragment.SORTING_ORDER_FRAGMENT);
                 break;
