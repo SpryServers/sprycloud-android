@@ -57,6 +57,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.material.navigation.NavigationView;
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.onboarding.FirstRunActivity;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
@@ -366,9 +367,11 @@ public abstract class DrawerActivity extends ToolbarActivity
             capability = storageManager.getCapability(account.name);
         }
 
+        boolean hasSearchSupport = accountManager.getServerVersion(account).isSearchSupported();
+
         DrawerMenuUtil.filterForBottomToolbarMenuItems(menu, getResources());
-        DrawerMenuUtil.filterSearchMenuItems(menu, account, getResources());
-        DrawerMenuUtil.filterTrashbinMenuItem(menu, account, capability);
+        DrawerMenuUtil.filterSearchMenuItems(menu, account, getResources(), hasSearchSupport);
+        DrawerMenuUtil.filterTrashbinMenuItem(menu, account, capability, accountManager);
         DrawerMenuUtil.filterActivityMenuItem(menu, capability);
 
         DrawerMenuUtil.setupHomeMenuItem(menu, getResources());
@@ -554,7 +557,7 @@ public abstract class DrawerActivity extends ToolbarActivity
     private void accountClicked(int hashCode) {
         final Account currentAccount = accountManager.getCurrentAccount();
         if (currentAccount != null && currentAccount.hashCode() != hashCode &&
-            AccountUtils.setCurrentOwnCloudAccount(getApplicationContext(), hashCode)) {
+            accountManager.setCurrentOwnCloudAccount(hashCode)) {
             fetchExternalLinks(true);
             restart();
         }
@@ -1131,7 +1134,7 @@ public abstract class DrawerActivity extends ToolbarActivity
                         };
 
                         int backgroundResource;
-                        OwnCloudVersion ownCloudVersion = AccountUtils.getServerVersion(getAccount());
+                        OwnCloudVersion ownCloudVersion = accountManager.getServerVersion(getAccount());
                         if (ownCloudVersion.compareTo(OwnCloudVersion.nextcloud_13) >= 0) {
                             backgroundResource = R.drawable.background_nc13;
                         } else {

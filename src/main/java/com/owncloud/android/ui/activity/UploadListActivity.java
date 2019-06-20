@@ -45,6 +45,8 @@ import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.device.PowerManagementService;
+import com.nextcloud.client.network.ConnectivityService;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.files.services.FileUploader;
@@ -108,10 +110,15 @@ public class UploadListActivity extends FileActivity {
     private Unbinder unbinder;
 
     @Inject
-    protected UserAccountManager userAccountManager;
+    UserAccountManager userAccountManager;
 
     @Inject
-    protected UploadsStorageManager uploadsStorageManager;
+    UploadsStorageManager uploadsStorageManager;
+
+    @Inject
+    ConnectivityService connectivityService;
+
+    @Inject PowerManagementService powerManagementService;
 
     @Override
     public void showFiles(boolean onDeviceOnly) {
@@ -155,6 +162,7 @@ public class UploadListActivity extends FileActivity {
                 getUserAccountManager().getCurrentAccount(),
                 bottomNavigationView,
                 getResources(),
+                accountManager,
                 this,
                 -1
             );
@@ -172,7 +180,11 @@ public class UploadListActivity extends FileActivity {
         emptyContentHeadline.setText(noResultsHeadline);
         emptyContentMessage.setText(noResultsMessage);
 
-        uploadListAdapter = new UploadListAdapter(this, uploadsStorageManager);
+        uploadListAdapter = new UploadListAdapter(this,
+                                                  uploadsStorageManager,
+                                                  userAccountManager,
+                                                  connectivityService,
+                                                  powerManagementService);
 
         final GridLayoutManager lm = new GridLayoutManager(this, 1);
         uploadListAdapter.setLayoutManager(lm);
@@ -216,7 +228,13 @@ public class UploadListActivity extends FileActivity {
 
         // retry failed uploads
         FileUploader.UploadRequester requester = new FileUploader.UploadRequester();
-        new Thread(() -> requester.retryFailedUploads(this, null, uploadsStorageManager,null)).start();
+        new Thread(() -> requester.retryFailedUploads(this,
+                                                      null,
+                                                      uploadsStorageManager,
+                                                      connectivityService,
+                                                      userAccountManager,
+                                                      null,
+                                                      powerManagementService)).start();
 
         // update UI
         uploadListAdapter.loadUploadItemsFromDb();
@@ -288,7 +306,10 @@ public class UploadListActivity extends FileActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FileActivity.REQUEST_CODE__UPDATE_CREDENTIALS && resultCode == RESULT_OK) {
-            FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, userAccountManager);
+            FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager,
+                                                userAccountManager,
+                                                connectivityService,
+                                                powerManagementService);
         }
     }
 
@@ -308,7 +329,10 @@ public class UploadListActivity extends FileActivity {
 
             } else {
                 // already updated -> just retry!
-                FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, userAccountManager);
+                FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager,
+                                                    userAccountManager,
+                                                    connectivityService,
+                                                    powerManagementService);
             }
 
         } else {

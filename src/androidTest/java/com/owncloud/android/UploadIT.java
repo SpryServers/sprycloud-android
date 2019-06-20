@@ -2,7 +2,10 @@ package com.owncloud.android;
 
 import android.content.ContentResolver;
 
+import com.evernote.android.job.JobRequest;
 import com.nextcloud.client.account.CurrentAccountProvider;
+import com.nextcloud.client.device.PowerManagementService;
+import com.nextcloud.client.network.ConnectivityService;
 import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.db.OCUpload;
@@ -27,8 +30,41 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class UploadIT extends AbstractIT {
 
-
     private UploadsStorageManager storageManager;
+
+    private ConnectivityService connectivityServiceMock = new ConnectivityService() {
+        @Override
+        public boolean isInternetWalled() {
+            return false;
+        }
+
+        @Override
+        public boolean isOnlineWithWifi() {
+            return true;
+        }
+
+        @Override
+        public JobRequest.NetworkType getActiveNetworkType() {
+            return JobRequest.NetworkType.ANY;
+        }
+    };
+
+    private PowerManagementService powerManagementServiceMock = new PowerManagementService() {
+        @Override
+        public boolean isPowerSavingEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isPowerSavingExclusionAvailable() {
+            return false;
+        }
+
+        @Override
+        public boolean isBatteryCharging() {
+            return false;
+        }
+    };
 
     @Before
     public void setUp() {
@@ -79,6 +115,8 @@ public class UploadIT extends AbstractIT {
     public RemoteOperationResult testUpload(OCUpload ocUpload) {
         UploadFileOperation newUpload = new UploadFileOperation(
             storageManager,
+            connectivityServiceMock,
+            powerManagementServiceMock,
             account,
             null,
             ocUpload,
@@ -102,15 +140,17 @@ public class UploadIT extends AbstractIT {
         OCUpload ocUpload = new OCUpload(FileStorageUtils.getSavePath(account.name) + "/empty.txt",
                 "/testUpload/2/3/4/1.txt", account.name);
         UploadFileOperation newUpload = new UploadFileOperation(
-                storageManager,
-                account,
-                null,
-                ocUpload,
-                false,
-                FileUploader.LOCAL_BEHAVIOUR_COPY,
-                targetContext,
-                false,
-                false
+            storageManager,
+            connectivityServiceMock,
+            powerManagementServiceMock,
+            account,
+            null,
+            ocUpload,
+            false,
+            FileUploader.LOCAL_BEHAVIOUR_COPY,
+            targetContext,
+            false,
+            false
         );
         newUpload.addRenameUploadListener(() -> {
             // dummy

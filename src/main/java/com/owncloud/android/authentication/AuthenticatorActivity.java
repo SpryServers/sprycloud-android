@@ -88,7 +88,10 @@ import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.device.DeviceInfo;
 import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.onboarding.FirstRunActivity;
+import com.nextcloud.client.onboarding.OnboardingService;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
@@ -113,7 +116,6 @@ import com.owncloud.android.operations.GetServerInfoOperation;
 import com.owncloud.android.services.OperationsService;
 import com.owncloud.android.services.OperationsService.OperationsServiceBinder;
 import com.owncloud.android.ui.activity.FileDisplayActivity;
-import com.owncloud.android.ui.activity.FirstRunActivity;
 import com.owncloud.android.ui.components.CustomEditText;
 import com.owncloud.android.ui.dialog.CredentialsDialogFragment;
 import com.owncloud.android.ui.dialog.IndeterminateProgressDialog;
@@ -250,11 +252,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
     private TextInputLayout mPasswordInputLayout;
     private boolean forceOldLoginMethod;
 
-    @Inject
-    UserAccountManager accountManager;
-
-    @Inject
-    protected AppPreferences preferences;
+    @Inject UserAccountManager accountManager;
+    @Inject AppPreferences preferences;
+    @Inject OnboardingService onboarding;
+    @Inject DeviceInfo deviceInfo;
 
     /**
      * {@inheritDoc}
@@ -269,7 +270,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
         Uri data = getIntent().getData();
         boolean directLogin = data != null && data.toString().startsWith(getString(R.string.login_data_own_scheme));
         if (savedInstanceState == null && !directLogin) {
-            FirstRunActivity.runIfNeeded(this);
+            onboarding.launchFirstRunIfNeeded(this);
         }
 
         // delete cookies for webView
@@ -291,7 +292,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
         /// get input values
         mAction = getIntent().getByteExtra(EXTRA_ACTION, ACTION_CREATE);
-        mAccount = getIntent().getExtras().getParcelable(EXTRA_ACCOUNT);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            mAccount = extras.getParcelable(EXTRA_ACCOUNT);
+        }
+
         if (savedInstanceState != null) {
             mWaitingForOpId = savedInstanceState.getLong(KEY_WAITING_FOR_OP_ID);
             mIsFirstAuthAttempt = savedInstanceState.getBoolean(KEY_AUTH_IS_FIRST_ATTEMPT_TAG);
@@ -586,7 +593,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
         mOkButton = findViewById(R.id.buttonOK);
         mOkButton.setOnClickListener(v -> onOkClick());
 
-        findViewById(R.id.scanQR).setOnClickListener(v -> onScan());
+        ImageButton scanQR = findViewById(R.id.scanQR);
+        if (deviceInfo.hasCamera(this)) {
+            scanQR.setOnClickListener(v -> onScan());
+        } else {
+            scanQR.setVisibility(View.GONE);
+        }
 
         setupInstructionMessage();
 
@@ -624,7 +636,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
                 mServerInfo.mBaseUrl = mAccountMgr.getUserData(mAccount, Constants.KEY_OC_BASE_URL);
                 // TODO do next in a setter for mBaseUrl
                 mServerInfo.mIsSslConn = mServerInfo.mBaseUrl.startsWith(HTTPS_PROTOCOL);
-                mServerInfo.mVersion = AccountUtils.getServerVersion(mAccount);
+                mServerInfo.mVersion = accountManager.getServerVersion(mAccount);
             } else {
                 if (!webViewLoginMethod) {
                     mServerInfo.mBaseUrl = getString(R.string.server_url).trim();
@@ -1243,8 +1255,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
             // show outdated warning
             if (getResources().getBoolean(R.bool.show_outdated_server_warning) &&
-                MainApp.OUTDATED_SERVER_VERSION.compareTo(mServerInfo.mVersion) >= 0) {
-                DisplayUtils.showServerOutdatedSnackbar(this);
+                MainApp.OUTDATED_SERVER_VERSION.compareTo(mServerInfo.mVersion) >= 0 &&
+                !mServerInfo.hasExtendedSupport) {
+                DisplayUtils.showServerOutdatedSnackbar(this, Snackbar.LENGTH_INDEFINITE);
             }
 
             webViewLoginMethod = mServerInfo.mVersion.isWebLoginSupported() && !forceOldLoginMethod;
@@ -1503,7 +1516,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
             if (success) {
                 finish();
 
-                AccountUtils.setCurrentOwnCloudAccount(this, mAccount.name);
+                accountManager.setCurrentOwnCloudAccount(mAccount.name);
 
                 Intent i = new Intent(this, FileDisplayActivity.class);
                 i.setAction(FileDisplayActivity.RESTART);
@@ -1656,7 +1669,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
         String accountName = com.owncloud.android.lib.common.accounts.AccountUtils.buildAccountName(uri, loginName);
         Account newAccount = new Account(accountName, accountType);
-        if (AccountUtils.exists(newAccount, getApplicationContext())) {
+        if (accountManager.exists(newAccount)) {
             // fail - not a new account, but an existing one; disallow
             RemoteOperationResult result = new RemoteOperationResult(ResultCode.ACCOUNT_NOT_NEW);
 

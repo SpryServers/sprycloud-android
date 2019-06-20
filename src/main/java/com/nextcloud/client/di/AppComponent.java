@@ -23,7 +23,9 @@ package com.nextcloud.client.di;
 import android.app.Application;
 
 import com.nextcloud.client.appinfo.AppInfoModule;
-import com.nextcloud.client.whatsnew.WhatsNewModule;
+import com.nextcloud.client.device.DeviceModule;
+import com.nextcloud.client.network.NetworkModule;
+import com.nextcloud.client.onboarding.OnboardingModule;
 import com.owncloud.android.MainApp;
 
 import javax.inject.Singleton;
@@ -36,7 +38,9 @@ import dagger.android.support.AndroidSupportInjectionModule;
     AndroidSupportInjectionModule.class,
     AppModule.class,
     AppInfoModule.class,
-    WhatsNewModule.class,
+    NetworkModule.class,
+    DeviceModule.class,
+    OnboardingModule.class
 })
 @Singleton
 public interface AppComponent {

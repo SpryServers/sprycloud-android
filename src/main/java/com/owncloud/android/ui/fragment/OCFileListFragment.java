@@ -51,6 +51,7 @@ import android.widget.RelativeLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.device.DeviceInfo;
 import com.nextcloud.client.di.Injectable;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
@@ -196,6 +197,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
     private AsyncTask remoteOperationAsyncTask;
     private String mLimitToMimeType;
 
+    @Inject DeviceInfo deviceInfo;
+
     private enum MenuItemAddRemove {
         DO_NOTHING, REMOVE_SORT, REMOVE_GRID_AND_SORT, ADD_SORT, ADD_GRID_AND_SORT, ADD_GRID_AND_SORT_WITH_SEARCH,
         REMOVE_SEARCH
@@ -287,6 +290,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             DisplayUtils.setupBottomBar(
                 accountManager.getCurrentAccount(),
                 bottomNavigationView, getResources(),
+                accountManager,
                 getActivity(),
                 R.id.nav_bar_files
             );
@@ -359,6 +363,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             getActivity(),
             accountManager.getCurrentAccount(),
             preferences,
+            accountManager,
             mContainerActivity,
             this,
             hideItemOptions,
@@ -416,7 +421,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
     private void registerFabListener() {
         FileActivity activity = (FileActivity) getActivity();
         getFabMain().setOnClickListener(v -> {
-            new OCFileListBottomSheetDialog(activity, this).show();
+            new OCFileListBottomSheetDialog(activity, this, deviceInfo).show();
         });
     }
 
@@ -484,9 +489,15 @@ public class OCFileListFragment extends ExtendedListFragment implements
     public void onOverflowIconClicked(OCFile file, View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
         popup.inflate(R.menu.file_actions_menu);
-        FileMenuFilter mf = new FileMenuFilter(mAdapter.getFiles().size(), Collections.singleton(file),
-                ((FileActivity) getActivity()).getAccount(), mContainerActivity, getActivity(), true);
-        mf.filter(popup.getMenu(), true);
+        Account currentAccount = ((FileActivity) getActivity()).getAccount();
+        FileMenuFilter mf = new FileMenuFilter(mAdapter.getFiles().size(),
+                                               Collections.singleton(file),
+                                               currentAccount,
+                                               mContainerActivity, getActivity(),
+                                               true);
+        mf.filter(popup.getMenu(),
+                  true,
+                  accountManager.isMediaStreamingSupported(currentAccount));
         popup.setOnMenuItemClickListener(item -> {
             Set<OCFile> checkedFiles = new HashSet<>();
             checkedFiles.add(file);
@@ -620,15 +631,19 @@ public class OCFileListFragment extends ExtendedListFragment implements
             final int checkedCount = mAdapter.getCheckedItems().size();
             String title = getResources().getQuantityString(R.plurals.items_selected_count, checkedCount, checkedCount);
             mode.setTitle(title);
+            Account currentAccount = ((FileActivity) getActivity()).getAccount();
             FileMenuFilter mf = new FileMenuFilter(
                     mAdapter.getFiles().size(),
                     checkedFiles,
-                    ((FileActivity) getActivity()).getAccount(),
+                    currentAccount,
                     mContainerActivity,
                     getActivity(),
                     false
             );
-            mf.filter(menu, false);
+
+            mf.filter(menu,
+                      false,
+                      accountManager.isMediaStreamingSupported(currentAccount));
             return true;
         }
 
@@ -949,7 +964,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
                         Account account = accountManager.getCurrentAccount();
                         OCCapability capability = mContainerActivity.getStorageManager().getCapability(account.name);
 
-                        if (PreviewMediaFragment.canBePreviewed(file) && AccountUtils.getServerVersion(account)
+                        if (PreviewMediaFragment.canBePreviewed(file) && accountManager.getServerVersion(account)
                                 .isMediaStreamingSupported()) {
                             // stream media preview on >= NC14
                             ((FileDisplayActivity) mContainerActivity).startMediaPreview(file, 0, true, true, true);
@@ -1190,6 +1205,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
                     onlyOnDevice,
                     mLimitToMimeType
                 );
+
+                OCFile previousDirectory = mFile;
                 mFile = directory;
 
                 updateLayout();
@@ -1197,7 +1214,9 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 mAdapter.setHighlightedItem(file);
                 int position = mAdapter.getItemPosition(file);
                 if (position == -1) {
-                    getRecyclerView().scrollToPosition(0);
+                    if (previousDirectory == null || !previousDirectory.equals(directory)) {
+                        getRecyclerView().scrollToPosition(0);
+                    }
                 } else {
                     getRecyclerView().scrollToPosition(position);
                 }
@@ -1446,7 +1465,6 @@ public class OCFileListFragment extends ExtendedListFragment implements
         Account currentAccount = accountManager.getCurrentAccount();
 
         OwnCloudAccount ocAccount;
-        AccountManager mAccountMgr = AccountManager.get(getActivity());
 
         try {
             ocAccount = new OwnCloudAccount(currentAccount, MainApp.getAppContext());

@@ -67,7 +67,6 @@ import androidx.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.owncloud.android.datamodel.OCFile.ROOT_PATH;
 
 @Getter
 public class FileDataStorageManager {
@@ -266,7 +265,7 @@ public class FileDataStorageManager {
      * @return the parent file
      */
     public OCFile saveFileWithParent(OCFile file, Context context) {
-        if (file.getParentId() == 0 && !ROOT_PATH.equals(file.getRemotePath())) {
+        if (file.getParentId() == 0 && !OCFile.ROOT_PATH.equals(file.getRemotePath())) {
             String remotePath = file.getRemotePath();
             String parentPath = remotePath.substring(0, remotePath.lastIndexOf(file.getFileName()));
 
@@ -1918,6 +1917,7 @@ public class FileDataStorageManager {
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_MICRO, capability.getVersionMicro());
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_STRING, capability.getVersionString());
         cv.put(ProviderTableMeta.CAPABILITIES_VERSION_EDITION, capability.getVersionEdition());
+        cv.put(ProviderTableMeta.CAPABILITIES_EXTENDED_SUPPORT, capability.getExtendedSupport().getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_CORE_POLLINTERVAL, capability.getCorePollInterval());
         cv.put(ProviderTableMeta.CAPABILITIES_SHARING_API_ENABLED, capability.getFilesSharingApiEnabled().getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_SHARING_PUBLIC_ENABLED,
@@ -1969,6 +1969,7 @@ public class FileDataStorageManager {
             .getValue());
         cv.put(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_TEMPLATES, capability.getRichDocumentsTemplatesAvailable()
             .getValue());
+        cv.put(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_PRODUCT_NAME, capability.getRichDocumentsProductName());
 
         if (capabilityExists(account.name)) {
             if (getContentResolver() != null) {
@@ -2072,6 +2073,8 @@ public class FileDataStorageManager {
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_VERSION_STRING)));
             capability.setVersionEdition(c.getString(c
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_VERSION_EDITION)));
+            capability.setExtendedSupport(CapabilityBooleanType.fromValue(c.getInt(c
+                                                                                       .getColumnIndex(ProviderTableMeta.CAPABILITIES_EXTENDED_SUPPORT))));
             capability.setCorePollInterval(c.getInt(c
                     .getColumnIndex(ProviderTableMeta.CAPABILITIES_CORE_POLLINTERVAL)));
             capability.setFilesSharingApiEnabled(CapabilityBooleanType.fromValue(c.getInt(c
@@ -2146,6 +2149,8 @@ public class FileDataStorageManager {
                 optionalMimetypes = "";
             }
             capability.setRichDocumentsOptionalMimeTypeList(Arrays.asList(optionalMimetypes.split(",")));
+            capability.setRichDocumentsProductName(
+                c.getString(c.getColumnIndex(ProviderTableMeta.CAPABILITIES_RICHDOCUMENT_PRODUCT_NAME)));
         }
         return capability;
     }

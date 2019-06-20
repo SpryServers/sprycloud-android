@@ -31,7 +31,7 @@ import com.owncloud.android.MainApp;
  */
 public class ProviderMeta {
     public static final String DB_NAME = "filelist";
-    public static final int DB_VERSION = 47;
+    public static final int DB_VERSION = 49;
 
     private ProviderMeta() {
         // No instance
@@ -151,6 +151,7 @@ public class ProviderMeta {
         public static final String CAPABILITIES_VERSION_MICRO = "version_micro";
         public static final String CAPABILITIES_VERSION_STRING = "version_string";
         public static final String CAPABILITIES_VERSION_EDITION = "version_edition";
+        public static final String CAPABILITIES_EXTENDED_SUPPORT = "extended_support";
         public static final String CAPABILITIES_CORE_POLLINTERVAL = "core_pollinterval";
         public static final String CAPABILITIES_SHARING_API_ENABLED = "sharing_api_enabled";
         public static final String CAPABILITIES_SHARING_PUBLIC_ENABLED = "sharing_public_enabled";
@@ -190,6 +191,7 @@ public class ProviderMeta {
             "richdocument_optional_mimetype_list";
         public static final String CAPABILITIES_RICHDOCUMENT_DIRECT_EDITING = "richdocument_direct_editing";
         public static final String CAPABILITIES_RICHDOCUMENT_TEMPLATES = "richdocument_direct_templates";
+        public static final String CAPABILITIES_RICHDOCUMENT_PRODUCT_NAME = "richdocument_product_name";
 
         public static final String CAPABILITIES_DEFAULT_SORT_ORDER = CAPABILITIES_ACCOUNT_NAME
                 + " collate nocase asc";

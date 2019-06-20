@@ -4,9 +4,12 @@
  *   @author Bartek Przybylski
  *   @author David A. Velasco
  *   @author Andy Scherzinger
+ *   @author Chris Narkiewicz
+ *
  *   Copyright (C) 2011 Bartek Przybylski
  *   Copyright (C) 2016 ownCloud Inc.
  *   Copyright (C) 2018 Andy Scherzinger
+ *   Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2,
@@ -41,7 +44,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.network.ConnectivityService;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
@@ -144,8 +149,9 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
     private ToolbarActivity activity;
     private int activeTab;
 
-    @Inject
-    AppPreferences preferences;
+    @Inject AppPreferences preferences;
+    @Inject ConnectivityService connectivityService;
+    @Inject UserAccountManager accountManager;
 
     /**
      * Public factory method to create new FileDetailFragment instances.
@@ -406,14 +412,18 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
 
     private void prepareOptionsMenu(Menu menu) {
         if (containerActivity.getStorageManager() != null) {
+            Account currentAccount = containerActivity.getStorageManager().getAccount();
             FileMenuFilter mf = new FileMenuFilter(
                 getFile(),
-                containerActivity.getStorageManager().getAccount(),
+                currentAccount,
                 containerActivity,
                 getActivity(),
                 false
             );
-            mf.filter(menu, true);
+
+            mf.filter(menu,
+                      true,
+                      accountManager.isMediaStreamingSupported(currentAccount));
         }
 
         if (getFile().isFolder()) {
@@ -643,6 +653,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
                             new ThumbnailsCacheManager.ResizedImageGenerationTask(this,
                                     activity.getPreviewImageView(),
                                     containerActivity.getStorageManager(),
+                                    connectivityService,
                                     containerActivity.getStorageManager().getAccount());
 
                     if (resizedImage == null) {

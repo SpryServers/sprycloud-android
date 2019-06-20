@@ -29,8 +29,9 @@ import android.os.PowerManager;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
-import com.evernote.android.job.util.Device;
 import com.nextcloud.client.account.UserAccountManager;
+import com.nextcloud.client.device.PowerManagementService;
+import com.nextcloud.client.network.ConnectivityService;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
@@ -38,9 +39,7 @@ import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.files.CheckEtagRemoteOperation;
 import com.owncloud.android.operations.SynchronizeFileOperation;
-import com.owncloud.android.utils.ConnectivityUtils;
 import com.owncloud.android.utils.FileStorageUtils;
-import com.owncloud.android.utils.PowerUtils;
 
 import java.io.File;
 import java.util.Set;
@@ -54,10 +53,16 @@ public class OfflineSyncJob extends Job {
     public static final String TAG = "OfflineSyncJob";
 
     private static final String WAKELOCK_TAG_SEPARATION = ":";
-    private UserAccountManager userAccountManager;
+    private final UserAccountManager userAccountManager;
+    private final ConnectivityService connectivityService;
+    private final PowerManagementService powerManagementService;
 
-    public OfflineSyncJob(UserAccountManager userAccountManager) {
+    public OfflineSyncJob(UserAccountManager userAccountManager,
+                          ConnectivityService connectivityService,
+                          PowerManagementService powerManagementService) {
         this.userAccountManager = userAccountManager;
+        this.connectivityService = connectivityService;
+        this.powerManagementService = powerManagementService;
     }
 
     @NonNull
@@ -66,9 +71,9 @@ public class OfflineSyncJob extends Job {
         final Context context = getContext();
 
         PowerManager.WakeLock wakeLock = null;
-        if (!PowerUtils.isPowerSaveMode(context) &&
-                Device.getNetworkType(context).equals(JobRequest.NetworkType.UNMETERED) &&
-                !ConnectivityUtils.isInternetWalled(context)) {
+        if (!powerManagementService.isPowerSavingEnabled() &&
+                connectivityService.getActiveNetworkType() == JobRequest.NetworkType.UNMETERED &&
+                !connectivityService.isInternetWalled()) {
             Set<Job> jobs = JobManager.instance().getAllJobsForTag(TAG);
             for (Job job : jobs) {
                 if (!job.isFinished() && !job.equals(this)) {

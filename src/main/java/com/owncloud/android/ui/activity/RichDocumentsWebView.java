@@ -47,7 +47,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.CurrentAccountProvider;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.Template;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
@@ -298,7 +297,7 @@ public class RichDocumentsWebView extends ExternalSiteWebView {
         OCFile file = data.getParcelableExtra(FolderPickerActivity.EXTRA_FILES);
 
         new Thread(() -> {
-            Account account = AccountUtils.getCurrentOwnCloudAccount(this);
+            Account account = currentAccountProvider.getCurrentAccount();
             RichDocumentsCreateAssetOperation operation = new RichDocumentsCreateAssetOperation(file.getRemotePath());
             RemoteOperationResult result = operation.execute(account, this);
 
@@ -347,6 +346,14 @@ public class RichDocumentsWebView extends ExternalSiteWebView {
         if (loadingSnackbar != null) {
             loadingSnackbar.dismiss();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        webview.evaluateJavascript("if (typeof OCA.RichDocuments.documentsMain.postGrabFocus !== 'undefined') " +
+                                       "{ OCA.RichDocuments.documentsMain.postGrabFocus(); }", null);
     }
 
     private class RichDocumentsMobileInterface {

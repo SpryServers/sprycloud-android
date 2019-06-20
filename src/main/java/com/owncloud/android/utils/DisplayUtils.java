@@ -58,9 +58,9 @@ import com.caverock.androidsvg.SVG;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.CurrentAccountProvider;
+import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
@@ -574,13 +574,14 @@ public final class DisplayUtils {
         Account account,
         BottomNavigationView view,
         Resources resources,
+        UserAccountManager accountManager,
         final Activity activity,
         int checkedMenuItem
     ) {
 
         Menu menu = view.getMenu();
 
-        boolean searchSupported = AccountUtils.hasSearchSupport(account);
+        boolean searchSupported = accountManager.isSearchSupported(account);
 
         if (!searchSupported) {
             menu.removeItem(R.id.nav_bar_favorites);
@@ -782,9 +783,9 @@ public final class DisplayUtils {
         return (int) (dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    static public void showServerOutdatedSnackbar(Activity activity) {
+    static public void showServerOutdatedSnackbar(Activity activity, int length) {
         Snackbar.make(activity.findViewById(android.R.id.content),
-                R.string.outdated_server, Snackbar.LENGTH_INDEFINITE)
+                      R.string.outdated_server, length)
                 .setAction(R.string.dismiss, v -> {
                 })
                 .show();

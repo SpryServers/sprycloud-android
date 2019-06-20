@@ -46,11 +46,13 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.appinfo.AppInfo;
+import com.nextcloud.client.device.PowerManagementService;
 import com.nextcloud.client.di.ActivityInjector;
 import com.nextcloud.client.di.DaggerAppComponent;
+import com.nextcloud.client.network.ConnectivityService;
+import com.nextcloud.client.onboarding.OnboardingService;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.nextcloud.client.preferences.AppPreferencesImpl;
-import com.nextcloud.client.whatsnew.WhatsNewService;
 import com.owncloud.android.authentication.PassCodeManager;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.MediaFolder;
@@ -155,7 +157,13 @@ public class MainApp extends MultiDexApplication implements
     protected AppInfo appInfo;
 
     @Inject
-    protected WhatsNewService whatsNew;
+    protected OnboardingService onboarding;
+
+    @Inject
+    ConnectivityService connectivityService;
+
+    @Inject
+    PowerManagementService powerManagementService;
 
     private PassCodeManager passCodeManager;
 
@@ -197,7 +205,9 @@ public class MainApp extends MultiDexApplication implements
                 getApplicationContext(),
                 accountManager,
                 preferences,
-                uploadsStorageManager
+                uploadsStorageManager,
+                connectivityService,
+                powerManagementService
             )
         );
 
@@ -230,7 +240,7 @@ public class MainApp extends MultiDexApplication implements
             }
         }
 
-        initSyncOperations(uploadsStorageManager, accountManager);
+        initSyncOperations(uploadsStorageManager, accountManager, connectivityService, powerManagementService);
         initContactsBackup(accountManager);
         notificationChannels();
 
@@ -253,7 +263,7 @@ public class MainApp extends MultiDexApplication implements
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 Log_OC.d(activity.getClass().getSimpleName(), "onCreate(Bundle) starting");
-                whatsNew.launchActivityIfNeeded(activity);
+                onboarding.launchActivityIfNeeded(activity);
             }
 
             @Override
@@ -356,7 +366,9 @@ public class MainApp extends MultiDexApplication implements
 
     public static void initSyncOperations(
         final UploadsStorageManager uploadsStorageManager,
-        final UserAccountManager accountManager
+        final UserAccountManager accountManager,
+        final ConnectivityService connectivityService,
+        final PowerManagementService powerManagementService
     ) {
         updateToAutoUpload();
         cleanOldEntries();
@@ -375,17 +387,29 @@ public class MainApp extends MultiDexApplication implements
         initiateExistingAutoUploadEntries();
 
         FilesSyncHelper.scheduleFilesSyncIfNeeded(mContext);
-        FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager, accountManager);
+        FilesSyncHelper.restartJobsIfNeeded(uploadsStorageManager,
+                                            accountManager,
+                                            connectivityService,
+                                            powerManagementService);
         FilesSyncHelper.scheduleOfflineSyncIfNeeded();
 
-        ReceiversHelper.registerNetworkChangeReceiver(uploadsStorageManager, accountManager);
+        ReceiversHelper.registerNetworkChangeReceiver(uploadsStorageManager,
+                                                      accountManager,
+                                                      connectivityService,
+                                                      powerManagementService);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            ReceiversHelper.registerPowerChangeReceiver(uploadsStorageManager, accountManager);
+            ReceiversHelper.registerPowerChangeReceiver(uploadsStorageManager,
+                                                        accountManager,
+                                                        connectivityService,
+                                                        powerManagementService);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ReceiversHelper.registerPowerSaveReceiver(uploadsStorageManager, accountManager);
+            ReceiversHelper.registerPowerSaveReceiver(uploadsStorageManager,
+                                                      accountManager,
+                                                      connectivityService,
+                                                      powerManagementService);
         }
     }
 

@@ -74,6 +74,16 @@
 
     <uses-sdk tools:overrideLibrary="com.blikoon.qrcodescanner" />
 
+    <!-- Some Chromebooks don't support touch. Although not essential,
+         it's a good idea to explicitly include this declaration. -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:name=".MainApp"
         android:icon="@mipmap/ic_launcher"
@@ -314,10 +324,10 @@
         <activity
             android:name=".ui.trashbin.TrashbinActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name="com.nextcloud.client.whatsnew.WhatsNewActivity"
+        <activity android:name="com.nextcloud.client.onboarding.WhatsNewActivity"
                   android:theme="@style/Theme.ownCloud.noActionBar.Login" />
         <activity
-            android:name=".ui.activity.FirstRunActivity"
+            android:name="com.nextcloud.client.onboarding.FirstRunActivity"
             android:theme="@style/Theme.ownCloud.noActionBar.Login"
             android:configChanges="orientation|screenSize"/>
 

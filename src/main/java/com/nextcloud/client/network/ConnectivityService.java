@@ -1,4 +1,5 @@
-/* Nextcloud Android client application
+/*
+ * Nextcloud Android client application
  *
  * @author Chris Narkiewicz
  * Copyright (C) 2019 Chris Narkiewicz <hello@ezaquarii.com>
@@ -16,26 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.nextcloud.client.whatsnew;
 
-import android.content.res.Resources;
+package com.nextcloud.client.network;
 
-import com.nextcloud.client.account.CurrentAccountProvider;
-import com.nextcloud.client.preferences.AppPreferences;
+import com.evernote.android.job.JobRequest;
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class WhatsNewModule {
-
-    @Provides
-    @Singleton
-    WhatsNewService whatsNewService(Resources resources,
-                                    AppPreferences preferences,
-                                    CurrentAccountProvider accountProvider) {
-        return new WhatsNewService(resources, preferences, accountProvider);
-    }
+public interface ConnectivityService {
+    boolean isInternetWalled();
+    boolean isOnlineWithWifi();
+    JobRequest.NetworkType getActiveNetworkType();
 }
