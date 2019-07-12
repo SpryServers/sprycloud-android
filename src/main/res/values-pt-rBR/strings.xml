@@ -3,6 +3,7 @@
     <string name="about_android">Aplicativo Android %1$s</string>
     <string name="about_title">Sobre</string>
     <string name="about_version">versão %1$s</string>
+    <string name="about_version_with_build">versão %1$s, build #%2$s</string>
     <string name="account_creation_failed">Falha ao criar conta</string>
     <string name="account_icon">Ícone da conta</string>
     <string name="account_not_found">Conta não encontrada!</string>
@@ -83,6 +84,7 @@
     <string name="auto_upload_path">/AutoEnvio</string>
     <string name="autoupload_create_new_custom_folder">Criar nova configuração de pasta personalizada</string>
     <string name="autoupload_custom_folder">Configurar uma pasta personalizada</string>
+    <string name="autoupload_disable_power_save_check">Desativar a verificação de economia de energia</string>
     <string name="avatar">Avatar</string>
     <string name="battery_optimization_close">Fechar</string>
     <string name="battery_optimization_disable">Desativar</string>
@@ -146,9 +148,12 @@
     <string name="copy_file_invalid_into_descendent">Não é possível copiar uma pasta para uma das suas próprias pastas subjacentes</string>
     <string name="copy_file_invalid_overwrite">O arquivo já está presente na pasta destino</string>
     <string name="copy_file_not_found">Não foi possível copiar. Por favor, verifique se o arquivo existe</string>
+    <string name="copy_internal_link">Copiar link interno</string>
+    <string name="copy_internal_link_subline">Funciona apenas para usuários com acesso a esta pasta</string>
     <string name="copy_link">Copiar link</string>
     <string name="copy_move_to_encrypted_folder_not_supported">Copia e movimentação para a pasta criptografada atualmente não são suportadas.</string>
     <string name="copy_to">Copiar para…</string>
+    <string name="could_not_retrieve_url">Não foi possível recuperar a URL</string>
     <string name="create_dir_fail_msg">Não foi possível criar a pasta</string>
     <string name="create_file_from_template">Criando arquivo a partir do modelo…</string>
     <string name="create_new_document">Criar novo documento</string>
@@ -230,6 +235,7 @@
     <string name="error_retrieving_templates">Erro recuperando modelos</string>
     <string name="error_starting_direct_camera_upload">Erro ao inicializar a câmera</string>
     <string name="fab_label">Adicionar ou enviar</string>
+    <string name="failed_to_download">Erro ao enviar o arquivo ao gerenciador de downloads</string>
     <string name="fallback_weblogin_back">Voltar</string>
     <string name="fallback_weblogin_text">Voltar ao antigo método de login</string>
     <string name="favorite">Adicionar aos favoritos</string>
@@ -404,7 +410,7 @@
     <string name="notification_icon">Ícone de notificação</string>
     <string name="notifications_loading_activity">Carregando notificações…</string>
     <string name="notifications_no_results_headline">Não há notificações</string>
-    <string name="notifications_no_results_message">Por favor verifique mais tarde.</string>
+    <string name="notifications_no_results_message">Por favor, verifique mais tarde.</string>
     <string name="oauth_2_0_access_end_point_address_hint">Endereço do ponto final da acesso</string>
     <string name="oauth_2_0_auth_end_point_address_hint">Endereço do ponto final da autenticação</string>
     <string name="oauth_check_onoff">Entrar com OAuth 2.0</string>
@@ -450,6 +456,8 @@
     <string name="placeholder_media_time">12:23:45</string>
     <string name="placeholder_sentence">Este é um espaço reservado</string>
     <string name="placeholder_timestamp">2012/05/18 12:23 PM</string>
+    <string name="power_check_dialog_title">Desativar a verificação de economia de energia</string>
+    <string name="power_save_check_dialog_message">Desativar a verificação de economia de energia pode resultar em uploads com a bateria baixa!</string>
     <string name="pref_behaviour_entries_delete_file">excluído</string>
     <string name="pref_behaviour_entries_keep_file">Mantido na pasta original</string>
     <string name="pref_behaviour_entries_move">movido para a pasta aplicativos</string>
@@ -498,7 +506,7 @@
     <string name="preview_image_error_unknown_format">Não foi possível exibir a imagem</string>
     <string name="preview_sorry">Desculpe</string>
     <string name="privacy">Privacidade</string>
-    <string name="push_notifications_not_implemented">Envio de notificações desabilitadas devido à dependências nos serviços proprietários do Google Play.</string>
+    <string name="push_notifications_not_implemented">Envio de notificações desativadas devido a dependências nos serviços proprietários do Google Play.</string>
     <string name="push_notifications_old_login">Sem envio de notificações devido à sessão de login desatualizada. Considere readicionar sua conta.</string>
     <string name="push_notifications_temp_error">Atualmente o envio de notificações está indisponível.</string>
     <string name="recommend_subject">Experimente %1$s em seu dispositivo!</string>

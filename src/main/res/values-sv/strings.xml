@@ -3,6 +3,7 @@
     <string name="about_android">%1$s Android-app</string>
     <string name="about_title">Om</string>
     <string name="about_version">version %1$s</string>
+    <string name="about_version_with_build">version %1$s, build #%2$s</string>
     <string name="account_creation_failed">Skapa konto misslyckades</string>
     <string name="account_icon">Kontoikon</string>
     <string name="account_not_found">Kontot hittades inte!</string>
@@ -83,6 +84,7 @@
     <string name="auto_upload_path">/AutomatiskUppladdning</string>
     <string name="autoupload_create_new_custom_folder">Skapa en ny anpassad mappkonfiguration </string>
     <string name="autoupload_custom_folder">Skapa en anpassad mapp</string>
+    <string name="autoupload_disable_power_save_check">Inaktivera strömsparingskontrollen</string>
     <string name="avatar">Avatar</string>
     <string name="battery_optimization_close">Stäng</string>
     <string name="battery_optimization_disable">Inaktivera</string>
@@ -146,9 +148,12 @@
     <string name="copy_file_invalid_into_descendent">Det är inte möjligt att kopiera mappen till en av dess undermappar</string>
     <string name="copy_file_invalid_overwrite">Filen finns redan i målmappen</string>
     <string name="copy_file_not_found">Kunde inte kopiera. Var god kontrollera om filen existerar.</string>
+    <string name="copy_internal_link">Kopiera intern länk</string>
+    <string name="copy_internal_link_subline">Fungerar bara för användare med tillgång till den här mappen</string>
     <string name="copy_link">Kopiera länk</string>
     <string name="copy_move_to_encrypted_folder_not_supported">Kopiera/flytta till krypterad mapp stöds för närvarande inte.</string>
     <string name="copy_to">Kopiera till…</string>
+    <string name="could_not_retrieve_url">Det gick inte att hämta url</string>
     <string name="create_dir_fail_msg">Kunde inte skapa mapp</string>
     <string name="create_file_from_template">Skapar fil från mall...</string>
     <string name="create_new_document">Skapa nytt dokument</string>
@@ -229,6 +234,7 @@
     <string name="error_retrieving_templates">Fel vid hämtning av mallar</string>
     <string name="error_starting_direct_camera_upload">Fel vid start av kamera</string>
     <string name="fab_label">Lägg till eller ladda upp</string>
+    <string name="failed_to_download">Misslyckades skicka filen till nedladdningshanteraren</string>
     <string name="fallback_weblogin_back">Tillbaka</string>
     <string name="fallback_weblogin_text">Gå tillbaka till gammal inloggningsmetod</string>
     <string name="favorite">Lägg till favoriter</string>
@@ -449,6 +455,8 @@
     <string name="placeholder_media_time">12:23:45</string>
     <string name="placeholder_sentence">Detta är en platshållare</string>
     <string name="placeholder_timestamp">2012/05/18 12:23 PM</string>
+    <string name="power_check_dialog_title">Inaktivera strömsparingskontrollen</string>
+    <string name="power_save_check_dialog_message">Inaktivera strömsparningskontroll kan resultera i att filer laddas upp i lågt batteriläge!</string>
     <string name="pref_behaviour_entries_delete_file">raderas</string>
     <string name="pref_behaviour_entries_keep_file">behållas i orginalmapp</string>
     <string name="pref_behaviour_entries_move">flyttas till Nextcloud-mapp</string>
