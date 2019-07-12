@@ -80,8 +80,8 @@ repositories {
 
 def versionMajor = 1
 def versionMinor = 4
-def versionPatch = 1
-def versionBuild = 99 // 0-50=Alpha / 51-98=RC / 99=stable
+def versionPatch = 2
+def versionBuild = 0 // 0-50=Alpha / 51-98=RC / 99=stable
 
 def taskRequest = getGradle().getStartParameter().getTaskRequests().toString()
 if (taskRequest.contains("Gplay") || taskRequest.contains("lint")) {
