@@ -77,7 +77,6 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
     private ConnectivityService connectivityService;
     private PowerManagementService powerManagementService;
     private UserAccountManager accountManager;
-    private PowerManagementService powerManagementService;
     private UploadGroup[] uploadGroups;
     private boolean showUser;
 

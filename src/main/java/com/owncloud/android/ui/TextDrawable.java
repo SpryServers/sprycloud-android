@@ -33,7 +33,7 @@ import android.graphics.drawable.Drawable;
 
 import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.utils.BitmapUtils;
-import com.owncloud.android.utils.NextcloudServer;
+import com.owncloud.android.utils.spryCloudServer;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -101,7 +101,7 @@ public class TextDrawable extends Drawable {
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    @NextcloudServer(max = 12)
+    @spryCloudServer(max = 12)
     public static TextDrawable createAvatar(Account account, float radiusInDp) throws
             NoSuchAlgorithmException {
         String username = UserAccountManager.getUsername(account);
@@ -119,7 +119,7 @@ public class TextDrawable extends Drawable {
      * @throws NoSuchAlgorithmException     if the specified algorithm is not available when calculating the color values
      */
     @NonNull
-    @NextcloudServer(max = 12)
+    @spryCloudServer(max = 12)
     public static TextDrawable createAvatarByUserId(String userId, float radiusInDp) throws
             NoSuchAlgorithmException {
         return createNamedAvatar(userId, radiusInDp);
