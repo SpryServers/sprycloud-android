@@ -16,6 +16,7 @@ gen/
 target/
 generic/
 gplay/
+.idea/*
 
 # Local configuration files (sdk path, etc)
 local.properties
