@@ -8,15 +8,21 @@
 1. Guidelines
     1. Issue reporting
     1. Labels
-        1. PR
+        1. Pull request (PR)
         1. Issue
+        1. Bug workflow
 1. Contributing to Source Code
     1. Developing process
+        1. Branching model
         1. Android Studio formatter setup
+        1. Build variants
     1. Contribution process
         1. Fork and download android/master repository
         1. Create pull request
         1. Create another pull request
+        1. Backport pull request
+        1. Pull requests that also need changes on library
+        1. Adding new files
     1. Translations
 1. Releases
     1. Types
@@ -24,10 +30,12 @@
         1. Release Candidate
         1. Dev
     1. Version Name and number
+        1. Stable / Release candidate
+        1. Dev
     1. Release cycle
     1. Release Process
-        1. Stable
-        1. Release Candidate
+        1. Stable Release
+        1. Release Candidate Release
         1. Development Dev
 
 
@@ -133,15 +141,112 @@ To make sure your new pull request does not contain commits which are already co
 * Use GitHub to issue PR
 
 ### 4. Backport pull request:
-If some pull request is worth to backport to a dot release, label it as "backport-request".
+Use backport-bot via "/backport to stable-version", e.g. "/backport to stable-3.7".
+This will automatically add "backport-request" label to PR and bot will create a new PR to targeted branch once the base PR is merged.
+If automatic backport fails, it will create a comment.
 
-* create a new branch based on latest stable branch
-* git cherry-pick commits from origin pull request
-* create pull request on github with "Backport of #originPullRequest: description"
-* remove label "backport-request" from origin pull request
+### 5. Pull requests that also need changes on library
+For speeding up developing, we do use a master snapshot of nextcloud-library, provided by jitpack.io.
+This means that if a breaking change is merged on library, master branch of the app will fail.
+To limit this risk please follow this approach:
+- on app PR: first use a reference to your library branch in build.gradle: ext -> androidLibraryVersion, e.g. androidLibraryVersion = "changeSearch-SNAPSHOT"
+- on library PR: use label "client change required" to indicate that this is breaking change. This will prevent GitHub from merging it.
+
+Once both PRs are reviewed and ready to merge:
+- on library PR: remove label and merge it (for a short time now master cannot be built!)
+- on app PR: change androidLibraryVersion back to "master-SNAPSHOT"
+- wait for CI and then merge
+
+With this approach the "downtime" of not building master is limited to the timestamp between merge lib PR and merging app PR, which is only limited by CI.
+
+### 6. Adding new files
+If you create a new file it needs to contain a license header. We encourage you to use the same license (AGPL3+) as we do.
+Copyright of Nextcloud GmbH is optional.
+
+Source code of library:
+```java
+ /* Nextcloud Android Library is available under MIT license
+ *
+ *   @author Your Name
+ *   Copyright (C) 2019 Your Name
+ *   Copyright (C) 2019 Nextcloud GmbH
+ *   
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to deal
+ *   in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *   
+ *   The above copyright notice and this permission notice shall be included in
+ *   all copies or substantial portions of the Software.
+ *   
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+ *   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+ *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+ *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+ *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *   THE SOFTWARE.
+ *
+ */
+ ```
+
+Source code of app:
+```java
+/*
+ * Nextcloud Android client application
+ *
+ * @author Your Name
+ * Copyright (C) 2019 Your Name
+ * Copyright (C) 2019 Nextcloud GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+ ```
+ 
+ XML (layout) file:
+ ```xml
+<!--
+  Nextcloud Android client application
+
+  @author Your Name
+  Copyright (C) 2019 Your Name
+  Copyright (C) 2019 Nextcloud GmbH
+ 
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+ 
+  You should have received a copy of the GNU Affero General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+```
 
 ## Translations
 We manage translations via [Transifex](https://www.transifex.com/nextcloud/nextcloud/android/). So just request joining the translation team for Android on the site and start translating. All translations will then be automatically pushed to this repository, there is no need for any pull request for translations.
+
+If you need to change a translation, do not change it, but give it new key. This way the translation stays backward compatible as we automatically backport translated strings to last versions.
+
+When submitting PRs with changed translations, please only submit changes to values/strings.xml and not changes to translated files. These will be overwritten by next merge of transifex-but and increase PR review.  
 
 # Releases
 At the moment we are releasing the app in two app stores:
@@ -215,7 +320,7 @@ Release Candidate releases are based on the git [master](https://github.com/next
 2. Create a [release/tag](https://github.com/nextcloud/android/releases) in git. Tag name following the naming schema: ```rc-Mayor.Minor.Hotfix-betaIncrement``` (e.g. rc-1.2.0-12) naming the version number following the [semantic versioning schema](http://semver.org/)
 
 
-### Dev Release
+### Developement Release
 Dev releases are based on the [master](https://github.com/nextcloud/android/tree/master) branch and are done independently from stable releases for people willing to test new features and provide valuable feedback on new features to be incorporated before a feature gets released in the stable app.
 
 The deployment/build is done once a day automatically. If code has changed a new apk will be published [here](https://download.nextcloud.com/android/dev) and it will, with a little delay, be available on [Fdroid](https://f-droid.org/repository/browse/?fdfilter=nextcloud&fdid=com.nextcloud.android.beta).

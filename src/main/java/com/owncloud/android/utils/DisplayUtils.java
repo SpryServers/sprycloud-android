@@ -43,8 +43,6 @@ import android.text.format.DateUtils;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.GenericRequestBuilder;
@@ -55,10 +53,8 @@ import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.caverock.androidsvg.SVG;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.CurrentAccountProvider;
-import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
@@ -66,10 +62,8 @@ import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.ThumbnailsCacheManager;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.lib.resources.files.SearchRemoteOperation;
 import com.owncloud.android.ui.TextDrawable;
 import com.owncloud.android.ui.activity.FileDisplayActivity;
-import com.owncloud.android.ui.events.MenuItemClickEvent;
 import com.owncloud.android.ui.events.SearchEvent;
 import com.owncloud.android.ui.fragment.OCFileListFragment;
 import com.owncloud.android.utils.glide.CustomGlideUriLoader;
@@ -462,6 +456,27 @@ public final class DisplayUtils {
      */
     public static void setAvatar(@NonNull Account account, @NonNull String userId, AvatarGenerationListener listener,
                                  float avatarRadius, Resources resources, Object callContext, Context context) {
+        setAvatar(account, userId, userId, listener, avatarRadius, resources, callContext, context);
+    }
+
+    /**
+     * fetches and sets the avatar of the given account in the passed callContext
+     *
+     * @param account      the account to be used to connect to server
+     * @param userId       the userId which avatar should be set
+     * @param displayName  displayName used to generate avatar with first char, only used as fallback
+     * @param avatarRadius the avatar radius
+     * @param resources    reference for density information
+     * @param callContext  which context is called to set the generated avatar
+     */
+    public static void setAvatar(@NonNull Account account,
+                                 @NonNull String userId,
+                                 String displayName,
+                                 AvatarGenerationListener listener,
+                                 float avatarRadius,
+                                 Resources resources,
+                                 Object callContext,
+                                 Context context) {
         if (callContext instanceof View) {
             ((View) callContext).setContentDescription(String.valueOf(account.hashCode()));
         }
@@ -474,12 +489,12 @@ public final class DisplayUtils {
 
         // first show old one
         Drawable avatar = BitmapUtils.bitmapToCircularBitmapDrawable(resources,
-                ThumbnailsCacheManager.getBitmapFromDiskCache(avatarKey));
+                                                                     ThumbnailsCacheManager.getBitmapFromDiskCache(avatarKey));
 
         // if no one exists, show colored icon with initial char
         if (avatar == null) {
             try {
-                avatar = TextDrawable.createAvatarByUserId(userId, avatarRadius);
+                avatar = TextDrawable.createAvatarByUserId(displayName, avatarRadius);
             } catch (Exception e) {
                 Log_OC.e(TAG, "Error calculating RGB value for active account icon.", e);
                 avatar = resources.getDrawable(R.drawable.account_circle_white);
@@ -489,11 +504,11 @@ public final class DisplayUtils {
         // check for new avatar, eTag is compared, so only new one is downloaded
         if (ThumbnailsCacheManager.cancelPotentialAvatarWork(userId, callContext)) {
             final ThumbnailsCacheManager.AvatarGenerationTask task =
-                    new ThumbnailsCacheManager.AvatarGenerationTask(listener, callContext, account, resources,
-                            avatarRadius, userId, serverName, context);
+                new ThumbnailsCacheManager.AvatarGenerationTask(listener, callContext, account, resources,
+                                                                avatarRadius, userId, serverName, context);
 
             final ThumbnailsCacheManager.AsyncAvatarDrawable asyncDrawable =
-                    new ThumbnailsCacheManager.AsyncAvatarDrawable(resources, avatar, task);
+                new ThumbnailsCacheManager.AsyncAvatarDrawable(resources, avatar, task);
             listener.avatarGenerated(asyncDrawable, callContext);
             task.execute(userId);
         }
@@ -567,80 +582,6 @@ public final class DisplayUtils {
         } catch (Exception e) {
             Log_OC.e(TAG, "Could not download image " + imageUrl);
             return null;
-        }
-    }
-
-    public static void setupBottomBar(
-        Account account,
-        BottomNavigationView view,
-        Resources resources,
-        UserAccountManager accountManager,
-        final Activity activity,
-        int checkedMenuItem
-    ) {
-
-        Menu menu = view.getMenu();
-
-        boolean searchSupported = accountManager.isSearchSupported(account);
-
-        if (!searchSupported) {
-            menu.removeItem(R.id.nav_bar_favorites);
-            menu.removeItem(R.id.nav_bar_photos);
-        }
-
-        if (resources.getBoolean(R.bool.use_home)) {
-            menu.findItem(R.id.nav_bar_files).setTitle(resources.
-                    getString(R.string.drawer_item_home));
-            menu.findItem(R.id.nav_bar_files).setIcon(R.drawable.ic_home);
-        }
-
-        setBottomBarItem(view, checkedMenuItem);
-
-        view.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.nav_bar_files:
-                                EventBus.getDefault().post(new MenuItemClickEvent(item));
-                                if (activity != null) {
-                                    activity.invalidateOptionsMenu();
-                                }
-                                break;
-                            case R.id.nav_bar_favorites:
-                                SearchEvent favoritesEvent = new SearchEvent("",
-                                    SearchRemoteOperation.SearchType.FAVORITE_SEARCH,
-                                        SearchEvent.UnsetType.UNSET_DRAWER);
-
-                                switchToSearchFragment(activity, favoritesEvent);
-                                break;
-                            case R.id.nav_bar_photos:
-                                SearchEvent photosEvent = new SearchEvent("image/%",
-                                    SearchRemoteOperation.SearchType.CONTENT_TYPE_SEARCH,
-                                        SearchEvent.UnsetType.UNSET_DRAWER);
-
-                                switchToSearchFragment(activity, photosEvent);
-                                break;
-                            case R.id.nav_bar_settings:
-                                EventBus.getDefault().post(new MenuItemClickEvent(item));
-                                break;
-                            default:
-                                break;
-                        }
-                        return true;
-                    }
-                });
-    }
-
-    public static void setBottomBarItem(BottomNavigationView view, int checkedMenuItem) {
-        Menu menu = view.getMenu();
-
-        for (int i = 0; i < menu.size(); i++) {
-            menu.getItem(i).setChecked(false);
-        }
-
-        if (checkedMenuItem != -1) {
-            menu.findItem(checkedMenuItem).setChecked(true);
         }
     }
 

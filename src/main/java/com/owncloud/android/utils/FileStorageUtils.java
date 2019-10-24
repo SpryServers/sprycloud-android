@@ -47,6 +47,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -157,21 +158,32 @@ public final class FileStorageUtils {
     /**
      * Returns the InstantUploadFilePath on the nextcloud instance
      *
-     * @param fileName complete file name
      * @param dateTaken: Time in milliseconds since 1970 when the picture was taken.
      * @return instantUpload path, eg. /Camera/2017/01/fileName
      */
-    public static String getInstantUploadFilePath(Locale current,
+    public static String getInstantUploadFilePath(File file,
+                                                  Locale current,
                                                   String remotePath,
-                                                  String fileName,
+                                                  String syncedFolderLocalPath,
                                                   long dateTaken,
                                                   Boolean subfolderByDate) {
-        String subPath = "";
+        String subfolderByDatePath = "";
         if (subfolderByDate) {
-            subPath = getSubPathFromDate(dateTaken, current);
+            subfolderByDatePath = getSubPathFromDate(dateTaken, current);
         }
 
-        return remotePath + OCFile.PATH_SEPARATOR + subPath + (fileName == null ? "" : fileName);
+        String relativeSubfolderPath = new File(file.getAbsolutePath().replace(syncedFolderLocalPath, ""))
+            .getParentFile().getAbsolutePath();
+
+        // Path must be normalized; otherwise the next RefreshFolderOperation has a mismatch and deletes the local file.
+        return (remotePath +
+            OCFile.PATH_SEPARATOR +
+            subfolderByDatePath +
+            OCFile.PATH_SEPARATOR +
+            relativeSubfolderPath +
+            OCFile.PATH_SEPARATOR +
+            file.getName())
+            .replaceAll(OCFile.PATH_SEPARATOR + "+", OCFile.PATH_SEPARATOR);
     }
 
 
@@ -210,7 +222,7 @@ public final class FileStorageUtils {
         file.setOwnerId(remote.getOwnerId());
         file.setOwnerDisplayName(remote.getOwnerDisplayName());
         file.setNote(remote.getNote());
-        file.setSharees(remote.getSharees());
+        file.setSharees(new ArrayList<>(Arrays.asList(remote.getSharees())));
 
         return file;
     }
@@ -234,13 +246,19 @@ public final class FileStorageUtils {
         return file;
     }
 
-    public static List<OCFile> sortOcFolderDescDateModified(List<OCFile> files) {
+    public static List<OCFile> sortOcFolderDescDateModifiedWithoutFavoritesFirst(List<OCFile> files) {
         final int multiplier = -1;
         Collections.sort(files, (o1, o2) -> {
             @SuppressFBWarnings(value = "Bx", justification = "Would require stepping up API level")
             Long obj1 = o1.getModificationTimestamp();
             return multiplier * obj1.compareTo(o2.getModificationTimestamp());
         });
+
+        return files;
+    }
+
+    public static List<OCFile> sortOcFolderDescDateModified(List<OCFile> files) {
+        files = sortOcFolderDescDateModifiedWithoutFavoritesFirst(files);
 
         return FileSortOrder.sortCloudFilesByFavourite(files);
     }

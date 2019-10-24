@@ -253,8 +253,8 @@ public final class FilesSyncHelper {
                                                    uploadsStorageManager,
                                                    connectivityService,
                                                    accountManager,
-                                                   null,
-                                                   powerManagementService);
+                                                   powerManagementService,
+                                                   null);
             }
         }).start();
     }
@@ -307,4 +307,3 @@ public final class FilesSyncHelper {
         }
     }
 }
-

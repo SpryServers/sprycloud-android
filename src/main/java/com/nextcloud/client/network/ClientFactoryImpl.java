@@ -64,4 +64,9 @@ class ClientFactoryImpl implements ClientFactory {
     public OwnCloudClient create(Uri uri, boolean followRedirects) {
         return OwnCloudClientFactory.createOwnCloudClient(uri, context, followRedirects);
     }
+
+    @Override
+    public PlainHttpClient createPlainClient() {
+        return new PlainHttpClient();
+    }
 }

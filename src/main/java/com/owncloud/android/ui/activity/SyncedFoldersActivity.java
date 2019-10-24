@@ -41,7 +41,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nextcloud.client.device.PowerManagementService;
 import com.nextcloud.client.di.Injectable;
 import com.nextcloud.client.preferences.AppPreferences;
@@ -205,7 +204,7 @@ public class SyncedFoldersActivity extends FileActivity implements SyncedFolderA
         AlertDialog alertDialog = new AlertDialog.Builder(this)
             .setView(findViewById(R.id.root_layout))
             .setPositiveButton(R.string.common_ok, (dialog, which) -> dialog.dismiss())
-            .setTitle(ThemeUtils.getColoredTitle(getResources().getString(R.string.power_check_dialog_title),
+            .setTitle(ThemeUtils.getColoredTitle(getResources().getString(R.string.autoupload_disable_power_save_check),
                                                  ThemeUtils.primaryAccentColor(this)))
             .setMessage(getString(R.string.power_save_check_dialog_message))
             .show();
@@ -233,20 +232,6 @@ public class SyncedFoldersActivity extends FileActivity implements SyncedFolderA
         mRecyclerView.addItemDecoration(new MediaGridItemDecoration(spacing));
         mRecyclerView.setLayoutManager(lm);
         mRecyclerView.setAdapter(mAdapter);
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-
-        if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
-            DisplayUtils.setupBottomBar(
-                getUserAccountManager().getCurrentAccount(),
-                bottomNavigationView,
-                getResources(),
-                accountManager,
-                this,
-                -1
-            );
-        }
 
         load(gridWidth * 2, false);
     }

@@ -1,3 +1,29 @@
+## 3.7.2 (August, 16, 2019)
+
+- Transifex update
+- bump to lib 1.5.0
+
+For a full list, please see https://github.com/nextcloud/android/milestone/37
+
+## 3.7.1 (July, 30, 2019)
+
+- fix for Global Scale
+
+For a full list, please see https://github.com/nextcloud/android/milestone/36
+
+## 3.7.0 (July, 09, 2019)
+
+- Collabora enhancements
+- Chromebook support
+- delete push notifications if read on other device (NC 18 and newer)
+- open file from notification
+- open file from Talk app
+- minimum supported server: NC12
+- end of life warning: NC13 and older
+- lots of bugfixes and refinements under the hood to provide an even more stable app
+
+For a full list, please see https://github.com/nextcloud/android/milestone/32
+
 ## 3.6.2 (May, 23, 2019)
 - fix bug when creating preview
 - fix crash on opening app

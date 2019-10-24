@@ -44,8 +44,6 @@ import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory;
-import com.owncloud.android.lib.common.OwnCloudCredentials;
-import com.owncloud.android.lib.common.OwnCloudCredentialsFactory;
 import com.owncloud.android.lib.common.operations.OnRemoteOperationListener;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
@@ -54,7 +52,7 @@ import com.owncloud.android.lib.resources.files.RestoreFileVersionRemoteOperatio
 import com.owncloud.android.lib.resources.files.model.FileVersion;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation;
+import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation;
 import com.owncloud.android.operations.CheckCurrentCredentialsOperation;
 import com.owncloud.android.operations.CopyFileOperation;
 import com.owncloud.android.operations.CreateFolderOperation;
@@ -434,7 +432,6 @@ public class OperationsService extends Service {
             }
 
             if (next != null) {
-
                 mCurrentOperation = next.second;
                 RemoteOperationResult result = null;
                 try {
@@ -454,17 +451,7 @@ public class OperationsService extends Service {
                                     mService.getContentResolver()
                             );
                         } else {
-                            OwnCloudCredentials credentials = null;
-                            if (!TextUtils.isEmpty(mLastTarget.mCookie)) {
-                                // just used for GetUserName
-                                // TODO refactor to run GetUserName as AsyncTask in the context of
-                                // AuthenticatorActivity
-                                credentials = OwnCloudCredentialsFactory.newSamlSsoCredentials(
-                                        null,                   // unknown
-                                        mLastTarget.mCookie);   // SAML SSO
-                            }
-                            OwnCloudAccount ocAccount = new OwnCloudAccount(
-                                    mLastTarget.mServerUrl, credentials);
+                            OwnCloudAccount ocAccount = new OwnCloudAccount(mLastTarget.mServerUrl, null);
                             mOwnCloudClient = OwnCloudClientManagerFactory.getDefaultSingleton().
                                     getClientFor(ocAccount, mService);
                             mStorageManager = null;
@@ -641,7 +628,7 @@ public class OperationsService extends Service {
                         break;
 
                     case ACTION_GET_USER_NAME:
-                        operation = new GetRemoteUserInfoOperation();
+                        operation = new GetUserInfoRemoteOperation();
                         break;
 
                     case ACTION_RENAME:

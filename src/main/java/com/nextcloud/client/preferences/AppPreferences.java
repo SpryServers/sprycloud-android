@@ -293,6 +293,10 @@ public interface AppPreferences {
 
     void setMigratedUserId(boolean value);
 
+    void setPhotoSearchTimestamp(long timestamp);
+
+    long getPhotoSearchTimestamp();
+
     boolean isPowerCheckDisabled();
 
     void setPowerCheckDisabled(boolean value);

@@ -25,12 +25,10 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.OCFile;
@@ -39,7 +37,6 @@ import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.ui.fragment.FileFragment;
 import com.owncloud.android.ui.fragment.contactsbackup.ContactListFragment;
 import com.owncloud.android.ui.fragment.contactsbackup.ContactsBackupFragment;
-import com.owncloud.android.utils.DisplayUtils;
 
 import org.parceler.Parcels;
 
@@ -104,20 +101,6 @@ public class ContactsPreferenceActivity extends FileActivity implements FileFrag
             }
             transaction.commit();
         }
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-
-        if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
-            DisplayUtils.setupBottomBar(
-                getUserAccountManager().getCurrentAccount(),
-                bottomNavigationView,
-                getResources(),
-                accountManager,
-                this,
-                -1
-            );
-        }
     }
 
     public static void startContactBackupJob(Account account) {
@@ -143,7 +126,7 @@ public class ContactsPreferenceActivity extends FileActivity implements FileFrag
 
         for (JobRequest jobRequest : jobs) {
             PersistableBundleCompat extras = jobRequest.getExtras();
-            if (extras.getString(ContactsBackupJob.ACCOUNT, "").equalsIgnoreCase(account.name) &&
+            if (extras != null && extras.getString(ContactsBackupJob.ACCOUNT, "").equalsIgnoreCase(account.name) &&
                     jobRequest.isPeriodic()) {
                 jobManager.cancel(jobRequest.getJobId());
             }

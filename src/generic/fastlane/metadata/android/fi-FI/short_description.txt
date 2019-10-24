@@ -1,1 +1,1 @@
-spryCloudin Android-sovelluksen avulla hallitset spryCloud-palvelimellasi olevia
+Itse ylläpidettävä tuottavuusalusta, joka säilyttää kontrollin sinulla

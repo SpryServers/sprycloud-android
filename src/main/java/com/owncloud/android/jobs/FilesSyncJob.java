@@ -64,8 +64,6 @@ import java.util.TimeZone;
 import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 
-import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
-
 /*
     Job that:
         - restarts existing jobs if required
@@ -74,7 +72,7 @@ import static com.owncloud.android.datamodel.OCFile.PATH_SEPARATOR;
  */
 public class FilesSyncJob extends Job {
     public static final String TAG = "FilesSyncJob";
-    public static final String SKIP_CUSTOM = "skipCustom";
+    static final String SKIP_CUSTOM = "skipCustom";
     public static final String OVERRIDE_POWER_SAVING = "overridePowerSaving";
     private static final String WAKELOCK_TAG_SEPARATION = ":";
 
@@ -84,13 +82,11 @@ public class FilesSyncJob extends Job {
     private ConnectivityService connectivityService;
     private PowerManagementService powerManagementService;
 
-    public FilesSyncJob(
-        final UserAccountManager userAccountManager,
-        final AppPreferences preferences,
-        final UploadsStorageManager uploadsStorageManager,
-        final ConnectivityService connectivityService,
-        final PowerManagementService powerManagementService
-    ) {
+    FilesSyncJob(final UserAccountManager userAccountManager,
+                        final AppPreferences preferences,
+                        final UploadsStorageManager uploadsStorageManager,
+                        final ConnectivityService connectivityService,
+                        final PowerManagementService powerManagementService) {
         this.userAccountManager = userAccountManager;
         this.preferences = preferences;
         this.uploadsStorageManager = uploadsStorageManager;
@@ -115,8 +111,10 @@ public class FilesSyncJob extends Job {
         final boolean overridePowerSaving = bundle.getBoolean(OVERRIDE_POWER_SAVING, false);
 
         // If we are in power save mode, better to postpone upload
-        if (!overridePowerSaving && powerManagementService.isPowerSavingEnabled()) {
-            wakeLock.release();
+        if (powerManagementService.isPowerSavingEnabled() && !overridePowerSaving) {
+            if (wakeLock != null) {
+                wakeLock.release();
+            }
             return Result.SUCCESS;
         }
 
@@ -198,21 +196,17 @@ public class FilesSyncJob extends Job {
                 remotePath = syncedFolder.getRemotePath();
             }
 
-            if (!subfolderByDate) {
-                String adaptedPath = file.getAbsolutePath()
-                        .replace(syncedFolder.getLocalPath(), "")
-                        .replace(PATH_SEPARATOR + file.getName(), "");
-                remotePath += adaptedPath;
-            }
-
             requester.uploadFileWithOverwrite(
                     context,
                     account,
                     file.getAbsolutePath(),
                     FileStorageUtils.getInstantUploadFilePath(
-                            currentLocale,
-                            remotePath, file.getName(),
-                            lastModificationTime, subfolderByDate),
+                        file,
+                        currentLocale,
+                        remotePath,
+                        syncedFolder.getLocalPath(),
+                        lastModificationTime,
+                        subfolderByDate),
                     uploadAction,
                     mimeType,
                     true,           // create parent folder if not existent
@@ -223,7 +217,7 @@ public class FilesSyncJob extends Job {
             );
 
             filesystemDataProvider.updateFilesystemFileAsSentForUpload(path,
-                    Long.toString(syncedFolder.getId()));
+                                                                       Long.toString(syncedFolder.getId()));
         }
     }
 

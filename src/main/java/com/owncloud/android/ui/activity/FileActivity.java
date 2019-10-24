@@ -69,6 +69,7 @@ import com.owncloud.android.operations.UpdateSharePermissionsOperation;
 import com.owncloud.android.operations.UpdateShareViaLinkOperation;
 import com.owncloud.android.services.OperationsService;
 import com.owncloud.android.services.OperationsService.OperationsServiceBinder;
+import com.owncloud.android.ui.asynctasks.CheckRemoteWipeTask;
 import com.owncloud.android.ui.asynctasks.LoadingVersionNumberTask;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment;
 import com.owncloud.android.ui.dialog.LoadingDialog;
@@ -80,6 +81,8 @@ import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.ErrorMessageAdapter;
 import com.owncloud.android.utils.FilesSyncHelper;
 import com.owncloud.android.utils.ThemeUtils;
+
+import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
@@ -394,43 +397,48 @@ public abstract class FileActivity extends DrawerActivity
      *                  be used.
      */
     protected void requestCredentialsUpdate(Context context, Account account) {
+        if (account == null) {
+            account = getAccount();
+        }
 
+        boolean remoteWipeSupported = accountManager.getServerVersion(account).isRemoteWipeSupported();
+
+        if (remoteWipeSupported) {
+            new CheckRemoteWipeTask(account, new WeakReference<>(this)).execute();
+        } else {
+            performCredentialsUpdate(account, context);
+        }
+    }
+
+    public void performCredentialsUpdate(Account account, Context context) {
         try {
             /// step 1 - invalidate credentials of current account
-            if (account == null) {
-                account = getAccount();
-            }
-            OwnCloudClient client;
             OwnCloudAccount ocAccount = new OwnCloudAccount(account, context);
-            client = OwnCloudClientManagerFactory.getDefaultSingleton().removeClientFor(ocAccount);
+            OwnCloudClient client = OwnCloudClientManagerFactory.getDefaultSingleton().removeClientFor(ocAccount);
+
             if (client != null) {
-                OwnCloudCredentials cred = client.getCredentials();
-                if (cred != null) {
-                    AccountManager am = AccountManager.get(context);
-                    if (cred.authTokenExpires()) {
-                        am.invalidateAuthToken(
-                                account.type,
-                                cred.getAuthToken()
-                        );
+                OwnCloudCredentials credentials = client.getCredentials();
+                if (credentials != null) {
+                    AccountManager accountManager = AccountManager.get(context);
+                    if (credentials.authTokenExpires()) {
+                        accountManager.invalidateAuthToken(account.type, credentials.getAuthToken());
                     } else {
-                        am.clearPassword(account);
+                        accountManager.clearPassword(account);
                     }
                 }
             }
 
             /// step 2 - request credentials to user
-            Intent updateAccountCredentials = new Intent(this, AuthenticatorActivity.class);
+            Intent updateAccountCredentials = new Intent(context, AuthenticatorActivity.class);
             updateAccountCredentials.putExtra(AuthenticatorActivity.EXTRA_ACCOUNT, account);
             updateAccountCredentials.putExtra(
-                    AuthenticatorActivity.EXTRA_ACTION,
-                    AuthenticatorActivity.ACTION_UPDATE_EXPIRED_TOKEN);
+                AuthenticatorActivity.EXTRA_ACTION,
+                AuthenticatorActivity.ACTION_UPDATE_EXPIRED_TOKEN);
             updateAccountCredentials.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             startActivityForResult(updateAccountCredentials, REQUEST_CODE__UPDATE_CREDENTIALS);
-
         } catch (com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException e) {
             DisplayUtils.showSnackMessage(this, R.string.auth_account_does_not_exist);
         }
-
     }
 
     /**
@@ -656,16 +664,16 @@ public abstract class FileActivity extends DrawerActivity
         }
     }
 
-    public static void copyAndShareFileLink(FileActivity activity, String link) {
+    public static void copyAndShareFileLink(FileActivity activity, OCFile file, String link) {
         ClipboardUtil.copyToClipboard(activity, link, false);
         Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content), R.string.clipboard_text_copied,
                                           Snackbar.LENGTH_LONG)
-            .setAction(R.string.share, v -> showShareLinkDialog(activity, link));
+            .setAction(R.string.share, v -> showShareLinkDialog(activity, file, link));
         ThemeUtils.colorSnackbar(activity, snackbar);
         snackbar.show();
     }
 
-    public static void showShareLinkDialog(FileActivity activity, String link) {
+    public static void showShareLinkDialog(FileActivity activity, OCFile file, String link) {
         // Create dialog to allow the user choose an app to send the link
         Intent intentToShareLink = new Intent(Intent.ACTION_SEND);
 
@@ -689,11 +697,11 @@ public abstract class FileActivity extends DrawerActivity
         if (username != null) {
             intentToShareLink.putExtra(Intent.EXTRA_SUBJECT,
                                        activity.getString(R.string.subject_user_shared_with_you, username,
-                                                          activity.getFile().getFileName()));
+                                                          file.getFileName()));
         } else {
             intentToShareLink.putExtra(Intent.EXTRA_SUBJECT,
                                        activity.getString(R.string.subject_shared_with_you,
-                                                          activity.getFile().getFileName()));
+                                                          file.getFileName()));
         }
 
         String[] packagesToExclude = new String[]{activity.getPackageName()};

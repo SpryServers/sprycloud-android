@@ -24,12 +24,10 @@
 package com.owncloud.android.db;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.nextcloud.client.account.UserAccountManager;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.datamodel.UploadsStorageManager.UploadStatus;
@@ -126,10 +124,10 @@ public class OCUpload implements Parcelable {
     /**
      * temporary values, used for sorting
      */
-    @Getter private UploadStatus fixedUploadStatus;
-    @Getter private boolean fixedUploadingNow;
-    @Getter private long fixedUploadEndTimeStamp;
-    @Getter private long fixedUploadId;
+    private UploadStatus fixedUploadStatus;
+    private boolean fixedUploadingNow;
+    private long fixedUploadEndTimeStamp;
+    private long fixedUploadId;
 
     /**
      * Main constructor.
@@ -206,6 +204,22 @@ public class OCUpload implements Parcelable {
      */
     public void setLastResult(UploadResult lastResult) {
         this.lastResult = lastResult != null ? lastResult : UploadResult.UNKNOWN;
+    }
+
+    public UploadStatus getFixedUploadStatus() {
+        return fixedUploadStatus;
+    }
+
+    public boolean isFixedUploadingNow() {
+        return fixedUploadingNow;
+    }
+
+    public long getFixedUploadEndTimeStamp() {
+        return fixedUploadEndTimeStamp;
+    }
+
+    public long getFixedUploadId() {
+        return fixedUploadId;
     }
 
     /**

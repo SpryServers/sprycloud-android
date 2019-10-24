@@ -23,7 +23,6 @@ package com.owncloud.android.jobs;
 
 import android.accounts.Account;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
@@ -35,9 +34,7 @@ import android.text.format.DateFormat;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.nextcloud.client.account.UserAccountManager;
-import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
@@ -45,7 +42,6 @@ import com.owncloud.android.files.services.FileUploader;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.operations.UploadFileOperation;
 import com.owncloud.android.services.OperationsService;
-import com.owncloud.android.ui.activity.ContactsPreferenceActivity;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -57,6 +53,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+
+import static com.owncloud.android.ui.activity.ContactsPreferenceActivity.PREFERENCE_CONTACTS_LAST_BACKUP;
 
 /**
  * Job that backup contacts to /Contacts-Backup and deletes files older than x days
@@ -84,9 +82,13 @@ public class ContactsBackupJob extends Job {
 
         final Account account = accountManager.getAccountByName(bundle.getString(ACCOUNT, ""));
 
+        if (account == null) {
+            return Result.FAILURE;
+        }
+
         ArbitraryDataProvider arbitraryDataProvider = new ArbitraryDataProvider(getContext().getContentResolver());
         Long lastExecution = arbitraryDataProvider.getLongValue(account,
-                ContactsPreferenceActivity.PREFERENCE_CONTACTS_LAST_BACKUP);
+                                                                PREFERENCE_CONTACTS_LAST_BACKUP);
 
         if (force || (lastExecution + 24 * 60 * 60 * 1000) < Calendar.getInstance().getTimeInMillis()) {
             Log_OC.d(TAG, "start contacts backup job");
@@ -105,8 +107,8 @@ public class ContactsBackupJob extends Job {
 
             // store execution date
             arbitraryDataProvider.storeOrUpdateKeyValue(account.name,
-                    ContactsPreferenceActivity.PREFERENCE_CONTACTS_LAST_BACKUP,
-                    String.valueOf(Calendar.getInstance().getTimeInMillis()));
+                                                        PREFERENCE_CONTACTS_LAST_BACKUP,
+                                                        Calendar.getInstance().getTimeInMillis());
         } else {
             Log_OC.d(TAG, "last execution less than 24h ago");
         }

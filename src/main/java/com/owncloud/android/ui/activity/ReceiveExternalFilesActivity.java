@@ -63,7 +63,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.owncloud.android.MainApp;
@@ -78,12 +77,11 @@ import com.owncloud.android.operations.CreateFolderOperation;
 import com.owncloud.android.operations.RefreshFolderOperation;
 import com.owncloud.android.operations.UploadFileOperation;
 import com.owncloud.android.syncadapter.FileSyncAdapter;
-import com.owncloud.android.ui.adapter.AccountListAdapter;
-import com.owncloud.android.ui.adapter.AccountListItem;
 import com.owncloud.android.ui.adapter.UploaderAdapter;
 import com.owncloud.android.ui.asynctasks.CopyAndUploadContentUrisTask;
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment;
 import com.owncloud.android.ui.dialog.CreateFolderDialogFragment;
+import com.owncloud.android.ui.dialog.MultipleAccountsDialog;
 import com.owncloud.android.ui.dialog.SortingOrderDialogFragment;
 import com.owncloud.android.ui.fragment.TaskRetainerFragment;
 import com.owncloud.android.ui.helpers.UriUploader;
@@ -119,8 +117,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -225,12 +221,17 @@ public class ReceiveExternalFilesActivity extends FileActivity
     }
 
     private void showAccountChooserDialog() {
-        DialogMultipleAccount dialog = new DialogMultipleAccount();
+        MultipleAccountsDialog dialog = new MultipleAccountsDialog();
         dialog.show(getSupportFragmentManager(), null);
     }
 
     private Activity getActivity() {
         return this;
+    }
+
+    public void changeAccount(Account account) {
+        setAccount(account, false);
+        onAccountSet(mAccountWasRestored);
     }
 
     @Override
@@ -287,52 +288,6 @@ public class ReceiveExternalFilesActivity extends FileActivity
             });
             builder.setNegativeButton(R.string.uploader_wrn_no_account_quit_btn_text, (dialog, which) -> getActivity().finish());
             return builder.create();
-        }
-    }
-
-    public static class DialogMultipleAccount extends DialogFragment implements Injectable {
-        private AccountListAdapter mAccountListAdapter;
-        private Drawable mTintedCheck;
-
-        @Inject UserAccountManager accountManager;
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final ReceiveExternalFilesActivity parent = (ReceiveExternalFilesActivity) getActivity();
-            AlertDialog.Builder builder = new Builder(parent);
-
-            mTintedCheck = DrawableCompat.wrap(ContextCompat.getDrawable(parent, R.drawable.account_circle_white));
-            int tint = ThemeUtils.primaryColor(getContext());
-            DrawableCompat.setTint(mTintedCheck, tint);
-
-            mAccountListAdapter = new AccountListAdapter(parent, accountManager, getAccountListItems(parent), mTintedCheck);
-
-            builder.setTitle(R.string.common_choose_account);
-            builder.setAdapter(mAccountListAdapter, (dialog, which) -> {
-                final ReceiveExternalFilesActivity parentActivity = (ReceiveExternalFilesActivity) getActivity();
-                parentActivity.setAccount(parentActivity.mAccountManager.getAccountsByType(
-                        MainApp.getAccountType(getActivity()))[which], false);
-                parentActivity.onAccountSet(parentActivity.mAccountWasRestored);
-                dialog.dismiss();
-            });
-            builder.setCancelable(true);
-            return builder.create();
-        }
-
-        /**
-         * creates the account list items list including the add-account action in case multiaccount_support is enabled.
-         *
-         * @return list of account list items
-         */
-        private List<AccountListItem> getAccountListItems(ReceiveExternalFilesActivity activity) {
-            Account[] accountList = activity.mAccountManager.getAccountsByType(MainApp.getAccountType(getActivity()));
-            List<AccountListItem> adapterAccountList = new ArrayList<>(accountList.length);
-            for (Account account : accountList) {
-                adapterAccountList.add(new AccountListItem(account));
-            }
-
-            return adapterAccountList;
         }
     }
 
@@ -728,11 +683,12 @@ public class ReceiveExternalFilesActivity extends FileActivity
     }
 
     private void setupActionBarSubtitle() {
+        ActionBar actionBar = getSupportActionBar();
+
         if (isHaveMultipleAccount()) {
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setSubtitle(getAccount().name);
-            }
+            ThemeUtils.setColoredSubtitle(actionBar, getAccount().name, this);
+        } else if (actionBar != null) {
+            actionBar.setSubtitle(null);
         }
     }
 
@@ -948,13 +904,13 @@ public class ReceiveExternalFilesActivity extends FileActivity
     public void uploadFiles() {
 
         UriUploader uploader = new UriUploader(
-                this,
-                mStreamsToUpload,
-                mUploadPath,
-                getAccount(),
-                FileUploader.LOCAL_BEHAVIOUR_FORGET,
-                true, // Show waiting dialog while file is being copied from private storage
-                this  // Copy temp task listener
+            this,
+            mStreamsToUpload,
+            mUploadPath,
+            getAccount(),
+            FileUploader.LOCAL_BEHAVIOUR_DELETE,
+            true, // Show waiting dialog while file is being copied from private storage
+            this  // Copy temp task listener
         );
 
         UriUploader.UriUploaderResultCode resultCode = uploader.uploadUris();
@@ -1073,14 +1029,7 @@ public class ReceiveExternalFilesActivity extends FileActivity
         newFolderMenuItem.setEnabled(mFile.canWrite());
 
         // hacky as no default way is provided
-        int fontColor = ThemeUtils.fontColor(this);
-        EditText editText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        editText.setHintTextColor(fontColor);
-        editText.setTextColor(fontColor);
-        ImageView searchClose = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        searchClose.setColorFilter(ThemeUtils.fontColor(this));
-        ImageView searchButton = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchButton.setColorFilter(ThemeUtils.fontColor(this));
+        ThemeUtils.themeSearchView(searchView, true, this);
 
         return true;
     }

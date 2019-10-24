@@ -318,9 +318,14 @@
         <activity android:name=".ui.activity.ConflictsResolveActivity"/>
         <activity android:name=".ui.activity.ErrorsWhileCopyingHandlerActivity"/>
 
-        <activity android:name=".ui.activity.LogHistoryActivity"/>
+        <activity android:name="com.nextcloud.client.logger.ui.LogsActivity" />
 
-        <activity android:name=".ui.errorhandling.ErrorShowActivity" />
+        <activity android:name="com.nextcloud.client.errorhandling.ShowErrorActivity"
+            android:theme="@style/Theme.ownCloud.Toolbar"
+            android:process=":crash"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance" />
         <activity android:name=".ui.activity.UploadListActivity" />
         <activity
             android:name=".ui.trashbin.TrashbinActivity"
@@ -386,6 +391,10 @@
             android:name=".ui.activity.SsoGrantPermissionActivity"
             android:exported="true"
             android:theme="@style/Theme.ownCloud.Dialog.NoTitle" />
+
+        <activity
+            android:name="com.nextcloud.client.etm.EtmActivity"
+            android:theme="@style/Theme.ownCloud.Toolbar"/>
     </application>
 
 </manifest>

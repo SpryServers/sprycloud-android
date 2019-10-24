@@ -25,13 +25,20 @@ import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
 
 import com.nextcloud.client.account.CurrentAccountProvider;
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.account.UserAccountManagerImpl;
+import com.nextcloud.client.core.AsyncRunner;
+import com.nextcloud.client.core.ThreadPoolAsyncRunner;
+import com.nextcloud.client.core.Clock;
+import com.nextcloud.client.core.ClockImpl;
 import com.nextcloud.client.device.DeviceInfo;
-import com.nextcloud.client.preferences.AppPreferences;
-import com.nextcloud.client.preferences.AppPreferencesImpl;
+import com.nextcloud.client.logger.FileLogHandler;
+import com.nextcloud.client.logger.Logger;
+import com.nextcloud.client.logger.LoggerImpl;
+import com.nextcloud.client.logger.LogsRepository;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.ui.activities.data.activities.ActivitiesRepository;
@@ -41,6 +48,10 @@ import com.owncloud.android.ui.activities.data.activities.RemoteActivitiesReposi
 import com.owncloud.android.ui.activities.data.files.FilesRepository;
 import com.owncloud.android.ui.activities.data.files.FilesServiceApiImpl;
 import com.owncloud.android.ui.activities.data.files.RemoteFilesRepository;
+
+import java.io.File;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -61,11 +72,6 @@ class AppModule {
     @Provides
     Resources resources(Application application) {
         return application.getResources();
-    }
-
-    @Provides
-    AppPreferences preferences(Application application) {
-        return AppPreferencesImpl.fromContext(application);
     }
 
     @Provides
@@ -110,5 +116,34 @@ class AppModule {
     @Provides
     DeviceInfo deviceInfo() {
         return new DeviceInfo();
+    }
+
+    @Provides
+    @Singleton
+    Clock clock() {
+        return new ClockImpl();
+    }
+
+    @Provides
+    @Singleton
+    Logger logger(Context context, Clock clock) {
+        File logDir = new File(context.getFilesDir(), "logs");
+        FileLogHandler handler = new FileLogHandler(logDir, "log.txt", 1024*1024);
+        LoggerImpl logger = new LoggerImpl(clock, handler, new Handler(), 1000);
+        logger.start();
+        return logger;
+    }
+
+    @Provides
+    @Singleton
+    LogsRepository logsRepository(Logger logger) {
+        return (LogsRepository)logger;
+    }
+
+    @Provides
+    @Singleton
+    AsyncRunner asyncRunner() {
+        Handler uiHandler = new Handler();
+        return new ThreadPoolAsyncRunner(uiHandler, 4);
     }
 }

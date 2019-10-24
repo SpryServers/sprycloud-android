@@ -29,7 +29,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
@@ -45,7 +44,6 @@ import com.owncloud.android.ui.adapter.ActivityListAdapter;
 import com.owncloud.android.ui.interfaces.ActivityListInterface;
 import com.owncloud.android.ui.preview.PreviewImageActivity;
 import com.owncloud.android.ui.preview.PreviewImageFragment;
-import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.ThemeUtils;
 
 import java.util.List;
@@ -64,6 +62,7 @@ import butterknife.Unbinder;
 
 public class ActivitiesActivity extends FileActivity implements ActivityListInterface, ActivitiesContract.View {
     private static final String TAG = ActivitiesActivity.class.getSimpleName();
+    private static final int UNDEFINED = -1;
 
     @BindView(R.id.empty_list_view)
     public LinearLayout emptyContentContainer;
@@ -86,9 +85,6 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
     @BindView(android.R.id.list)
     public RecyclerView recyclerView;
 
-    @BindView(R.id.bottom_navigation_view)
-    public BottomNavigationView bottomNavigationView;
-
     @BindString(R.string.activities_no_results_headline)
     public String noResultsHeadline;
 
@@ -97,7 +93,7 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
 
     private ActivityListAdapter adapter;
     private Unbinder unbinder;
-    private String nextPageUrl;
+    private int lastGiven;
 
     private boolean isLoadingActivities;
 
@@ -128,10 +124,10 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
         }
 
         swipeListRefreshLayout.setOnRefreshListener(() -> {
-            // We set the nextPageUrl variable to null here since when manually refreshing
+            // We set lastGiven variable to undefined here since when manually refreshing
             // activities data we want to clear the list and reset the pagination.
-            nextPageUrl = null;
-            mActionListener.loadActivities(nextPageUrl);
+            lastGiven = UNDEFINED;
+            mActionListener.loadActivities(lastGiven);
         });
 
         // Since we use swipe-to-refresh for progress indication we can hide the inherited
@@ -139,7 +135,6 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
         emptyContentProgressBar.setVisibility(View.GONE);
         emptyContentMessage.setVisibility(View.INVISIBLE);
         emptyContentHeadline.setVisibility(View.INVISIBLE);
-
     }
 
     protected void onCreateSwipeToRefresh(SwipeRefreshLayout refreshLayout) {
@@ -171,7 +166,7 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
     private void setupContent() {
         emptyContentIcon.setImageResource(R.drawable.ic_activity_light_grey);
         emptyContentProgressBar.getIndeterminateDrawable().setColorFilter(ThemeUtils.primaryAccentColor(this),
-                PorterDuff.Mode.SRC_IN);
+                                                                          PorterDuff.Mode.SRC_IN);
 
         FileDataStorageManager storageManager = new FileDataStorageManager(getAccount(), getContentResolver());
         adapter = new ActivityListAdapter(this, getUserAccountManager(), this, storageManager, getCapabilities(), false);
@@ -192,26 +187,14 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
 
                 // synchronize loading state when item count changes
                 if (!isLoadingActivities && (totalItemCount - visibleItemCount) <= (firstVisibleItemIndex + 5)
-                        && nextPageUrl != null && !nextPageUrl.isEmpty()) {
+                    && lastGiven > 0) {
                     // Almost reached the end, continue to load new activities
-                    mActionListener.loadActivities(nextPageUrl);
+                    mActionListener.loadActivities(lastGiven);
                 }
             }
         });
 
-        if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
-            DisplayUtils.setupBottomBar(
-                getUserAccountManager().getCurrentAccount(),
-                bottomNavigationView,
-                getResources(),
-                getUserAccountManager(),
-                this,
-                -1
-            );
-        }
-
-        mActionListener.loadActivities(null);
+        mActionListener.loadActivities(UNDEFINED);
     }
 
     @Override
@@ -254,15 +237,16 @@ public class ActivitiesActivity extends FileActivity implements ActivityListInte
     }
 
     @Override
-    public void showActivities(List<Object> activities, OwnCloudClient client, String nextPageUrl) {
+    public void showActivities(List<Object> activities, OwnCloudClient client, int lastGiven) {
         boolean clear = false;
-        if (this.nextPageUrl == null) {
+        if (this.lastGiven == UNDEFINED) {
             clear = true;
         }
         adapter.setActivityItems(activities, client, clear);
-        this.nextPageUrl = nextPageUrl;
+        this.lastGiven = lastGiven;
+
         // Hide the recyclerView if list is empty
-        if (activities.isEmpty()) {
+        if (adapter.isEmpty()) {
             recyclerView.setVisibility(View.INVISIBLE);
 
             emptyContentMessage.setText(noResultsMessage);

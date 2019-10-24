@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -46,9 +47,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.nextcloud.client.account.UserAccountManagerImpl;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.status.OCCapability;
@@ -229,6 +230,42 @@ public final class ThemeUtils {
                 actionBar.setTitle(text);
             }
         }
+    }
+
+    /**
+     * Set color of subtitle to white/black depending on background color
+     *
+     * @param actionBar actionBar to be used
+     * @param title     title to be shown
+     */
+    public static void setColoredSubtitle(@Nullable ActionBar actionBar, String title, Context context) {
+        if (actionBar != null) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
+                actionBar.setSubtitle(title);
+            } else {
+                Spannable text = new SpannableString(title);
+                text.setSpan(new ForegroundColorSpan(fontColor(context)),
+                             0,
+                             text.length(),
+                             Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                actionBar.setSubtitle(text);
+            }
+        }
+    }
+
+    /**
+     * For activities that do not use drawer, e.g. Settings, this can be used to correctly tint back button based on
+     * theme
+     *
+     * @param supportActionBar
+     */
+    public static void tintBackButton(@Nullable ActionBar supportActionBar, Context context) {
+        if (supportActionBar == null) {
+            return;
+        }
+
+        Drawable backArrow = context.getResources().getDrawable(R.drawable.ic_arrow_back);
+        supportActionBar.setHomeAsUpIndicator(ThemeUtils.tintDrawable(backArrow, ThemeUtils.fontColor(context)));
     }
 
     public static Spanned getColoredTitle(String title, int color) {
@@ -459,30 +496,46 @@ public final class ThemeUtils {
     public static void themeEditText(Context context, EditText editText, boolean themedBackground) {
         if (editText == null) { return; }
 
-        int color = primaryColor(context);
-        // Don't theme the view when it is already on a theme'd background
+        int color = ContextCompat.getColor(context, R.color.fg_default);
+
+        // Theme the view when it is already on a theme'd background according to dark / light theme
         if (themedBackground) {
             if (darkTheme(context)) {
                 color = ContextCompat.getColor(context, R.color.themed_fg);
             } else {
                 color = ContextCompat.getColor(context, R.color.themed_fg_inverse);
             }
-        } else {
-            if (lightTheme(context)) {
-                color = ContextCompat.getColor(context, R.color.fg_default);
-            }
         }
 
+        editText.setHintTextColor(color);
+        editText.setTextColor(color);
         editText.setHighlightColor(context.getResources().getColor(R.color.fg_contrast));
-        setTextViewCursorColor(editText, color);
+        setEditTextCursorColor(editText, color);
         setTextViewHandlesColor(context, editText, color);
     }
 
-    public static void themeSearchView(Context context, SearchView searchView, boolean themedBackground) {
-        if (searchView == null) { return; }
-
+    /**
+     * Theme search view
+     *
+     * @param searchView       searchView to be changed
+     * @param themedBackground true if background is themed, e.g. on action bar; false if background is white
+     * @param context
+     */
+    public static void themeSearchView(SearchView searchView, boolean themedBackground, Context context) {
+        // hacky as no default way is provided
+        int fontColor = ThemeUtils.fontColor(context);
         SearchView.SearchAutoComplete editText = searchView.findViewById(R.id.search_src_text);
         themeEditText(context, editText, themedBackground);
+
+        ImageView closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        closeButton.setColorFilter(fontColor);
+        ImageView searchButton = searchView.findViewById(androidx.appcompat.R.id.search_button);
+        searchButton.setColorFilter(fontColor);
+    }
+
+    public static void themeProgressBar(Context context, ProgressBar progressBar) {
+        int color = ThemeUtils.primaryAccentColor(context);
+        progressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }
 
     public static void tintCheckbox(AppCompatCheckBox checkBox, int color) {
@@ -559,7 +612,8 @@ public final class ThemeUtils {
         if (acc != null) {
             account = acc;
         } else if (context != null) {
-            account = AccountUtils.getCurrentOwnCloudAccount(context);
+            // TODO: refactor when dark theme work is completed
+            account = UserAccountManagerImpl.fromContext(context).getCurrentAccount();
         }
 
         if (account != null) {
@@ -574,34 +628,54 @@ public final class ThemeUtils {
      * Lifted from SO.
      * FindBugs surpressed because of lack of public API to alter the cursor color.
      *
-     * @param view      TextView to be styled
+     * @param editText  TextView to be styled
      * @param color     The desired cursor colour
-     * @see             <a href="https://stackoverflow.com/questions/25996032/how-to-change-programmatically-edittext-cursor-color-in-android#26543290">StackOverflow url</a>
+     * @see             <a href="https://stackoverflow.com/a/52564925">StackOverflow url</a>
      */
     @SuppressFBWarnings
-    private static void setTextViewCursorColor(EditText view, @ColorInt int color) {
+    public static void setEditTextCursorColor(EditText editText, int color) {
         try {
             // Get the cursor resource id
-            Field field = TextView.class.getDeclaredField("mCursorDrawableRes");
-            field.setAccessible(true);
-            int drawableResId = field.getInt(view);
+            if (Build.VERSION.SDK_INT >= 28) {//set differently in Android P (API 28)
+                Field field = TextView.class.getDeclaredField("mCursorDrawableRes");
+                field.setAccessible(true);
+                int drawableResId = field.getInt(editText);
 
-            // Get the editor
-            field = TextView.class.getDeclaredField("mEditor");
-            field.setAccessible(true);
-            Object editor = field.get(view);
+                // Get the editor
+                field = TextView.class.getDeclaredField("mEditor");
+                field.setAccessible(true);
+                Object editor = field.get(editText);
 
-            // Get the drawable and set a color filter
-            Drawable drawable = ContextCompat.getDrawable(view.getContext(), drawableResId);
-            drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-            Drawable[] drawables = {drawable, drawable};
+                // Get the drawable and set a color filter
+                Drawable drawable = ContextCompat.getDrawable(editText.getContext(), drawableResId);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
-            // Set the drawables
-            field = editor.getClass().getDeclaredField("mCursorDrawable");
-            field.setAccessible(true);
-            field.set(editor, drawables);
-        } catch (Exception e) {
-            Log_OC.e(TAG, "setTextViewCursorColor", e);
+                // Set the drawables
+                field = editor.getClass().getDeclaredField("mDrawableForCursor");
+                field.setAccessible(true);
+                field.set(editor, drawable);
+            } else {
+                Field field = TextView.class.getDeclaredField("mCursorDrawableRes");
+                field.setAccessible(true);
+                int drawableResId = field.getInt(editText);
+
+                // Get the editor
+                field = TextView.class.getDeclaredField("mEditor");
+                field.setAccessible(true);
+                Object editor = field.get(editText);
+
+                // Get the drawable and set a color filter
+                Drawable drawable = ContextCompat.getDrawable(editText.getContext(), drawableResId);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                Drawable[] drawables = {drawable, drawable};
+
+                // Set the drawables
+                field = editor.getClass().getDeclaredField("mCursorDrawable");
+                field.setAccessible(true);
+                field.set(editor, drawables);
+            }
+        } catch (Exception exception) {
+            // we do not log this
         }
     }
 

@@ -44,6 +44,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,6 +55,8 @@ import android.webkit.URLUtil;
 
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
+import com.nextcloud.client.etm.EtmActivity;
+import com.nextcloud.client.logger.ui.LogsActivity;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.owncloud.android.BuildConfig;
@@ -134,7 +137,6 @@ public class SettingsActivity extends PreferenceActivity
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         if (ThemeUtils.themingEnabled(this)) {
             setTheme(R.style.FallbackThemingTheme);
         }
@@ -206,6 +208,15 @@ public class SettingsActivity extends PreferenceActivity
                     return true;
                 });
             }
+
+            /* Engineering Test Mode */
+            Preference pEtm = findPreference("etm");
+            if (pEtm != null) {
+                pEtm.setOnPreferenceClickListener(preference -> {
+                    EtmActivity.launch(this);
+                    return true;
+                });
+            }
         } else {
             preferenceScreen.removePreference(preferenceCategoryDev);
         }
@@ -220,7 +231,16 @@ public class SettingsActivity extends PreferenceActivity
         Preference pAboutApp = findPreference("about_app");
         if (pAboutApp != null) {
             pAboutApp.setTitle(String.format(getString(R.string.about_android), getString(R.string.app_name)));
-            pAboutApp.setSummary(String.format(getString(R.string.about_version), appVersion));
+
+            String buildNumber = getResources().getString(R.string.buildNumber);
+
+            if (TextUtils.isEmpty(buildNumber)) {
+                pAboutApp.setSummary(String.format(getString(R.string.about_version), appVersion));
+            } else {
+                pAboutApp.setSummary(String.format(getString(R.string.about_version_with_build),
+                                                   appVersion,
+                                                   buildNumber));
+            }
         }
 
         // license
@@ -341,7 +361,7 @@ public class SettingsActivity extends PreferenceActivity
         if (pLogger != null) {
             if (loggerEnabled) {
                 pLogger.setOnPreferenceClickListener(preference -> {
-                    Intent loggerIntent = new Intent(getApplicationContext(), LogHistoryActivity.class);
+                    Intent loggerIntent = new Intent(getApplicationContext(), LogsActivity.class);
                     startActivity(loggerIntent);
 
                     return true;

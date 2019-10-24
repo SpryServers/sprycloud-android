@@ -44,12 +44,10 @@ public final class ReceiversHelper {
         // utility class -> private constructor
     }
 
-    public static void registerNetworkChangeReceiver(
-        final UploadsStorageManager uploadsStorageManager,
-        final UserAccountManager accountManager,
-        final ConnectivityService connectivityService,
-        final PowerManagementService powerManagementService
-        ) {
+    public static void registerNetworkChangeReceiver(final UploadsStorageManager uploadsStorageManager,
+                                                     final UserAccountManager accountManager,
+                                                     final ConnectivityService connectivityService,
+                                                     final PowerManagementService powerManagementService) {
         Context context = MainApp.getAppContext();
 
         IntentFilter intentFilter = new IntentFilter();
@@ -103,7 +101,7 @@ public final class ReceiversHelper {
         final UserAccountManager accountManager,
         final ConnectivityService connectivityService,
         final PowerManagementService powerManagementService
-    ) {
+        ) {
         Context context = MainApp.getAppContext();
 
         IntentFilter intentFilter = new IntentFilter();

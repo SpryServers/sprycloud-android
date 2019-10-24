@@ -16,10 +16,8 @@
     <string name="actionbar_contacts">Pasidaryti atsarginę adresatų kopiją</string>
     <string name="actionbar_contacts_restore">Atkurti adresatus</string>
     <string name="actionbar_copy">Kopijuoti</string>
-    <string name="actionbar_logger">Žurnalai</string>
     <string name="actionbar_mkdir">Naujas aplankas</string>
     <string name="actionbar_move">Perkelti</string>
-    <string name="actionbar_open_as_richdocument">Atverti naudojant Collabora</string>
     <string name="actionbar_open_as_richdocument_parameter">Atverti naudojant %1$s</string>
     <string name="actionbar_open_with">Atverti naudojant</string>
     <string name="actionbar_search">Paieška</string>
@@ -42,13 +40,9 @@
     <string name="auth_bad_oc_version_title">Nežinoma serverio versija</string>
     <string name="auth_can_not_auth_against_server">Nepavyko autentifikuotis šiame serveryje</string>
     <string name="auth_check_server">Patikrinti serverį</string>
-    <string name="auth_connecting_auth_server">Jungiamasi prie tapatybės nustatymo serverio…</string>
     <string name="auth_connection_established">Ryšys užmegztas</string>
     <string name="auth_expired_basic_auth_toast">Prašome įvesti dabartinį slaptažodį</string>
-    <string name="auth_expired_oauth_token_toast">Autorizacijos laikas baigėsi. Prašome autorizuotis iš naujo</string>
-    <string name="auth_expired_saml_sso_token_toast">Jūsų seanso laikas baigėsi. Prašome prisijungti iš naujo</string>
     <string name="auth_fail_get_user_name">Jūsų serveris negrąžina teisingo naudotojo ID, susisiekite su administratoriumi</string>
-    <string name="auth_getting_authorization">Gaunamos prieigos teisės…</string>
     <string name="auth_host_address">Serverio adresas</string>
     <string name="auth_host_url">Serverio adresas https://…</string>
     <string name="auth_incorrect_address_title">Neteisingas serverio adreso formatas</string>
@@ -131,6 +125,7 @@
     <string name="contacts_preferences_import_scheduled">Importas suplanuotas ir prasidės netrukus</string>
     <string name="contacts_preferences_no_file_found">Failas nerastas</string>
     <string name="contacts_read_permission">Reikalingas leidimas skaityti adresatų sąrašą</string>
+    <string name="copied_to_clipboard">Nukopijuota į iškarpinę</string>
     <string name="copy_file_error">Klaida kopijuojant failą ar aplanką</string>
     <string name="copy_file_invalid_into_descendent">Neįmanoma nukopijuoti aplanko į poaplankį</string>
     <string name="copy_file_invalid_overwrite">Failas aplanke jau egzistuoja</string>
@@ -178,7 +173,6 @@
     <string name="drawer_item_photos">Nuotraukos</string>
     <string name="drawer_item_recently_added">Paskiausiai pridėti</string>
     <string name="drawer_item_recently_modified">Paskiausiai modifikuoti</string>
-    <string name="drawer_item_settings">Nustatymai</string>
     <string name="drawer_item_shared">Bendrinami</string>
     <string name="drawer_item_trashbin">Ištrinti failai</string>
     <string name="drawer_item_uploads_list">Įkėlimai</string>
@@ -191,6 +185,7 @@
     <string name="drawer_quota_unlimited">panaudota %1$s</string>
     <string name="drawer_synced_folders">Automatinis įkėlimas</string>
     <string name="edit_permission_label">redaguoti</string>
+    <string name="encrypted">Nustatyti kaip šifruotą</string>
     <string name="end_to_end_encryption_confirm_button">Nustatyti šifravimą</string>
     <string name="end_to_end_encryption_decrypting">Iššifruojama…</string>
     <string name="end_to_end_encryption_dialog_close">Užverti</string>
@@ -208,6 +203,7 @@
     <string name="error__upload__local_file_not_copied">%1$s negali būti nukopijuota į %2$s vietinį aplanką</string>
     <string name="error_cant_bind_to_operations_service">Kritinė klaida: negalima įvykdyti operacijos</string>
     <string name="error_comment_file">Klaida komentuojant failą</string>
+    <string name="error_crash_title">%1$s užstrigo</string>
     <string name="error_retrieving_templates">Klaida gaunant šablonus</string>
     <string name="error_starting_direct_camera_upload">Klaida paleidžiant kamerą</string>
     <string name="fallback_weblogin_back">Atgal</string>
@@ -297,10 +293,10 @@
     <string name="local_file_list_empty">Šiame aplanke nėra failų.</string>
     <string name="local_file_not_found_message">Failas nerastas vietinėje failų sistemoje</string>
     <string name="local_folder_list_empty">Nėra kitų aplankų</string>
-    <string name="log_progress_dialog_text">Įkeliami duomenys…</string>
-    <string name="log_send_history_button">Ištrinti istoriją</string>
     <string name="log_send_mail_subject">%1$s Android žurnalai</string>
     <string name="log_send_no_mail_app">Nėra programėlės įrašams siųsti. Prašome instaliuoti el. pašto klientą.</string>
+    <string name="logs_menu_refresh">Įkelti iš naujo</string>
+    <string name="logs_status_loading">Įkeliama…</string>
     <string name="maintenance_mode">Serveris yra techninės priežiūros veiksenoje</string>
     <string name="manage_space_clear_data">Išvalyti duomenis</string>
     <string name="manage_space_description">Nustatymai, duomenų bazė ir serverio sertifikatai iš %1$s duomenų bus ištrinti negrįžtamai. \n\nAtsisiųsti failai bus išsaugoti.\n\nŠis procesas gali užtrukti.</string>
@@ -353,8 +349,6 @@
     <string name="notifications_loading_activity">Įkeliami pranešimai…</string>
     <string name="notifications_no_results_headline">Pranešimų nėra</string>
     <string name="notifications_no_results_message">Prašome patikrinti vėliau</string>
-    <string name="oauth_check_onoff">Prisijungti naudojant oAuth2</string>
-    <string name="oauth_login_connection">Jungiamasi prie OAuth 2.0 serverio…</string>
     <string name="offline_mode">Nėra interneto ryšio</string>
     <string name="operation_canceled">Operacijos atsisakyta</string>
     <string name="overflow_menu">Daugiau meniu</string>
@@ -407,7 +401,7 @@
     <string name="prefs_instant_upload_path_use_subfolders_summary">Išsaugoti poaplankyje pagal metus ir mėnesį</string>
     <string name="prefs_instant_upload_path_use_subfolders_title">Naudoti poaplankius</string>
     <string name="prefs_license">Licencija</string>
-    <string name="prefs_log_delete_history_button">Ištrinti istoriją</string>
+    <string name="prefs_lock_none">Nėra</string>
     <string name="prefs_manage_accounts">Tvarkyti paskyras</string>
     <string name="prefs_recommend">Rekomenduok draugui</string>
     <string name="prefs_show_hidden_files">Rodyti paslėptus failus</string>
@@ -438,12 +432,10 @@
     <string name="resized_image_not_possible_download">Nėra prieinamas pakeisto dydžio paveikslas. Atsisiųsti pilno dydžio paveikslą?</string>
     <string name="restore">Atkurti failą</string>
     <string name="restore_button_description">Atkurti ištrintą failą</string>
+    <string name="retrieving_file">Gaunamas failas…</string>
     <string name="richdocuments_failed_to_load_document">Nepavyko įkelti dokumento!</string>
     <string name="saml_authentication_required_text">Reikalingas slaptažodis</string>
     <string name="saml_authentication_wrong_pass">Neteisingas slaptažodis</string>
-    <string name="screenshot_01_gridView">Saugūs namai visiems jūsų duomenims</string>
-    <string name="screenshot_02_listView">Lengvai naršykite ir bendrinkite savo failus</string>
-    <string name="screenshot_03_drawer">Greitai pasiekite veiklą, bendruosius išteklius, failus neprisijungus ir dar daugiau</string>
     <string name="search_users_and_groups_hint">Ieškoti naudotojų ar grupių</string>
     <string name="select_all">Pažymėti viską</string>
     <string name="send">Siųsti</string>
@@ -454,6 +446,7 @@
     <string name="share_add_user_or_group">Pridėti vartotoją ar grupę</string>
     <string name="share_dialog_title">Bendrinimas</string>
     <string name="share_email_clarification">%1$s (el. paštas)</string>
+    <string name="share_expiration_date_label">Baigia galioti %1$s</string>
     <string name="share_file">Dalintis %1$s</string>
     <string name="share_get_public_link_button">Gauti nuorodą</string>
     <string name="share_group_clarification">%1$s (grupė)</string>
@@ -463,6 +456,7 @@
     <string name="share_link_file_no_exist">Nepavyko pasidalinti. Patikrinkite ar failas egzistuoja</string>
     <string name="share_link_forbidden_permissions">dalintis failu</string>
     <string name="share_link_password_title">Įveskite slaptažodį</string>
+    <string name="share_no_password_title">Nustatyti slaptažodį</string>
     <string name="share_no_users">Su vartotojais niekuo nesidalinama</string>
     <string name="share_password_title">Apsaugota slaptažodžiu</string>
     <string name="share_privilege_can_edit">gali redaguoti</string>
@@ -544,6 +538,7 @@
     <string name="trashbin_file_not_deleted">Nepavyko ištrinti failo %1$s!</string>
     <string name="trashbin_file_not_restored">Nepavyko atkurti failo %1$s!</string>
     <string name="trashbin_loading_failed">Nepavyko įkelti šiukšlinės!</string>
+    <string name="trashbin_not_emptied">Nepavyko ištrinti failų visam laikui!</string>
     <string name="unset_favorite">Šalinti iš mėgstamų</string>
     <string name="unshare_link_file_error">Įvyko klaida bandant nebedalinti šio failu ar aplanku</string>
     <string name="unshare_link_file_no_exist">Nepavyksta nebedalinti. Patikrinkite ar failas egzistuoja</string>
@@ -552,6 +547,7 @@
     <string name="update_link_file_error">Bandant atnaujinti žymes įvyko klaida</string>
     <string name="update_link_file_no_exist">Nepavyksta nebedalinti. Patikrinkite ar failas egzistuoja</string>
     <string name="update_link_forbidden_permissions">dalintis failu</string>
+    <string name="updating_share_failed">Viešinio atnaujinimas nepavyko</string>
     <string name="upload_cannot_create_file">Nepavyksta sukurti vietinį failą</string>
     <string name="upload_chooser_title">Įkelti iš…</string>
     <string name="upload_file_dialog_filename">Failo pavadinimas</string>
@@ -570,6 +566,7 @@
     <string name="upload_unknown_error">Nežinoma klaida</string>
     <string name="uploader_btn_alternative_text">Pasirinkite</string>
     <string name="uploader_btn_upload_text">Įkelti</string>
+    <string name="uploader_error_message_no_file_to_upload">Gautuose duomenyse nebuvo teisingo failo.</string>
     <string name="uploader_error_message_read_permission_not_granted">%1$s neleidžiama perskaityti gauto failo</string>
     <string name="uploader_error_message_source_file_not_copied">Nepavyko nukopijuoti failo į laikiną aplanką. Pabandykite dar kartą</string>
     <string name="uploader_error_message_source_file_not_found">Nepavyko įkelti failo. Patikrinkite failą, kurį norite įkelti.</string>
@@ -625,4 +622,16 @@
     <string name="wait_checking_credentials">Dekriptuojami prisijungimo duomenys</string>
     <string name="wait_for_tmp_copy_from_private_storage">Kopijuojamas failas iš privačios saugyklos</string>
     <string name="whats_new_skip">Praleisti</string>
+    <plurals name="file_list__footer__folder">
+        <item quantity="one">%1$d aplankas</item>
+        <item quantity="few">%1$d aplankai</item>
+        <item quantity="many">%1$d aplankų</item>
+        <item quantity="other">%1$d aplankas</item>
+    </plurals>
+    <plurals name="file_list__footer__file">
+        <item quantity="one">%1$d failas</item>
+        <item quantity="few">%1$d failai</item>
+        <item quantity="many">%1$d failų</item>
+        <item quantity="other">%1$d failas</item>
+    </plurals>
     </resources>

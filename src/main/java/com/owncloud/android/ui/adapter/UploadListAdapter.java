@@ -49,6 +49,7 @@ import com.owncloud.android.datamodel.ThumbnailsCacheManager;
 import com.owncloud.android.datamodel.UploadsStorageManager;
 import com.owncloud.android.datamodel.UploadsStorageManager.UploadStatus;
 import com.owncloud.android.db.OCUpload;
+import com.owncloud.android.db.OCUploadComparator;
 import com.owncloud.android.db.UploadResult;
 import com.owncloud.android.files.services.FileUploader;
 import com.owncloud.android.lib.common.utils.Log_OC;
@@ -59,7 +60,6 @@ import com.owncloud.android.utils.ThemeUtils;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Comparator;
 
 import androidx.annotation.NonNull;
 import butterknife.BindView;
@@ -75,9 +75,11 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
     private FileActivity parentActivity;
     private UploadsStorageManager uploadsStorageManager;
     private ConnectivityService connectivityService;
+    private PowerManagementService powerManagementService;
     private UserAccountManager accountManager;
     private PowerManagementService powerManagementService;
     private UploadGroup[] uploadGroups;
+    private boolean showUser;
 
     @Override
     public int getSectionCount() {
@@ -135,8 +137,8 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
                             uploadsStorageManager,
                             connectivityService,
                             accountManager,
-                            null,
-                            powerManagementService))
+                            powerManagementService,
+                            null))
                         .start();
                     break;
 
@@ -192,6 +194,9 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
                 fixAndSortItems(uploadsStorageManager.getFinishedUploadsForCurrentAccount());
             }
         };
+
+        showUser = accountManager.getAccounts().length > 1;
+
         loadUploadItemsFromDb();
     }
 
@@ -224,24 +229,32 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
 
         // upload date
         long updateTime = item.getUploadEndTimestamp();
-        CharSequence dateString = DisplayUtils.getRelativeDateTimeString(parentActivity, updateTime,
-                                                                         DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0);
+        CharSequence dateString = DisplayUtils.getRelativeDateTimeString(parentActivity,
+                                                                         updateTime,
+                                                                         DateUtils.SECOND_IN_MILLIS,
+                                                                         DateUtils.WEEK_IN_MILLIS, 0);
         itemViewHolder.date.setText(dateString);
 
+        // account
         Account account = accountManager.getAccountByName(item.getAccountName());
-        if (account != null) {
-            itemViewHolder.account.setText(DisplayUtils.getAccountNameDisplayText(parentActivity, account,
-                                                                                  account.name, item.getAccountName()));
+        if (showUser) {
+            itemViewHolder.account.setVisibility(View.VISIBLE);
+            if (account != null) {
+                itemViewHolder.account.setText(DisplayUtils.getAccountNameDisplayText(parentActivity,
+                                                                                      account,
+                                                                                      account.name,
+                                                                                      item.getAccountName()));
+            } else {
+                itemViewHolder.account.setText(item.getAccountName());
+            }
         } else {
-            itemViewHolder.account.setText(item.getAccountName());
+            itemViewHolder.account.setVisibility(View.GONE);
         }
 
         // Reset fields visibility
         itemViewHolder.date.setVisibility(View.VISIBLE);
         itemViewHolder.remotePath.setVisibility(View.VISIBLE);
-
         itemViewHolder.fileSize.setVisibility(View.VISIBLE);
-        itemViewHolder.account.setVisibility(View.VISIBLE);
         itemViewHolder.status.setVisibility(View.VISIBLE);
         itemViewHolder.progressBar.setVisibility(View.GONE);
 
@@ -714,7 +727,7 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
             for (OCUpload upload : array) {
                 upload.setDataFixed(binder);
             }
-            Arrays.sort(array, comparator);
+            Arrays.sort(array, new OCUploadComparator());
 
             setItems(array);
         }
@@ -722,46 +735,5 @@ public class UploadListAdapter extends SectionedRecyclerViewAdapter<SectionedVie
         private int getGroupItemCount() {
             return items == null ? 0 : items.length;
         }
-
-        Comparator<OCUpload> comparator = new Comparator<OCUpload>() {
-            @Override
-            public int compare(OCUpload upload1, OCUpload upload2) {
-                if (upload1 == null && upload2 == null) {
-                    return 0;
-                }
-                if (upload1 == null) {
-                    return -1;
-                }
-                if (upload2 == null) {
-                    return 1;
-                }
-                if (UploadStatus.UPLOAD_IN_PROGRESS == upload1.getFixedUploadStatus()) {
-                    if (UploadStatus.UPLOAD_IN_PROGRESS != upload2.getFixedUploadStatus()) {
-                        return -1;
-                    }
-                    // both are in progress
-                    if (upload1.isFixedUploadingNow()) {
-                        return -1;
-                    } else if (upload2.isFixedUploadingNow()) {
-                        return 1;
-                    }
-                } else if (upload2.getFixedUploadStatus() == UploadStatus.UPLOAD_IN_PROGRESS) {
-                    return 1;
-                }
-                if (upload1.getFixedUploadEndTimeStamp() == 0 || upload2.getFixedUploadEndTimeStamp() == 0) {
-                    return compareUploadId(upload1, upload2);
-                } else {
-                    return compareUpdateTime(upload1, upload2);
-                }
-            }
-
-            private int compareUploadId(OCUpload upload1, OCUpload upload2) {
-                return Long.compare(upload1.getFixedUploadId(), upload2.getFixedUploadId());
-            }
-
-            private int compareUpdateTime(OCUpload upload1, OCUpload upload2) {
-                return Long.compare(upload2.getFixedUploadEndTimeStamp(), upload1.getFixedUploadEndTimeStamp());
-            }
-        };
     }
 }

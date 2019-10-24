@@ -399,8 +399,8 @@ public class FileUploader extends Service
             @NotNull final UploadsStorageManager uploadsStorageManager,
             @NotNull final ConnectivityService connectivityService,
             @NotNull final UserAccountManager accountManager,
-            @Nullable final UploadResult uploadResult,
-            @NotNull final PowerManagementService powerManagementService
+            @NotNull final PowerManagementService powerManagementService,
+            @Nullable final UploadResult uploadResult
         ) {
             OCUpload[] failedUploads = uploadsStorageManager.getFailedUploads();
             Account currentAccount = null;
@@ -641,16 +641,16 @@ public class FileUploader extends Service
 
                     newUpload = new UploadFileOperation(
                         mUploadsStorageManager,
-                        connectivityService,
-                        powerManagementService,
-                        account,
-                        file,
-                        ocUpload,
-                        forceOverwrite,
-                        localAction,
-                        this,
-                        onWifiOnly,
-                        whileChargingOnly
+                            connectivityService,
+                            powerManagementService,
+                            account,
+                            file,
+                            ocUpload,
+                            forceOverwrite,
+                            localAction,
+                            this,
+                            onWifiOnly,
+                            whileChargingOnly
                     );
                     newUpload.setCreatedBy(createdBy);
                     if (isCreateRemoteFolder) {
@@ -701,17 +701,17 @@ public class FileUploader extends Service
             whileChargingOnly = upload.isWhileChargingOnly();
 
             UploadFileOperation newUpload = new UploadFileOperation(
-                mUploadsStorageManager,
-                connectivityService,
-                powerManagementService,
-                account,
-                null,
-                upload,
-                upload.isForceOverwrite(),  // TODO should be read from DB?
-                upload.getLocalAction(),    // TODO should be read from DB?
-                this,
-                onWifiOnly,
-                whileChargingOnly
+                    mUploadsStorageManager,
+                    connectivityService,
+                    powerManagementService,
+                    account,
+                    null,
+                    upload,
+                    upload.isForceOverwrite(),  // TODO should be read from DB?
+                    upload.getLocalAction(),    // TODO should be read from DB?
+                    this,
+                    onWifiOnly,
+                    whileChargingOnly
             );
 
             newUpload.addDataTransferProgressListener(this);
@@ -982,21 +982,18 @@ public class FileUploader extends Service
             }
 
             if (MainApp.getAppContext() != null) {
-                if (mCurrentUpload.isWifiRequired() &&
-                    connectivityService.getActiveNetworkType() != JobRequest.NetworkType.UNMETERED) {
-                    cancel(mCurrentUpload.getAccount().name,
-                           mCurrentUpload.getFile().getRemotePath(),
-                           ResultCode.DELAYED_FOR_WIFI);
+                if (mCurrentUpload.isWifiRequired() && !Device.getNetworkType(MainApp.getAppContext()).
+                    equals(JobRequest.NetworkType.UNMETERED)) {
+                    cancel(mCurrentUpload.getAccount().name, mCurrentUpload.getFile().getRemotePath()
+                        , ResultCode.DELAYED_FOR_WIFI);
                 } else if (mCurrentUpload.isChargingRequired() &&
                     !Device.getBatteryStatus(MainApp.getAppContext()).isCharging()) {
-                    cancel(mCurrentUpload.getAccount().name,
-                           mCurrentUpload.getFile().getRemotePath(),
-                           ResultCode.DELAYED_FOR_CHARGING);
+                    cancel(mCurrentUpload.getAccount().name, mCurrentUpload.getFile().getRemotePath()
+                        , ResultCode.DELAYED_FOR_CHARGING);
                 } else if (!mCurrentUpload.isIgnoringPowerSaveMode() &&
                     powerManagementService.isPowerSavingEnabled()) {
-                    cancel(mCurrentUpload.getAccount().name,
-                           mCurrentUpload.getFile().getRemotePath(),
-                           ResultCode.DELAYED_IN_POWER_SAVE_MODE);
+                    cancel(mCurrentUpload.getAccount().name, mCurrentUpload.getFile().getRemotePath()
+                        , ResultCode.DELAYED_IN_POWER_SAVE_MODE);
                 }
             }
         }

@@ -41,12 +41,10 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.nextcloud.client.account.CurrentAccountProvider;
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.OwnCloudAccount;
@@ -101,6 +99,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
 
     private static final String ARG_FILE = "FILE";
     private static final String ARG_ACCOUNT = "ACCOUNT";
+    private static final int END_REACHED = 0;
 
     private ActivityAndVersionListAdapter adapter;
     private Unbinder unbinder;
@@ -109,7 +108,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
     private OCFile file;
     private Account account;
 
-    private String nextPageUrl;
+    private int lastGiven;
     private boolean isLoadingActivities;
 
     @BindView(R.id.empty_list_view)
@@ -181,7 +180,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
         onCreateSwipeToRefresh(swipeEmptyListRefreshLayout);
         onCreateSwipeToRefresh(swipeListRefreshLayout);
 
-        fetchAndSetData(null);
+        fetchAndSetData(-1);
 
         swipeListRefreshLayout.setOnRefreshListener(() -> onRefreshListLayout(swipeListRefreshLayout));
         swipeEmptyListRefreshLayout.setOnRefreshListener(() -> onRefreshListLayout(swipeEmptyListRefreshLayout));
@@ -191,7 +190,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
             @Override
             public void onSuccess() {
                 commentInput.getText().clear();
-                fetchAndSetData(null);
+                fetchAndSetData(-1);
             }
 
             @Override
@@ -230,7 +229,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
         if (refreshLayout != null && refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
         }
-        fetchAndSetData(null);
+        fetchAndSetData(-1);
     }
 
     private void setLoadingMessage() {
@@ -277,29 +276,43 @@ public class FileDetailActivitiesFragment extends Fragment implements
 
                 // synchronize loading state when item count changes
                 if (!isLoadingActivities && (totalItemCount - visibleItemCount) <= (firstVisibleItemIndex + 5)
-                        && nextPageUrl != null && !nextPageUrl.isEmpty()) {
+                    && lastGiven > 0) {
                     // Almost reached the end, continue to load new activities
-                    fetchAndSetData(nextPageUrl);
+                    fetchAndSetData(lastGiven);
                 }
             }
         });
     }
 
     public void reload() {
-        fetchAndSetData(null);
+        fetchAndSetData(-1);
     }
 
     /**
-     * @param pageUrl String
+     * @param lastGiven int; -1 to disable
      */
-    private void fetchAndSetData(String pageUrl) {
-        final Account currentAccount = accountManager.getCurrentAccount();
-        final Context context = MainApp.getAppContext();
+    private void fetchAndSetData(int lastGiven) {
         final FragmentActivity activity = getActivity();
+
+        if (activity == null) {
+            Log_OC.e(this, "Activity is null, aborting!");
+            return;
+        }
 
         final SwipeRefreshLayout empty = swipeEmptyListRefreshLayout;
         final SwipeRefreshLayout list = swipeListRefreshLayout;
+        final Account currentAccount = accountManager.getCurrentAccount();
 
+        if (currentAccount == null) {
+            activity.runOnUiThread(() -> {
+                setEmptyContent(getString(R.string.common_error), getString(R.string.file_detail_activity_error));
+                list.setVisibility(View.GONE);
+                empty.setVisibility(View.VISIBLE);
+            });
+            return;
+        }
+
+        final Context context = MainApp.getAppContext();
 
         Thread t = new Thread(() -> {
             OwnCloudAccount ocAccount;
@@ -310,11 +323,12 @@ public class FileDetailActivitiesFragment extends Fragment implements
                 ownCloudClient.setOwnCloudVersion(accountManager.getServerVersion(currentAccount));
                 isLoadingActivities = true;
 
-                GetActivitiesRemoteOperation getRemoteNotificationOperation = new GetActivitiesRemoteOperation(
-                        file.getLocalId());
+                GetActivitiesRemoteOperation getRemoteNotificationOperation;
 
-                if (pageUrl != null) {
-                    getRemoteNotificationOperation.setNextUrl(pageUrl);
+                if (lastGiven > 0) {
+                    getRemoteNotificationOperation = new GetActivitiesRemoteOperation(file.getLocalId(), lastGiven);
+                } else {
+                    getRemoteNotificationOperation = new GetActivitiesRemoteOperation(file.getLocalId());
                 }
 
                 Log_OC.d(TAG, "BEFORE getRemoteActivitiesOperation.execute");
@@ -334,14 +348,19 @@ public class FileDetailActivitiesFragment extends Fragment implements
                     final List<Object> data = result.getData();
                     final List<Object> activitiesAndVersions = (ArrayList) data.get(0);
 
+                    this.lastGiven = (int) data.get(1);
+
+                    if (activitiesAndVersions.isEmpty()) {
+                        this.lastGiven = END_REACHED;
+                    }
+
                     if (restoreFileVersionSupported && versions != null) {
                         activitiesAndVersions.addAll(versions);
                     }
-                    nextPageUrl = (String) data.get(1);
 
                     activity.runOnUiThread(() -> {
-                        populateList(activitiesAndVersions, pageUrl == null);
-                        if (activitiesAndVersions.isEmpty()) {
+                        populateList(activitiesAndVersions, lastGiven == -1);
+                        if (adapter.getItemCount() == 0) {
                             setEmptyContent(noResultsHeadline, noResultsMessage);
                             list.setVisibility(View.GONE);
                             empty.setVisibility(View.VISIBLE);
@@ -367,7 +386,7 @@ public class FileDetailActivitiesFragment extends Fragment implements
 
                 hideRefreshLayoutLoader(activity);
             } catch (com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundException | IOException |
-                    OperationCanceledException | AuthenticatorException e) {
+                OperationCanceledException | AuthenticatorException | NullPointerException e) {
                 Log_OC.e(TAG, "Error fetching file details activities", e);
             }
         });

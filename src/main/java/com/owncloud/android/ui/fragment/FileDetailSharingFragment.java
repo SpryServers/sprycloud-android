@@ -25,6 +25,7 @@ import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,9 +43,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.di.Injectable;
 import com.owncloud.android.R;
-import com.owncloud.android.authentication.AccountUtils;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
+import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.SharePermissionsBuilder;
@@ -136,6 +137,9 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
     @BindView(R.id.shared_with_you_note)
     TextView sharedWithYouNote;
 
+    @BindView(R.id.copy_internal_link_icon)
+    ImageView internalLinkIcon;
+
     @Inject UserAccountManager accountManager;
 
     public static FileDetailSharingFragment newInstance(OCFile file, Account account) {
@@ -200,6 +204,14 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
 
         setupView();
 
+        // todo extract
+        internalLinkIcon.getBackground().setColorFilter(getResources().getColor(R.color.grey_db),
+                                                        PorterDuff.Mode.SRC_IN);
+        internalLinkIcon.getDrawable().mutate().setColorFilter(getResources().getColor(R.color.black),
+                                                               PorterDuff.Mode.SRC_IN);
+
+
+
         return view;
     }
 
@@ -226,7 +238,7 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
             FileDetailSharingFragmentHelper.setupSearchView(
                 (SearchManager) fileDisplayActivity.getSystemService(Context.SEARCH_SERVICE), searchView,
                 fileDisplayActivity.getComponentName());
-            ThemeUtils.themeSearchView(getContext(), searchView, false);
+            ThemeUtils.themeSearchView(searchView, false, requireContext());
         } else {
             searchView.setVisibility(View.GONE);
             shareByLinkContainer.setVisibility(View.GONE);
@@ -325,6 +337,22 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
         }
     }
 
+    @OnClick(R.id.copy_internal_container)
+    public void copyInternalLink() {
+        OwnCloudAccount account = accountManager.getCurrentOwnCloudAccount();
+
+        if (account == null) {
+            DisplayUtils.showSnackMessage(getView(), getString(R.string.could_not_retrieve_url));
+            return;
+        }
+
+        FileDisplayActivity.showShareLinkDialog(fileDisplayActivity, file, createInternalLink(account, file));
+    }
+
+    private String createInternalLink(OwnCloudAccount account, OCFile file) {
+        return account.getBaseUri() + "/index.php/f/" + file.getLocalId();
+    }
+
     private void createShareLink() {
         if (capabilities != null && (capabilities.getFilesSharingPublicPasswordEnforced().isTrue() ||
             capabilities.getFilesSharingPublicAskForOptionalPassword().isTrue())) {
@@ -343,7 +371,7 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
             if (TextUtils.isEmpty(file.getPublicLink())) {
                 fileOperationsHelper.getFileWithLink(file);
             } else {
-                FileDisplayActivity.showShareLinkDialog(fileDisplayActivity, file.getPublicLink());
+                FileDisplayActivity.showShareLinkDialog(fileDisplayActivity, file, file.getPublicLink());
             }
         }
     }
@@ -438,7 +466,7 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
             }
             case R.id.action_share_send_link: {
                 if(shareByLink.isChecked() && file.isSharedViaLink() && !TextUtils.isEmpty(file.getPublicLink())) {
-                    FileDisplayActivity.showShareLinkDialog(fileDisplayActivity, file.getPublicLink());
+                    FileDisplayActivity.showShareLinkDialog(fileDisplayActivity, file, file.getPublicLink());
                 } else {
                     showSendLinkTo();
                 }

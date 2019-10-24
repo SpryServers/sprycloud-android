@@ -26,7 +26,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.owncloud.android.authentication.AccountUtils;
+import com.nextcloud.client.account.CurrentAccountProvider;
+import com.nextcloud.client.account.UserAccountManagerImpl;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
@@ -46,6 +47,7 @@ public final class AppPreferencesImpl implements AppPreferences {
      */
     public static final String AUTO_PREF__LAST_SEEN_VERSION_CODE = "lastSeenVersionCode";
     public static final String STORAGE_PATH = "storage_path";
+    public static final float DEFAULT_GRID_COLUMN = 4.0f;
     private static final String AUTO_PREF__LAST_UPLOAD_PATH = "last_upload_path";
     private static final String AUTO_PREF__UPLOAD_FROM_LOCAL_LAST_PATH = "upload_from_local_last_path";
     private static final String AUTO_PREF__UPLOAD_FILE_EXTENSION_MAP_URL = "prefs_upload_file_extension_map_url";
@@ -71,19 +73,23 @@ public final class AppPreferencesImpl implements AppPreferences {
     private static final String PREF__LOCK = SettingsActivity.PREFERENCE_LOCK;
     private static final String PREF__SELECTED_ACCOUNT_NAME = "select_oc_account";
     private static final String PREF__MIGRATED_USER_ID = "migrated_user_id";
+    private static final String PREF__PHOTO_SEARCH_TIMESTAMP = "photo_search_timestamp";
     private static final String PREF__POWER_CHECK_DISABLED = "power_check_disabled";
 
     private final Context context;
     private final SharedPreferences preferences;
+    private final CurrentAccountProvider currentAccountProvider;
 
     public static AppPreferences fromContext(Context context) {
-        SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
-        return new AppPreferencesImpl(context, prefs);
+        final CurrentAccountProvider currentAccountProvider = UserAccountManagerImpl.fromContext(context);
+        final SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        return new AppPreferencesImpl(context, prefs, currentAccountProvider);
     }
 
-    AppPreferencesImpl(Context appContext, SharedPreferences preferences) {
+    AppPreferencesImpl(Context appContext, SharedPreferences preferences, CurrentAccountProvider currentAccountProvider) {
         this.context = appContext;
         this.preferences = preferences;
+        this.currentAccountProvider = currentAccountProvider;
     }
 
     @Override
@@ -204,23 +210,38 @@ public final class AppPreferencesImpl implements AppPreferences {
 
     @Override
     public String getFolderLayout(OCFile folder) {
-        return getFolderPreference(context, PREF__FOLDER_LAYOUT, folder, FOLDER_LAYOUT_LIST);
+        return getFolderPreference(context,
+                                   currentAccountProvider.getCurrentAccount(),
+                                   PREF__FOLDER_LAYOUT,
+                                   folder,
+                                   FOLDER_LAYOUT_LIST);
     }
 
     @Override
     public void setFolderLayout(OCFile folder, String layout_name) {
-        setFolderPreference(context, PREF__FOLDER_LAYOUT, folder, layout_name);
+        setFolderPreference(context,
+                            currentAccountProvider.getCurrentAccount(),
+                            PREF__FOLDER_LAYOUT,
+                            folder,
+                            layout_name);
     }
 
     @Override
     public FileSortOrder getSortOrderByFolder(OCFile folder) {
-        return FileSortOrder.sortOrders.get(getFolderPreference(context, PREF__FOLDER_SORT_ORDER, folder,
-            FileSortOrder.sort_a_to_z.name));
+        return FileSortOrder.sortOrders.get(getFolderPreference(context,
+                                                                currentAccountProvider.getCurrentAccount(),
+                                                                PREF__FOLDER_SORT_ORDER,
+                                                                folder,
+                                                                FileSortOrder.sort_a_to_z.name));
     }
 
     @Override
     public void setSortOrder(OCFile folder, FileSortOrder sortOrder) {
-        setFolderPreference(context, PREF__FOLDER_SORT_ORDER, folder, sortOrder.name);
+        setFolderPreference(context,
+                            currentAccountProvider.getCurrentAccount(),
+                            PREF__FOLDER_SORT_ORDER,
+                            folder,
+                            sortOrder.name);
     }
 
     @Override
@@ -230,8 +251,7 @@ public final class AppPreferencesImpl implements AppPreferences {
 
     @Override
     public FileSortOrder getSortOrderByType(FileSortOrder.Type type, FileSortOrder defaultOrder) {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(context);
-
+        Account account = currentAccountProvider.getCurrentAccount();
         if (account == null) {
             return defaultOrder;
         }
@@ -245,7 +265,7 @@ public final class AppPreferencesImpl implements AppPreferences {
 
     @Override
     public void setSortOrder(FileSortOrder.Type type, FileSortOrder sortOrder) {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(context);
+        Account account = currentAccountProvider.getCurrentAccount();
 
         if (account == null) {
             throw new IllegalArgumentException("Account may not be null!");
@@ -332,7 +352,13 @@ public final class AppPreferencesImpl implements AppPreferences {
      */
     @Override
     public float getGridColumns() {
-        return preferences.getFloat(AUTO_PREF__GRID_COLUMNS, 4.0f);
+        float columns = preferences.getFloat(AUTO_PREF__GRID_COLUMNS, DEFAULT_GRID_COLUMN);
+
+        if (columns < 0) {
+            return DEFAULT_GRID_COLUMN;
+        } else {
+            return columns;
+        }
     }
 
     /**
@@ -448,6 +474,16 @@ public final class AppPreferencesImpl implements AppPreferences {
         preferences.edit().putBoolean(PREF__MIGRATED_USER_ID, value).apply();
     }
 
+    @Override
+    public void setPhotoSearchTimestamp(long timestamp) {
+        preferences.edit().putLong(PREF__PHOTO_SEARCH_TIMESTAMP, timestamp).apply();
+    }
+
+    @Override
+    public long getPhotoSearchTimestamp() {
+        return preferences.getLong(PREF__PHOTO_SEARCH_TIMESTAMP, 0);
+    }
+
     /**
      * Get preference value for a folder.
      * If folder is not set itself, it finds an ancestor that is set.
@@ -458,10 +494,11 @@ public final class AppPreferencesImpl implements AppPreferences {
      * @param defaultValue Fallback value in case no ancestor is set.
      * @return Preference value
      */
-    private static String getFolderPreference(Context context, String preferenceName, OCFile folder,
-                                              String defaultValue) {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(context);
-
+    private static String getFolderPreference(final Context context,
+                                              final Account account,
+                                              final String preferenceName,
+                                              final OCFile folder,
+                                              final String defaultValue) {
         if (account == null) {
             return defaultValue;
         }
@@ -470,9 +507,10 @@ public final class AppPreferencesImpl implements AppPreferences {
         FileDataStorageManager storageManager = new FileDataStorageManager(account, context.getContentResolver());
 
         String value = dataProvider.getValue(account.name, getKeyFromFolder(preferenceName, folder));
-        while (folder != null && value.isEmpty()) {
-            folder = storageManager.getFileById(folder.getParentId());
-            value = dataProvider.getValue(account.name, getKeyFromFolder(preferenceName, folder));
+        OCFile prefFolder = folder;
+        while (prefFolder != null && value.isEmpty()) {
+            prefFolder = storageManager.getFileById(prefFolder.getParentId());
+            value = dataProvider.getValue(account.name, getKeyFromFolder(preferenceName, prefFolder));
         }
         return value.isEmpty() ? defaultValue : value;
     }
@@ -485,9 +523,11 @@ public final class AppPreferencesImpl implements AppPreferences {
      * @param folder Folder.
      * @param value Preference value to set.
      */
-    private static void setFolderPreference(Context context, String preferenceName, OCFile folder, String value) {
-        Account account = AccountUtils.getCurrentOwnCloudAccount(context);
-
+    private static void setFolderPreference(final Context context,
+                                            final Account account,
+                                            final String preferenceName,
+                                            final OCFile folder,
+                                            final String value) {
         if (account == null) {
             throw new IllegalArgumentException("Account may not be null!");
         }

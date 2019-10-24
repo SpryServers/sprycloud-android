@@ -15,10 +15,9 @@
     <string name="actionbar_contacts">주소록 백업</string>
     <string name="actionbar_contacts_restore">주소록 복원</string>
     <string name="actionbar_copy">복사</string>
-    <string name="actionbar_logger">로그</string>
     <string name="actionbar_mkdir">새 폴더</string>
     <string name="actionbar_move">이동</string>
-    <string name="actionbar_open_as_richdocument">콜래보라로 열기</string>
+    <string name="actionbar_open_as_richdocument_parameter">다음으로 열기 %1$s</string>
     <string name="actionbar_open_with">다음으로 열기</string>
     <string name="actionbar_search">검색</string>
     <string name="actionbar_see_details">자세한 정보</string>
@@ -39,13 +38,9 @@
     <string name="auth_bad_oc_version_title">서버 버전을 확인할 수 없음</string>
     <string name="auth_can_not_auth_against_server">이 서버에 인증할 수 없음</string>
     <string name="auth_check_server">서버 확인</string>
-    <string name="auth_connecting_auth_server">인증 서버에 연결…</string>
     <string name="auth_connection_established">연결됨</string>
     <string name="auth_expired_basic_auth_toast">현재 암호를 입력하십시오</string>
-    <string name="auth_expired_oauth_token_toast">인증이 만료되었습니다. 다시 인증하십시오</string>
-    <string name="auth_expired_saml_sso_token_toast">세션이 만료되었습니다. 다시 접속하십시오</string>
     <string name="auth_fail_get_user_name">서버에서 올바른 사용자 ID를 반환하지 않습니다. 시스템 관리자에게 연락하십시오</string>
-    <string name="auth_getting_authorization">인증 중…</string>
     <string name="auth_host_address">서버 주소</string>
     <string name="auth_host_url">서버 주소 https://…</string>
     <string name="auth_incorrect_address_title">서버 주소 형식이 잘못됨</string>
@@ -112,6 +107,25 @@
     <string name="common_switch_account">계정 전환</string>
     <string name="common_unknown">알 수 없음</string>
     <string name="common_yes">예</string>
+    <string name="community_beta_headline">개발 중인 버전 테스트하기</string>
+    <string name="community_beta_text">포함될 예정인 기능이 들어 있으며 완벽한 상태가 아닙니다. 버그나 오류가 발생할 수 있으며, 언제 어떻게 발생하는지 정보를 알려 주십시오.</string>
+    <string name="community_contribute_forum_forum">포럼</string>
+    <string name="community_contribute_forum_text">다른 사람 돕기:</string>
+    <string name="community_contribute_github_text">코드를 리뷰, 수정, 작성할 수 있습니다. 자세한 사항은 %1$s 사이트를 참조하십시오</string>
+    <string name="community_contribute_headline">적극적으로 기여</string>
+    <string name="community_contribute_irc_text">IRC 채팅 참여하기:</string>
+    <string name="community_contribute_translate_text">앱</string>
+    <string name="community_contribute_translate_translate">번역:</string>
+    <string name="community_dev_direct_download">직접 개발 릴리스 다운로드</string>
+    <string name="community_dev_fdroid">F-Droid 앱에서 개발 릴리스 받기</string>
+    <string name="community_rc_fdroid">F-Droid 앱에서 릴리스 후보 버전 받기</string>
+    <string name="community_rc_play_store">Google Play 스토어에서 릴리스 후보 버전 받기</string>
+    <string name="community_release_candidate_headline">릴리스 후보</string>
+    <string name="community_release_candidate_text">릴리스 후보(RC) 버전은 다가올 릴리스의 미리 보기 버전이며 안정화를 목표로 합니다. 개별 환경에서의 테스트를 통해서 안정성을 더 높일 수 있습니다. Play Store에서 테스트 프로그램에 등록하거나 F-Droid의 \"버전\"을 직접 확인하십시오.</string>
+    <string name="community_testing_bug_text">버그를 찾으셨나요? 무언가 이상하게 작동하나요?</string>
+    <string name="community_testing_headline">테스트로 돕기</string>
+    <string name="community_testing_report_text">GitHub에 문제점 보고하기</string>
+    <string name="community_testing_version_text">다음 버전에 포함될 예정인 기능을 테스트해 보고 싶으신가요?</string>
     <string name="configure_new_media_folder_detection_notifications">구성</string>
     <string name="confirmation_remove_file_alert">%1$s을(를) 삭제하시겠습니까?</string>
     <string name="confirmation_remove_files_alert">선택한 항목을 삭제하시겠습니까?</string>
@@ -137,6 +151,7 @@
     <string name="contacts_preferences_no_file_found">파일을 찾을 수 없음</string>
     <string name="contacts_preferences_something_strange_happened">마지막 백업을 찾을 수 없습니다!</string>
     <string name="contacts_read_permission">주소록 읽기 권한이 필요함</string>
+    <string name="copied_to_clipboard">클립보드로 복사됨</string>
     <string name="copy_file_error">이 파일이나 폴더를 복사할 수 없음</string>
     <string name="copy_file_invalid_into_descendent">폴더를 자기 자신의 하위 폴더로 복사할 수 없음</string>
     <string name="copy_file_invalid_overwrite">파일이 대상 폴더에 이미 존재함</string>
@@ -180,7 +195,6 @@
     <string name="drawer_item_photos">사진</string>
     <string name="drawer_item_recently_added">최근 추가됨</string>
     <string name="drawer_item_recently_modified">최근 수정됨</string>
-    <string name="drawer_item_settings">설정</string>
     <string name="drawer_item_shared">공유됨</string>
     <string name="drawer_item_trashbin">삭제된 파일</string>
     <string name="drawer_item_uploads_list">업로드</string>
@@ -312,11 +326,12 @@
     <string name="local_file_list_empty">이 폴더에 파일이 없습니다.</string>
     <string name="local_file_not_found_message">내부 파일 시스템에서 파일을 찾을 수 없음</string>
     <string name="local_folder_list_empty">더 이상의 폴더가 없습니다.</string>
-    <string name="log_progress_dialog_text">데이터 불러오는 중…</string>
-    <string name="log_send_history_button">기록 보내기</string>
     <string name="log_send_mail_subject">%1$s Android 앱 로그</string>
     <string name="log_send_no_mail_app">로그를 보내는 데 사용할 수 있는 앱이 없습니다. 이메일 앱을 설치하십시오.</string>
     <string name="login">로그인</string>
+    <string name="logs_menu_refresh">새로 고침</string>
+    <string name="logs_status_loading">불러오는 중…</string>
+    <string name="logs_title">로그</string>
     <string name="maintenance_mode">서버가 유지 관리 모드임</string>
     <string name="manage_space_clear_data">데이터 지우기</string>
     <string name="manage_space_description">%1$s의 데이터에서 설정, 데이터베이스, 서버 인증서를 삭제합니다.\n\n다운로드한 파일은 변경되지 않습니다.\n\n이 작업은 시간이 걸릴 수 있습니다.</string>
@@ -375,9 +390,6 @@
     <string name="notifications_loading_activity">알림 불러오는 중…</string>
     <string name="notifications_no_results_headline">알림 없음</string>
     <string name="notifications_no_results_message">나중에 다시 확인하십시오.</string>
-    <string name="oauth_2_0_access_end_point_address_hint">Access end point address</string>
-    <string name="oauth_check_onoff">OAuth 2.0으로 로그인</string>
-    <string name="oauth_login_connection">OAuth 2.0 서버에 연결 중…</string>
     <string name="offline_mode">네트워크에 연결할 수 없음</string>
     <string name="outdated_server">서버의 수명이 다된것 같네요, 업그레이드 해주세요!</string>
     <string name="overflow_menu">메뉴 더 보기</string>
@@ -445,7 +457,6 @@
     <string name="prefs_lock_device_credentials_not_setup">기기 인증이 설정되지 않았습니다.</string>
     <string name="prefs_lock_using_device_credentials">기기 인증 정보</string>
     <string name="prefs_lock_using_passcode">암호</string>
-    <string name="prefs_log_delete_history_button">과거 기록 삭제</string>
     <string name="prefs_manage_accounts">계정 관리</string>
     <string name="prefs_recommend">친구에게 추천하기</string>
     <string name="prefs_show_hidden_files">숨겨진 파일 보기</string>
@@ -465,6 +476,7 @@
     <string name="recommend_text">사용하고 있는 장치에서 %1$s을(를) 사용해 보세요.\n다운로드 링크: %2$s</string>
     <string name="recommend_urls">%1$s 및 %2$s</string>
     <string name="remove_fail_msg">삭제할 수 없음</string>
+    <string name="remove_push_notification">삭제</string>
     <string name="remove_success_msg">삭제함</string>
     <string name="rename_dialog_title">새 이름 입력</string>
     <string name="rename_local_fail_msg">로컬 파일의 이름을 변경할 수 없습니다. 다른 이름을 입력하십시오</string>
@@ -475,11 +487,6 @@
     <string name="restore_button_description">삭제된 파일 복구</string>
     <string name="saml_authentication_required_text">암호가 필요함</string>
     <string name="saml_authentication_wrong_pass">잘못된 암호</string>
-    <string name="screenshot_01_gridView">내 모든 데이터를 위한 안전한 저장소</string>
-    <string name="screenshot_02_listView">내 파일을 쉽게 탐색하고 공유하기</string>
-    <string name="screenshot_03_drawer">활동, 공유, 오프라인 파일 및 기타 콘텐츠에 빠르게 접근</string>
-    <string name="screenshot_04_accounts">다른 계정에 연결하기</string>
-    <string name="screenshot_05_autoUpload">내 사진과 동영상 자동 업로드</string>
     <string name="search_users_and_groups_hint">사용자와 그룹 검색</string>
     <string name="select_all">모두 선택</string>
     <string name="send">보내기</string>
@@ -491,6 +498,7 @@
     <string name="share_add_user_or_group">사용자 또는 그룹 추가</string>
     <string name="share_dialog_title">공유</string>
     <string name="share_email_clarification">%1$s(이메일)</string>
+    <string name="share_expiration_date_label">%1$s 에 만료됨</string>
     <string name="share_file">%1$s 공유</string>
     <string name="share_get_public_link_button">링크 얻기</string>
     <string name="share_group_clarification">%1$s(그룹)</string>
@@ -511,6 +519,9 @@
     <string name="share_privilege_can_share">공유 가능</string>
     <string name="share_privilege_unshare">공유 해제</string>
     <string name="share_remote_clarification">%1$s(원격)</string>
+    <string name="share_room_clarification">%1$s (대화)</string>
+    <string name="share_search">이름, 연합 클라우드 ID 및 이메일 주소…</string>
+    <string name="share_send_note">받는 사람 메모</string>
     <string name="share_via_link_edit_permission_label">편집 허용</string>
     <string name="share_via_link_expiration_date_label">만료 날짜 설정</string>
     <string name="share_via_link_hide_download">다운로드 숨기기</string>
@@ -526,6 +537,7 @@
     <string name="shared_icon_share">공유</string>
     <string name="shared_icon_shared">공유됨</string>
     <string name="shared_icon_shared_via_link">링크로 공유됨</string>
+    <string name="shared_with_you_by">다음을 이용해 나와 공유됨 %1$s</string>
     <string name="sharee_add_failed">공유사용자 추가 실패</string>
     <string name="sort_by">정렬</string>
     <string name="sort_by_modification_date_ascending">새 항목 먼저</string>
@@ -628,6 +640,7 @@
     <string name="upload_list_empty_headline">업로드 없음</string>
     <string name="upload_list_empty_text_auto_upload">콘텐츠를 업로드하거나 자동 업로드를 활성화하십시오.</string>
     <string name="upload_query_move_foreign_files">공간이 부족해서 선택한 파일을 %1$s 폴더로 복사할 수 없습니다. 대신 이동하시겠습니까?</string>
+    <string name="upload_unknown_error">알 수 없는 오류</string>
     <string name="uploader_btn_alternative_text">선택</string>
     <string name="uploader_btn_upload_text">업로드</string>
     <string name="uploader_error_message_no_file_to_upload">올바르지 않은 파일을 포함한 데이터를 받았습니다.</string>
@@ -689,7 +702,21 @@
     <string name="wait_checking_credentials">저장된 인증 정보 확인 중</string>
     <string name="wait_for_tmp_copy_from_private_storage">개인 저장소에서 파일 복사</string>
     <string name="what_s_new_image">새로운 기능 사진</string>
-    <string name="whats_new_device_credentials_content">데이터를 보호하기 위해 패턴, 비밀번호, PIN 또는 지문을 사용합니다</string>
     <string name="whats_new_skip">건너뛰기</string>
     <string name="whats_new_title">%1$s의 새로운 것</string>
-    </resources>
+    <plurals name="sync_fail_in_favourites_content">
+        <item quantity="other">파일 %1$d개의 내용을 동기화할 수 없음(충돌 %2$d개)</item>
+    </plurals>
+    <plurals name="sync_foreign_files_forgotten_content">
+        <item quantity="other">폴더 %2$s의 파일 중 %1$d개를 복사할 수 없음</item>
+    </plurals>
+    <plurals name="file_list__footer__folder">
+        <item quantity="other">폴더 %1$d개</item>
+    </plurals>
+    <plurals name="file_list__footer__file">
+        <item quantity="other">파일 %1$d개</item>
+    </plurals>
+    <plurals name="items_selected_count">
+        <item quantity="other">%d개 선택됨</item>
+    </plurals>
+</resources>

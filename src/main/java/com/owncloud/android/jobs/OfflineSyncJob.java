@@ -57,9 +57,7 @@ public class OfflineSyncJob extends Job {
     private final ConnectivityService connectivityService;
     private final PowerManagementService powerManagementService;
 
-    public OfflineSyncJob(UserAccountManager userAccountManager,
-                          ConnectivityService connectivityService,
-                          PowerManagementService powerManagementService) {
+    OfflineSyncJob(UserAccountManager userAccountManager, ConnectivityService connectivityService, PowerManagementService powerManagementService) {
         this.userAccountManager = userAccountManager;
         this.connectivityService = connectivityService;
         this.powerManagementService = powerManagementService;

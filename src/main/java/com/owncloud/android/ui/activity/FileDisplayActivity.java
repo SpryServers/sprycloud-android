@@ -27,11 +27,9 @@ package com.owncloud.android.ui.activity;
 
 import android.Manifest;
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -54,10 +52,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.EditText;
-import android.widget.ImageView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.appinfo.AppInfo;
 import com.nextcloud.client.di.Injectable;
@@ -78,6 +73,7 @@ import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult.ResultCode;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.files.RestoreFileVersionRemoteOperation;
+import com.owncloud.android.lib.resources.files.SearchRemoteOperation;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
@@ -103,12 +99,14 @@ import com.owncloud.android.ui.asynctasks.CheckAvailableSpaceTask;
 import com.owncloud.android.ui.asynctasks.FetchRemoteFileTask;
 import com.owncloud.android.ui.dialog.SendShareDialog;
 import com.owncloud.android.ui.dialog.SortingOrderDialogFragment;
+import com.owncloud.android.ui.events.SearchEvent;
 import com.owncloud.android.ui.events.SyncEventFinished;
 import com.owncloud.android.ui.events.TokenPushEvent;
 import com.owncloud.android.ui.fragment.ExtendedListFragment;
 import com.owncloud.android.ui.fragment.FileDetailFragment;
 import com.owncloud.android.ui.fragment.FileFragment;
 import com.owncloud.android.ui.fragment.OCFileListFragment;
+import com.owncloud.android.ui.fragment.PhotoFragment;
 import com.owncloud.android.ui.fragment.TaskRetainerFragment;
 import com.owncloud.android.ui.fragment.contactsbackup.ContactListFragment;
 import com.owncloud.android.ui.helpers.FileOperationsHelper;
@@ -136,7 +134,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -163,6 +160,8 @@ public class FileDisplayActivity extends FileActivity
         SendShareDialog.SendShareDialogDownloader, Injectable {
 
     public static final String RESTART = "RESTART";
+    public static final String ALL_FILES = "ALL_FILES";
+    public static final String PHOTO_SEARCH = "PHOTO_SEARCH";
 
     private SyncBroadcastReceiver mSyncBroadcastReceiver;
     private UploadFinishReceiver mUploadFinishReceiver;
@@ -195,7 +194,7 @@ public class FileDisplayActivity extends FileActivity
 
     private static final String TAG = FileDisplayActivity.class.getSimpleName();
 
-    private static final String TAG_LIST_OF_FILES = "LIST_OF_FILES";
+    public static final String TAG_LIST_OF_FILES = "LIST_OF_FILES";
     public static final String TAG_SECOND_FRAGMENT = "SECOND_FRAGMENT";
 
     public static final String TEXT_PREVIEW = "TEXT_PREVIEW";
@@ -378,7 +377,7 @@ public class FileDisplayActivity extends FileActivity
 
             // show outdated warning
             if (getResources().getBoolean(R.bool.show_outdated_server_warning) &&
-                MainApp.OUTDATED_SERVER_VERSION.compareTo(serverVersion) >= 0 &&
+                MainApp.OUTDATED_SERVER_VERSION.isSameMajorVersion(serverVersion) &&
                 getCapabilities().getExtendedSupport().isFalse()) {
                 DisplayUtils.showServerOutdatedSnackbar(this, Snackbar.LENGTH_LONG);
             }
@@ -564,9 +563,30 @@ public class FileDisplayActivity extends FileActivity
             startActivity(intent);
         } else // Verify the action and get the query
             if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-                String query = intent.getStringExtra(SearchManager.QUERY);
                 setIntent(intent);
-                Log_OC.w(TAG, "Ignored Intent requesting to query for " + query);
+
+                SearchEvent searchEvent = Parcels.unwrap(intent.getParcelableExtra(OCFileListFragment.SEARCH_EVENT));
+                if (SearchRemoteOperation.SearchType.PHOTO_SEARCH.equals(searchEvent.searchType)) {
+                    Log_OC.d(this, "Switch to photo search fragment");
+
+                    PhotoFragment photoFragment = new PhotoFragment(true);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(OCFileListFragment.SEARCH_EVENT, Parcels.wrap(searchEvent));
+                    photoFragment.setArguments(bundle);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.left_fragment_container, photoFragment, TAG_LIST_OF_FILES);
+                    transaction.commit();
+                } else {
+                    Log_OC.d(this, "Switch to oc file search fragment");
+
+                    OCFileListFragment photoFragment = new OCFileListFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(OCFileListFragment.SEARCH_EVENT, Parcels.wrap(searchEvent));
+                    photoFragment.setArguments(bundle);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.left_fragment_container, photoFragment, TAG_LIST_OF_FILES);
+                    transaction.commit();
+                }
             } else if (UsersAndGroupsSearchProvider.ACTION_SHARE_WITH.equals(intent.getAction())) {
                 Uri data = intent.getData();
                 String dataString = intent.getDataString();
@@ -585,8 +605,13 @@ public class FileDisplayActivity extends FileActivity
                     doShareWith(shareWith, shareType);
                 }
 
-            } else {
-                Log_OC.e(TAG, String.format(Locale.US, "Unexpected intent %s", intent));
+            } else if (ALL_FILES.equals(intent.getAction())) {
+                Log_OC.d(this, "Switch to oc file fragment");
+
+                OCFileListFragment fragment = new OCFileListFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.left_fragment_container, fragment, TAG_LIST_OF_FILES);
+                transaction.commit();
             }
     }
 
@@ -799,13 +824,7 @@ public class FileDisplayActivity extends FileActivity
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchMenuItem.setVisible(false);
 
-        // hacky as no default way is provided
-        int fontColor = ThemeUtils.fontColor(this);
-        EditText editText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        editText.setHintTextColor(fontColor);
-        editText.setTextColor(fontColor);
-        ImageView searchClose = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        searchClose.setColorFilter(ThemeUtils.fontColor(this));
+        ThemeUtils.themeSearchView(searchView, true, this);
 
         // populate list of menu items to show/hide when drawer is opened/closed
         mDrawerMenuItemstoShowHideList = new ArrayList<>(4);
@@ -1053,14 +1072,7 @@ public class FileDisplayActivity extends FileActivity
 
     private void requestUploadOfFilesFromFileSystem(Intent data, int resultCode) {
         String[] filePaths = data.getStringArrayExtra(UploadFilesActivity.EXTRA_CHOSEN_FILES);
-        int behaviour;
-
-        if (resultCode == UploadFilesActivity.RESULT_OK_AND_MOVE) {
-            behaviour = FileUploader.LOCAL_BEHAVIOUR_MOVE;
-        } else {
-            behaviour = FileUploader.LOCAL_BEHAVIOUR_COPY;
-        }
-        requestUploadOfFilesFromFileSystem(filePaths, behaviour);
+        requestUploadOfFilesFromFileSystem(filePaths, resultCode);
     }
 
     private void requestUploadOfFilesFromFileSystem(String[] filePaths, int resultCode) {
@@ -1178,16 +1190,6 @@ public class FileDisplayActivity extends FileActivity
         }
     }
 
-    private void revertBottomNavigationBarToAllFiles() {
-        if (getResources().getBoolean(R.bool.bottom_toolbar_enabled)) {
-            BottomNavigationView bottomNavigationView = getListOfFilesFragment().getView()
-                    .findViewById(R.id.bottom_navigation_view);
-            if (bottomNavigationView.getMenu().findItem(R.id.nav_bar_settings).isChecked()) {
-                bottomNavigationView.getMenu().findItem(R.id.nav_bar_files).setChecked(true);
-            }
-        }
-    }
-
     @Override
     public void onBackPressed() {
         boolean isDrawerOpen = isDrawerOpen();
@@ -1265,8 +1267,6 @@ public class FileDisplayActivity extends FileActivity
             startFile = getIntent().getParcelableExtra(EXTRA_FILE);
             setFile(startFile);
         }
-
-        revertBottomNavigationBarToAllFiles();
 
         // refresh list of files
         if (searchView != null && !TextUtils.isEmpty(searchQuery)) {
@@ -1904,7 +1904,8 @@ public class FileDisplayActivity extends FileActivity
                 setFile(getStorageManager().getFileById(removedFile.getParentId()));
                 cleanSecondFragment();
             }
-            if (getStorageManager().getFileById(removedFile.getParentId()).equals(getCurrentDir())) {
+            OCFile parentFile = getStorageManager().getFileById(removedFile.getParentId());
+            if (parentFile != null && parentFile.equals(getCurrentDir())) {
                 refreshListOfFilesFragment(false);
             }
             supportInvalidateOptionsMenu();
@@ -1987,15 +1988,17 @@ public class FileDisplayActivity extends FileActivity
             // if share to user and share via link multiple ocshares are returned,
             // therefore filtering for public_link
             String link = "";
+            OCFile file = null;
             for (Object object : result.getData()) {
                 OCShare shareLink = (OCShare) object;
                 if (TAG_PUBLIC_LINK.equalsIgnoreCase(shareLink.getShareType().name())) {
                     link = shareLink.getShareLink();
+                    file = getStorageManager().getFileByPath(shareLink.getPath());
                     break;
                 }
             }
 
-            copyAndShareFileLink(this, link);
+            copyAndShareFileLink(this, file, link);
 
             if (fileDetailFragment != null && fileDetailFragment.getFileDetailSharingFragment() != null) {
                 fileDetailFragment.getFileDetailSharingFragment().refreshPublicShareFromDB();
@@ -2575,6 +2578,26 @@ public class FileDisplayActivity extends FileActivity
         getListOfFilesFragment().refreshDirectory();
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(final SearchEvent event) {
+        Fragment fragment;
+
+        if (SearchRemoteOperation.SearchType.PHOTO_SEARCH == event.searchType) {
+            Log_OC.d(this, "Switch to photo search fragment");
+
+            fragment = new PhotoFragment(true);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.left_fragment_container, fragment, TAG_LIST_OF_FILES);
+            transaction.commit();
+        }
+//        else {
+//            Log_OC.d(this, "Switch to OCFileListFragment");
+//
+//            fragment = new OCFileListFragment();
+//        }
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(SyncEventFinished event) {
         Bundle bundle = event.getIntent().getExtras();
@@ -2650,9 +2673,6 @@ public class FileDisplayActivity extends FileActivity
             DisplayUtils.showSnackMessage(this, getString(R.string.error_retrieving_file));
             return;
         }
-
-        AccountManager am = AccountManager.get(this);
-        String userId = am.getUserData(getAccount(), AccountUtils.Constants.KEY_USER_ID);
 
         FileDataStorageManager storageManager = getStorageManager();
 

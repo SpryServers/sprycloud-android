@@ -22,7 +22,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-
 import com.nextcloud.client.account.CurrentAccountProvider
 import com.nextcloud.client.preferences.AppPreferences
 import com.owncloud.android.BuildConfig
@@ -34,16 +33,17 @@ import com.owncloud.android.ui.activity.PassCodeActivity
 internal class OnboardingServiceImpl constructor(
     private val resources: Resources,
     private val preferences: AppPreferences,
-    accountProvider: CurrentAccountProvider
+    private val accountProvider: CurrentAccountProvider
 ) : OnboardingService {
 
     private companion object {
         const val ITEM_VERSION_CODE = 99999999
     }
 
-    private val notSeenYet: Boolean get() {
-        return BuildConfig.VERSION_CODE >= ITEM_VERSION_CODE && preferences.lastSeenVersionCode < ITEM_VERSION_CODE
-    }
+    private val notSeenYet: Boolean
+        get() {
+            return BuildConfig.VERSION_CODE >= ITEM_VERSION_CODE && preferences.lastSeenVersionCode < ITEM_VERSION_CODE
+        }
 
     override val whatsNew: Array<FeatureItem>
         get() = if (!isFirstRun && notSeenYet) {
@@ -52,7 +52,10 @@ internal class OnboardingServiceImpl constructor(
             emptyArray()
         }
 
-    override val isFirstRun: Boolean = accountProvider.currentAccount == null
+    override val isFirstRun: Boolean
+        get() {
+            return accountProvider.currentAccount == null
+        }
 
     override fun shouldShowWhatsNew(callingContext: Context): Boolean {
         return callingContext !is PassCodeActivity && whatsNew.size > 0

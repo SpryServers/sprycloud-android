@@ -1,1 +1,1 @@
-spryCloud Dev forritið er skyndiþróunarútgáfa (development snapshot) og er hægt
+Nextcloud-kerfið er opið og frjálst, og heldur þér við stjórnvölinn (forútgáfa f

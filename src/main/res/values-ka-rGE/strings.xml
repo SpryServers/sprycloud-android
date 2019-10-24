@@ -12,7 +12,6 @@
     <string name="actionbar_contacts">კონტაქტების ბექაფი</string>
     <string name="actionbar_contacts_restore">კონტაქტების აღდგენა</string>
     <string name="actionbar_copy">კოპირება</string>
-    <string name="actionbar_logger">ლოგები</string>
     <string name="actionbar_mkdir">ახალი დირექტორია</string>
     <string name="actionbar_move">გადატანა</string>
     <string name="actionbar_open_with">გახსნა</string>
@@ -33,8 +32,6 @@
     <string name="auth_check_server">სერვერის შემოწმება</string>
     <string name="auth_connection_established">კავშირი დამყარდა</string>
     <string name="auth_expired_basic_auth_toast">გთხოვთ შეიყვანოთ ამჟამინდელი პაროლი</string>
-    <string name="auth_expired_oauth_token_toast">თქვენს ავტორიზაციას გაუვიდა ვადა. გთხოვთ ახლიდან გაიაროთ ავტორიზაცია</string>
-    <string name="auth_expired_saml_sso_token_toast">თქვენს სესიას ვადა გაუვიდა. გთხოვთ დაკავშირდდეთ ახლიდან</string>
     <string name="auth_fail_get_user_name">თქვენი სერვერი არ აბრუნებს სწორ მომხმარებლის ID-ს, გთხოვთ დაუკავშირდეთ ადმინისტრატორს</string>
     <string name="auth_host_address">სერვერის მისამართი</string>
     <string name="auth_incorrect_address_title">სერვერისთვის არასწორი მისამსამართის ფორმატი</string>
@@ -143,7 +140,6 @@
     <string name="drawer_item_photos">სურათები</string>
     <string name="drawer_item_recently_added">ახლად დამატებული</string>
     <string name="drawer_item_recently_modified">ახლად შეცვლილი</string>
-    <string name="drawer_item_settings">პარამეტრები</string>
     <string name="drawer_item_shared">გაზიარებული</string>
     <string name="drawer_item_uploads_list">ატვირთვები</string>
     <string name="drawer_item_videos">ვიდეოები</string>
@@ -238,7 +234,6 @@
     <string name="list_layout">ჩამოწერილი მაკეტი</string>
     <string name="local_file_list_empty">ამ დირექტორიაში ფაილები არაა.</string>
     <string name="local_folder_list_empty">მომდევნო დირექტორიები არაა.</string>
-    <string name="log_send_history_button">გაგზავნის ისტორია</string>
     <string name="log_send_mail_subject">%1$s Android აპლიკაციის ლოგები.</string>
     <string name="log_send_no_mail_app">აპლიკაცია ლოგების გადასაგზავნად ვერ იქნა ნაპოვნი. გთხოვთ ელ-ფოსტის კლიენტი დააყენოთ ახლიდან.</string>
     <string name="maintenance_mode">სერვერი სარემონტო რეჟიმშია</string>
@@ -286,7 +281,6 @@
     <string name="notification_channel_upload_name">შეტყობინებების არხის ატვირთვა</string>
     <string name="notifications_no_results_headline">შეტყობინებები არაა</string>
     <string name="notifications_no_results_message">გთხოვთ დაბრუნდეთ მოგვინაებით.</string>
-    <string name="oauth_check_onoff">გაიარეთ ავტორიზაცია OAuth 2.0-ით</string>
     <string name="participate_beta_headline">დევ. ვერსიის შემოწმება</string>
     <string name="participate_beta_text">იმყოფება სისხლდენის ზღვარზე და მოიცავს ყველა დამდეგ ფუნქციას. შეიძლება გამოჩნდეს შეცდომები, ასეთი შემთხვევისას გთხოვთ გვამცნობოთ რეპორტით.</string>
     <string name="participate_contribute_forum_forum">ფურუმი</string>
@@ -342,7 +336,6 @@
     <string name="prefs_instant_upload_path_use_subfolders_summary">ქვე-დირექტორიებში თვისა და წელიწადის მიხედვით შევნახვა</string>
     <string name="prefs_instant_upload_path_use_subfolders_title">ქვე-დირექტორიების მოხმარება</string>
     <string name="prefs_license">ლიცენზია</string>
-    <string name="prefs_log_delete_history_button">ისტორიის წაშლა</string>
     <string name="prefs_manage_accounts">ანგარიშების მართვა</string>
     <string name="prefs_recommend">ურჩიეთ მეგობარს</string>
     <string name="prefs_show_hidden_files">დამალული ფაილების ჩვენება</string>
@@ -371,11 +364,6 @@
     <string name="resized_image_not_possible_download">ზომა-შეცვლილი სურათი არაა ხელმისაწვდომი. გადმოვწეროთ მთლიანი სურათი?</string>
     <string name="saml_authentication_required_text">საჭიროა პაროლი</string>
     <string name="saml_authentication_wrong_pass">არასწორი პაროლი</string>
-    <string name="screenshot_01_gridView">უსაფრთხო სახლი მთელი თქვენი მონაცემებისათვის</string>
-    <string name="screenshot_02_listView">მოიხილეთ და გააზიარეთ თქვენი ფაილები მარტივად</string>
-    <string name="screenshot_03_drawer">იქონიეთ სწრაფი წვდომა აქტივობებზე, გაზიარებებზე, ოფლაინ ფაილებზე და ა.შ.</string>
-    <string name="screenshot_04_accounts">დაუკავშირდით სხვა ანგარიშებს</string>
-    <string name="screenshot_05_autoUpload">ავტომატურად ატვირთეთ თქვენი ფოტოები და ვიდეოები</string>
     <string name="search_users_and_groups_hint">მომხმარებლების და ჯგუფების ძიება</string>
     <string name="select_all">ყველას მონიშვნა</string>
     <string name="send">გაგზავნა</string>
