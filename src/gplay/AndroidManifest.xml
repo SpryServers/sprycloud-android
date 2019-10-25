@@ -33,7 +33,7 @@
             android:value="false"/>
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
-            android:value="true"/>
+            android:value="false"/>
 
         <activity
             android:name=".authentication.ModifiedAuthenticatorActivity"
