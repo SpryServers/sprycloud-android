@@ -55,7 +55,6 @@
     <string name="prefs_daily_contacts_sync_summary">Daily backup of your contacts</string>
     <string name="prefs_help">Help</string>
     <string name="prefs_recommend">Recommend to friend</string>
-    <string name="prefs_feedback">Feedback</string>
     <string name="prefs_imprint">Imprint</string>
 
     <string name="recommend_subject">Try %1$s on your device!</string>
@@ -217,17 +216,12 @@
 
     <string name="media_notif_ticker">%1$s music player</string>
     <string name="media_state_playing">%1$s (playing)</string>
-    <string name="media_state_loading">%1$s (loading)</string>
-    <string name="media_event_done">%1$s playback finished</string>
-    <string name="media_err_nothing_to_play">No media file found</string>
-    <string name="media_err_not_in_owncloud">The file is not in a valid account</string>
     <string name="media_err_unsupported">Unsupported media codec</string>
     <string name="media_err_io">Could not read the media file</string>
     <string name="media_err_malformed">The media file has incorrect encoding</string>
     <string name="media_err_timeout">Attempt to play file timed out</string>
     <string name="media_err_invalid_progressive_playback">The media file can not be streamed</string>
     <string name="media_err_unknown">The built-in media player is unable to play the media file</string>
-    <string name="media_err_playing">Unexpected error while trying to play %1$s</string>
     <string name="media_rewind_description">Rewind button</string>
     <string name="media_play_pause_description">Play or pause button</string>
     <string name="media_forward_description">Fast forward button</string>
@@ -527,30 +521,30 @@
     <string name="files_drop_not_supported">This is a Nextcloud feature, please upgrade.</string>
     <string name="learn_more">Learn more</string>
     <string name="drawer_synced_folders">Auto upload</string>
-    <string name="drawer_participate">Participate</string>
-    <string name="participate_testing_headline">Help by testing</string>
-    <string name="participate_testing_bug_text">Found a bug? Oddments?</string>
-    <string name="participate_testing_report_text">Report an issue on GitHub</string>
-    <string name="participate_testing_version_text">Interested in helping out by testing what will be the next version?</string>
-    <string name="participate_beta_headline">Test the dev version</string>
-    <string name="participate_beta_text">This includes all upcoming features and it is on the very bleeding edge. Bugs/errors can occur, if and when they do, please report of your findings.</string>
-    <string name="participate_release_candidate_headline">Release candidate</string>
-    <string name="participate_release_candidate_text">The release candidate (RC) is a snapshot of the upcoming release and is expected to be stable. Testing your individual setup could help ensure this. Sign up for testing on the Play store or manually look in the \"Version\" section of F-Droid.</string>
-    <string name="participate_contribute_headline">Actively Contribute</string>
-    <string name="participate_contribute_irc_text">Join the chat on IRC:</string>
-    <string name="participate_contribute_irc_text_link" translatable="false"> &lt;font color=\"%1$s\">&lt;a href=\"%2$s\">#nextcloud-mobile&lt;/a>&lt;/font></string>
-    <string name="participate_contribute_forum_text">Help others on the</string>
-    <string name="participate_contribute_forum_forum">forum</string>
-    <string name="participate_contribute_forum_text_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">%3$s&lt;/a>&lt;/font></string>
-    <string name="participate_contribute_translate_translate">Translate</string>
-    <string name="participate_contribute_translate_text">the app</string>
-    <string name="participate_contribute_translate_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">%3$s&lt;/a>&lt;/font></string>
-    <string name="participate_contribute_github_text">Review, amend and write code, see %1$s for details</string>
-    <string name="participate_contribute_github_text_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">CONTRIBUTING.md&lt;/a>&lt;/font></string>
-    <string name="participate_rc_play_store">Get release candidate from Google Play store</string>
-    <string name="participate_rc_fdroid">Get release candidate from F-Droid app</string>
-    <string name="participate_dev_fdroid">Get development release from F-Droid app</string>
-    <string name="participate_dev_direct_download">Download development release directly</string>
+    <string name="drawer_community">Community</string>
+    <string name="community_testing_headline">Help by testing</string>
+    <string name="community_testing_bug_text">Found a bug? Oddments?</string>
+    <string name="community_testing_report_text">Report an issue on GitHub</string>
+    <string name="community_testing_version_text">Interested in helping out by testing what will be the next version?</string>
+    <string name="community_beta_headline">Test the dev version</string>
+    <string name="community_beta_text">This includes all upcoming features and it is on the very bleeding edge. Bugs/errors can occur, if and when they do, please report of your findings.</string>
+    <string name="community_release_candidate_headline">Release candidate</string>
+    <string name="community_release_candidate_text">The release candidate (RC) is a snapshot of the upcoming release and is expected to be stable. Testing your individual setup could help ensure this. Sign up for testing on the Play store or manually look in the \"Version\" section of F-Droid.</string>
+    <string name="community_contribute_headline">Actively Contribute</string>
+    <string name="community_contribute_irc_text">Join the chat on IRC:</string>
+    <string name="community_contribute_irc_text_link" translatable="false"> &lt;font color=\"%1$s\">&lt;a href=\"%2$s\">#nextcloud-mobile&lt;/a>&lt;/font></string>
+    <string name="community_contribute_forum_text">Help others on the</string>
+    <string name="community_contribute_forum_forum">forum</string>
+    <string name="community_contribute_forum_text_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">%3$s&lt;/a>&lt;/font></string>
+    <string name="community_contribute_translate_translate">Translate</string>
+    <string name="community_contribute_translate_text">the app</string>
+    <string name="community_contribute_translate_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">%3$s&lt;/a>&lt;/font></string>
+    <string name="community_contribute_github_text">Review, amend and write code, see %1$s for details</string>
+    <string name="community_contribute_github_text_link" translatable="false">&lt;font color=\"%1$s\">&lt;a href=\"%2$s\">CONTRIBUTING.md&lt;/a>&lt;/font></string>
+    <string name="community_rc_play_store">Get release candidate from Google Play store</string>
+    <string name="community_rc_fdroid">Get release candidate from F-Droid app</string>
+    <string name="community_dev_fdroid">Get development release from F-Droid app</string>
+    <string name="community_dev_direct_download">Download development release directly</string>
     <string name="move_to">Move to…</string>
     <string name="copy_to">Copy to…</string>
     <string name="choose_remote_folder">Choose remote folder…</string>
@@ -794,7 +788,6 @@
     <string name="new_media_folder_videos">video</string>
     <string name="outdated_server">The server has reached end of life, please upgrade!</string>
     <string name="dismiss">Dismiss</string>
-    <string name="feedback_no_mail_app">No app available to send mails!</string>
     <string name="drawer_item_trashbin">Deleted files</string>
     <string name="trashbin_activity_title">Deleted files</string>
     <string name="action_empty_trashbin">Empty trashbin</string>
@@ -884,6 +877,7 @@
     <string name="copy_internal_link">Copy internal link</string>
     <string name="copy_internal_link_subline">Only works for users with access to this folder</string>
     <string name="failed_to_download">Failed to pass file to download manager</string>
+    <string name="failed_to_print">Failed to print file</string>
     <string name="autoupload_disable_power_save_check">Disable power save check</string>
     <string name="power_save_check_dialog_message">Disabling power save check might result in uploading files when in low battery state!</string>
     <string name="etm_title">Engineering Test Mode</string>
@@ -903,4 +897,5 @@
     <string name="could_not_download_image">Could not download full image</string>
     <string name="file_detail_activity_error">Error retrieving activities for file</string>
     <string name="no_mutliple_accounts_allowed">Only one account allowed</string>
+    <string name="remote_file_fetch_failed">Failed to find file!</string>
 </resources>
