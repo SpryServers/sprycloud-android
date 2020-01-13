@@ -42,7 +42,7 @@ import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.services.OperationsService.OperationsServiceBinder;
 import com.owncloud.android.ui.activity.ComponentsGetter;
 import com.owncloud.android.utils.MimeTypeUtil;
-import com.owncloud.android.utils.NextcloudServer;
+import com.owncloud.android.utils.spryCloudServer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -326,7 +326,7 @@ public class FileMenuFilter {
     /**
      * This will be replaced by unified editor and can be removed once EOL of corresponding server version.
      */
-    @NextcloudServer(max = 18)
+    @spryCloudServer(max = 18)
     private boolean isRichDocumentEditingSupported(OCCapability capability, String mimeType) {
         return isSingleFile() && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
             (capability.getRichDocumentsMimeTypeList().contains(mimeType) ||

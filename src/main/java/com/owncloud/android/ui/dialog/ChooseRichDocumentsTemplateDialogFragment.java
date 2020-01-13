@@ -60,7 +60,7 @@ import com.owncloud.android.ui.activity.RichDocumentsEditorWebView;
 import com.owncloud.android.ui.adapter.RichDocumentsTemplateAdapter;
 import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.FileStorageUtils;
-import com.owncloud.android.utils.NextcloudServer;
+import com.owncloud.android.utils.spryCloudServer;
 import com.owncloud.android.utils.ThemeUtils;
 
 import org.parceler.Parcels;
@@ -108,7 +108,7 @@ public class ChooseRichDocumentsTemplateDialogFragment extends DialogFragment im
     @BindView(R.id.filename)
     EditText fileName;
 
-    @NextcloudServer(max = 18) // will be removed in favor of generic direct editing
+    @spryCloudServer(max = 18) // will be removed in favor of generic direct editing
     public static ChooseRichDocumentsTemplateDialogFragment newInstance(OCFile parentFolder, Type type) {
         ChooseRichDocumentsTemplateDialogFragment frag = new ChooseRichDocumentsTemplateDialogFragment();
         Bundle args = new Bundle();

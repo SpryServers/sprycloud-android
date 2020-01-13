@@ -35,7 +35,7 @@ import com.nextcloud.client.network.ClientFactory;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.Template;
 import com.owncloud.android.ui.dialog.ChooseRichDocumentsTemplateDialogFragment;
-import com.owncloud.android.utils.NextcloudServer;
+import com.owncloud.android.utils.spryCloudServer;
 import com.owncloud.android.utils.glide.CustomGlideStreamLoader;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class RichDocumentsTemplateAdapter extends RecyclerView.Adapter<RichDocum
 
     @NonNull
     @Override
-    @NextcloudServer(max = 18) // remove entire class
+    @spryCloudServer(max = 18) // remove entire class
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.template_button, parent, false));
     }

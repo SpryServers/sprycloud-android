@@ -24,7 +24,7 @@ import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
-import com.owncloud.android.utils.NextcloudServer;
+import com.owncloud.android.utils.spryCloudServer;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -57,7 +57,7 @@ public class RichDocumentsUrlOperation extends RemoteOperation {
         this.fileID = fileID;
     }
 
-    @NextcloudServer(max = 18)
+    @spryCloudServer(max = 18)
     protected RemoteOperationResult run(OwnCloudClient client) {
         RemoteOperationResult result;
         PostMethod postMethod = null;
