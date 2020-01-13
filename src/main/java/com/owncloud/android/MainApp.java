@@ -122,13 +122,8 @@ import static com.owncloud.android.ui.activity.ContactsPreferenceActivity.PREFER
  */
 public class MainApp extends MultiDexApplication implements HasAndroidInjector {
 
-<<<<<<< HEAD
-    public static final OwnCloudVersion OUTDATED_SERVER_VERSION = OwnCloudVersion.nextcloud_14;
-    public static final OwnCloudVersion MINIMUM_SUPPORTED_SERVER_VERSION = OwnCloudVersion.nextcloud_12;
-=======
     public static final OwnCloudVersion OUTDATED_SERVER_VERSION = OwnCloudVersion.nextcloud_15;
     public static final OwnCloudVersion MINIMUM_SUPPORTED_SERVER_VERSION = OwnCloudVersion.nextcloud_13;
->>>>>>> nc/stable-3.10
 
     private static final String TAG = MainApp.class.getSimpleName();
     public static final String DOT = ".";
