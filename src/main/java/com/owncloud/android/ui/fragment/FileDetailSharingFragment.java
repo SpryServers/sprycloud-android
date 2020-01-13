@@ -140,6 +140,9 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
     @BindView(R.id.copy_internal_link_icon)
     ImageView internalLinkIcon;
 
+    @BindView(R.id.shareInternalLinkText)
+    TextView internalLinkText;
+
     @Inject UserAccountManager accountManager;
 
     public static FileDetailSharingFragment newInstance(OCFile file, Account account) {
@@ -210,7 +213,8 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
         internalLinkIcon.getDrawable().mutate().setColorFilter(getResources().getColor(R.color.black),
                                                                PorterDuff.Mode.SRC_IN);
 
-
+        internalLinkText.setText(getString(R.string.share_internal_link_text, file.isFolder() ?
+            getString(R.string.folder) : getString(R.string.file)));
 
         return view;
     }
@@ -405,7 +409,7 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
         }
 
         PopupMenu popup = new PopupMenu(context, overflowMenuShareLink);
-        popup.inflate(R.menu.file_detail_sharing_link_menu);
+        popup.inflate(R.menu.fragment_file_detail_sharing_link);
         prepareOptionsMenu(popup.getMenu());
         popup.setOnMenuItemClickListener(this::optionsItemSelected);
         popup.show();
@@ -457,7 +461,8 @@ public class FileDetailSharingFragment extends Fragment implements UserListAdapt
                 return true;
             }
             case R.id.action_share_expiration_date: {
-                ExpirationDatePickerDialogFragment dialog = ExpirationDatePickerDialogFragment.newInstance(file, -1);
+                ExpirationDatePickerDialogFragment dialog = ExpirationDatePickerDialogFragment
+                    .newInstance(file, publicShare.getExpirationDate());
                 dialog.show(
                     fileDisplayActivity.getSupportFragmentManager(),
                         ExpirationDatePickerDialogFragment.DATE_PICKER_DIALOG

@@ -1,17 +1,43 @@
+3.10.0 RC2 (January, 10, 2020)
+
+- Dark theme (@dan0xii, @AndyScherzinger)
+- Rich workspace (NC18+)
+- collaborative text editor (NC18+)
+- links in Markdown previews clickable (@AndyScherzinger)
+- Show/Hide auto upload list items (@AndyScherzinger)
+- drop 4.0.x support
+- outdated server warning set to NC15
+- latest supported version NC13
+
+For a full list, please see https://github.com/nextcloud/android/milestone/40
+
+3.10.0 RC1 (January, 08, 2020)
+
+- Dark theme (@dan0xii, @AndyScherzinger)
+- Rich workspace (NC18+)
+- collaborative text editor (NC18+)
+- links in Markdown previews clickable (@AndyScherzinger)
+- Show/Hide auto upload list items (@AndyScherzinger)
+- drop 4.0.x support
+- outdated server warning set to NC15
+- latest supported version NC13
+
+For a full list, please see https://github.com/nextcloud/android/milestone/40
+
+3.9.2 (December, 05, 2019)
+
+- HOTFIX: fix login loop
+- Fix crash on opening png images
+- Translation updates
+
+3.9.1 (December, 04, 2019)
+
+- Fix crash on opening png images
+- Translation updates
+
+For a full list, please see https://github.com/nextcloud/android/milestone/43
+
 3.9.0 (November, 12, 2019)
-
-- preview Markdown with syntax highlighting @AndyScherzinger
-- improved DavX5 integration @bitfireAT
-- AutoUpload: allow files to upload into subfolder
-- new media player service @ezaquarii
-- Remote wipe integration
-- Print from within Collabora
-- enhanced SingleSignOn
-- outdated server warning set to NC14
-
-For a full list, please see https://github.com/nextcloud/android/milestone/38
-
-3.9.0 RC1 (October, 28, 2019)
 
 - preview Markdown with syntax highlighting @AndyScherzinger
 - improved DavX5 integration @bitfireAT
@@ -287,7 +313,7 @@ For a full list, please see https://github.com/nextcloud/android/milestone/26
 - Further bug fixes and improvements
 
 ## 1.4.1 (January 27, 2017)
-- Share URLs to spryCloud
+- Share URLs to Nextcloud
 - Improve performance of Auto Upload view
 - Fix for removing files
 - Proper email sharee handling
@@ -313,7 +339,7 @@ For a full list, please see https://github.com/nextcloud/android/milestone/26
 ## 1.3.1 (September 20, 2016)
 - Move action hard to discover - difference between single/multi selection
 - Show move/copy context in toolbar title
-- Share file with dictadroid to spryCloud
+- Share file with dictadroid to Nextcloud
 - Don't show upload failure notification for already deleted files
 
 ## 1.3.0 (September 17, 2016)
@@ -325,7 +351,7 @@ For a full list, please see https://github.com/nextcloud/android/milestone/26
 - Mix folders and files on sort by date
 - Upload when charging option
 - Revamp upload options Move/Copy/Just-Upload
-- Text can be selected and shared to spryCloud
+- Text can be selected and shared to Nextcloud
 - Respect metered wifi and block instant uploads
 - Proper handling of .djvu files
 - Bugfixes and design improvements
@@ -345,7 +371,7 @@ For a full list, please see https://github.com/nextcloud/android/milestone/26
 
 ## 1.1.0 (July 6, 2016)
 - New main menu to switch accounts easily
-- Ability to open spryCloud hosted files (read-only) from other apps that support the standard file chooser (requires Android 4.4 / KitKat or higher)
+- Ability to open Nextcloud hosted files (read-only) from other apps that support the standard file chooser (requires Android 4.4 / KitKat or higher)
 - "Select all files" for upload within a folder
 - Optional feature to auto-create monthly folders for your instant uploads
 - Revamped login screen
@@ -357,4 +383,4 @@ For a full list, please see https://github.com/nextcloud/android/milestone/26
 - Optimized uploader layout
 
 ## 1.0.0 (June 12, 2016)
-- Initial release of the spryCloud Android app
+- Initial release of the Nextcloud Android app

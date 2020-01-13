@@ -183,7 +183,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
             context.getTheme().applyStyle(R.style.FallbackThemingTheme, true);
         }
         PopupMenu popup = new PopupMenu(context, view);
-        popup.inflate(R.menu.file_detail_sharing_menu);
+        popup.inflate(R.menu.item_user_sharing_settings);
 
         prepareOptionsMenu(popup.getMenu(), share);
 
@@ -336,7 +336,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
                 return true;
             }
             case R.id.action_expiration_date: {
-                ExpirationDatePickerDialogFragment dialog = ExpirationDatePickerDialogFragment.newInstance(share, -1);
+                ExpirationDatePickerDialogFragment dialog = ExpirationDatePickerDialogFragment
+                    .newInstance(share, share.getExpirationDate());
                 dialog.show(fragmentManager, ExpirationDatePickerDialogFragment.DATE_PICKER_DIALOG);
                 return true;
             }
