@@ -39,7 +39,7 @@ src/gplay/res/values/setup.xml
 *.iml
 build
 /gradle.properties
-
+*.log
 .attach_pid*
 fastlane/Fastfile
 *.hprof
