@@ -44,11 +44,11 @@
     <array name="whatsnew_urls"></array>
 
     <!-- Colors -->
-    <color name="primary">#2a9372</color>
-    <color name="primary_dark">#2a8093</color>
-    <color name="color_accent">#2a933e</color>
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#4A944A</color>
+    <color name="color_accent">#00C853</color>
     <color name="login_text_color">@color/white</color>
-    <color name="login_text_hint_color">#7fC0E3</color>
+    <color name="login_text_hint_color">#FFFFFF</color>
 
     <!-- Multiaccount support -->
     <bool name="multiaccount_support">true</bool>
