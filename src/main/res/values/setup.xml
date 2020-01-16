@@ -48,7 +48,7 @@
     <color name="primary_dark">#4A944A</color>
     <color name="color_accent">#00C853</color>
     <color name="login_text_color">@color/white</color>
-    <color name="login_text_hint_color">#FFFFFF</color>
+    <color name="login_text_hint_color">#69F0AE</color>
 
     <!-- Multiaccount support -->
     <bool name="multiaccount_support">true</bool>
